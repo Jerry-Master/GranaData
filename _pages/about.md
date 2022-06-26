@@ -2,33 +2,35 @@
 layout: page
 title: About
 permalink: /about
-comments: true
+comments: false
 ---
 
 <div class="row justify-content-between">
+
+<!-- About -->
 <div class="col-md-8 pr-5">
 
-<p>This website is built with Jekyll and Mediumish template for Jekyll. It's for demonstration purposes, no real content can be found. Mediumish template for Jekyll is compatible with Github pages, in fact even this demo is created with Github Pages and hosted with Github.</p>
+<p>This blog was bornt from my need to explain everything that I have learnt during my degrees and to show to the world the results of my research in a more divulgative way.</p>
 
-<p class="mb-5"><img class="shadow-lg" src="{{site.baseurl}}/assets/images/mediumish-jekyll-template.png" alt="jekyll template mediumish" /></p>
-<h4>Documentation</h4>
+<p>The name from the blog was inspired from the love I have for the place I belong: Granada, and the love I have for Data Science. As you may have noticed, the footer image is of La Alhambra, as it couldn't be otherwise.</p>
 
-<p>Please, read the docs <a href="https://bootstrapstarter.com/bootstrap-templates/template-mediumish-bootstrap-jekyll/">here</a>.</p>
+<p>About me I can say that I always have many things in mind, but seldom have time to put them in practice. Below is a photo of me surrounded by olives, you cannot see it but behind the camera there was a rally. I hope you enjoy my blog.</p>
 
-<h4>Questions or bug reports?</h4>
+<!-- Image describing the blog -->
+<p class="mb-5"><img class="shadow-lg" src="{{site.baseurl}}/assets/images/about.jpg" alt="jekyll template mediumish" /></p>
 
-<p>Head over to our <a href="https://github.com/wowthemesnet/mediumish-theme-jekyll">Github repository</a>!</p>
 
 </div>
 
 <div class="col-md-4">
 
+<!-- Donation -->
 <div class="sticky-top sticky-top-80">
 <h5>Buy me a coffee</h5>
 
-<p>Thank you for your support! Your donation helps me to maintain and improve <a target="_blank" href="https://github.com/wowthemesnet/mediumish-theme-jekyll">Mediumish <i class="fab fa-github"></i></a>.</p>
+<p>Thank you for your support! Your donation helps me to maintain and improve this blog.</p>
 
-<a target="_blank" href="https://www.wowthemes.net/donate/" class="btn btn-danger">Buy me a coffee</a> <a target="_blank" href="https://bootstrapstarter.com/bootstrap-templates/template-mediumish-bootstrap-jekyll/" class="btn btn-warning">Documentation</a>
+<a target="_blank" href="404.html" class="btn btn-danger">Buy me a coffee</a>
 
 </div>
 </div>
