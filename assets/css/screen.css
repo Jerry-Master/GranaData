@@ -12,6 +12,11 @@ License: https://www.wowthemes.net/freebies-license/
     max-width: 85%;
 }
 
+.center-inputs {
+    display:flex; 
+    justify-content:center;
+}
+
 .inside-container {
     max-width: 100%;
 }

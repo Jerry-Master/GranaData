@@ -7,7 +7,7 @@ favicon: 'assets/images/favicon.ico'
 baseurl: /GranaData
 google_analytics: 'UA-46278016-1'
 disqus: 'demowebsite'
-# mailchimp-list: 'https://wowthemes.us11.list-manage.com/subscribe/post?u=8aeb20a530e124561927d3bd8&amp;id=8c3d2d214b'
+mailchimp-list: 'https://github.us18.list-manage.com/subscribe/post?u=b0e63e3e42776975c7190aee7&amp;id=a0648cb149'
 include: ["_pages"]
 permalink: /:title/
 mode: night
