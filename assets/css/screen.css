@@ -596,7 +596,7 @@ ul.tags li a:hover {
 .alertbar input[type="submit"] {
     background-color: #1C9963;
     border: 1px solid #1C9963;
-    color: rgba(255, 255, 255, 1);
+    color: rgba(255, 255, 255, 1); 
     fill: rgba(255, 255, 255, 1);
     font-size: 0.85rem;
     padding: 4px 10px;
