@@ -22,12 +22,16 @@ jQuery(document).ready(function($){
 
     // alertbar later
     $(document).scroll(function () {
-        var y = $(this).scrollTop();
-        if (y > 280) {
+      if (window.innerWidth >= 999){
+        var y = window.scrollY + window.innerHeight ;
+        if (y > 0.9 * $(document).height()) {
             $('.alertbar').fadeIn();
         } else {
             $('.alertbar').fadeOut();
         }
+      } else {
+        $('.alertbar').fadeIn();
+      }
     });
 
 

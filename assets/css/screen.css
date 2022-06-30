@@ -12,6 +12,11 @@ License: https://www.wowthemes.net/freebies-license/
     max-width: 85%;
 }
 
+.center-inputs {
+    display:flex; 
+    justify-content:center;
+}
+
 .inside-container {
     max-width: 100%;
 }
@@ -580,11 +585,9 @@ ul.tags li a:hover {
 .alertbar input[type="email"] {
     font-size: 0.85rem;
     padding: 3px 5px 3px 10px;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
+    border-radius: 3px;
     border: 1px solid #ddd;
-    border-right: 0;
-    margin-right: -10px;
+    margin-right: 0px;
     height: 34px;
     letter-spacing: 0.5px;
     margin-left: 5px;
@@ -596,14 +599,14 @@ ul.tags li a:hover {
     color: rgba(255, 255, 255, 1);
     fill: rgba(255, 255, 255, 1);
     font-size: 0.85rem;
-    border-radius: 0;
     padding: 4px 10px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
     font-weight: 600;
     height: 34px;
     letter-spacing: 0.5px;
     cursor: pointer;
+    margin-left:15px; 
+    border-radius:20px; 
+    line-height:1.2;
 }
 
 .form-control::-webkit-input-placeholder {
@@ -799,7 +802,7 @@ iframe {
 }
 
 .jumbotron.fortags {
-    margin-top: 3rem;
+    margin-top: 1rem;
     padding: 0;
     border-radius: 0;
     background-image: url(../images/jumbotron.jpg);
