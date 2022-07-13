@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GranaData</title>
+    <description>Data science from Granada to the world.</description>
+    <link>/GranaData/</link>
+    <atom:link href="/GranaData/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 13 Jul 2022 16:56:17 +0000</pubDate>
+    <lastBuildDate>Wed, 13 Jul 2022 16:56:17 +0000</lastBuildDate>
+    <generator>Jekyll v4.2.2</generator>
+    
+      <item>
+        <title>Neural Architecture Search (Part 2)</title>
+        <description>&lt;p&gt;In the previous article we discussed how we can use reinforcement learning to design simple architectures like some types of convolutional neural networks. Today I am bringing to you the explanation on how to design more complex architectures. Before diving into how to modify the controller, let’s introduce another way of thinking about recurrent nertworks. Typically, LSTM and GRU are explained through formulas or diagrams like the one I showed in the previous article. However, in the NAS paper they introduced another way of thinking about them. They used a graph representation in which states are nodes, and the edges represent the way of merging states. For instance, and edge can mean to apply a sigmoid function, another can be summing two hidden states, and so on. Below is a simple example visualized.&lt;/p&gt;
+
+&lt;p class=&quot;text-center&quot;&gt;&lt;img class=&quot;&quot; src=&quot;/GranaData/assets/images/NAS/simple-rnn.png&quot; alt=&quot;simple&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Here the input is &lt;span&gt;$x_t$&lt;/span&gt;, the hidden state from the previous step &lt;span&gt;$h_{t-1}$&lt;/span&gt; and the cell state &lt;span&gt;$c_{t-1}$&lt;/span&gt; which is used as memory. As you can see the states are combined either using multiplication or addition, and then some activation functions are applied. Now, think for a moment how can you represent this same graph in a linear way, as a sequence of operations. You have it? Well, one possible way would be [Add, Tanh, Multiply, ReLU, Multiply, sigmoid, Add, ReLU, 1, 0]. Don’t worry, there are many ways to represent the above graph sequentally, this one is just the one provided by the author of the NAS. To understand it look at the next picture.&lt;/p&gt;
+
+&lt;p class=&quot;text-center&quot;&gt;&lt;img class=&quot;&quot; src=&quot;/GranaData/assets/images/NAS/simple-explained.png&quot; alt=&quot;simple2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Let’s analyze it step by step. As you can see the process is split in 5. The first three are what you see, the way in which to combine &lt;span&gt;$x_t$&lt;/span&gt; and &lt;span&gt;$h_{t-1}$&lt;/span&gt; to produce &lt;span&gt;$h_{t}$&lt;/span&gt;. However, that description is not complete because the cells state can be injected to any tree index. The last two numbers of the sequences indicate when to inject, in this example there is a 1 and a 0, which means that the cell state is injected to the tree index 0 and that the new cell state is the value in tree index 1. And the content of the cell inject part is how you inject the cell state. Let’s recap. Tree index 0 is &lt;span&gt;$a_0 = \text{tanh}(W_1 \cdot x_t + W_2 \cdot h_{t-1})$&lt;/span&gt;, which is located at the right part of the graph above. Tree index 1 is &lt;span&gt;$a_1 = \text{ReLU}(W_3 \cdot x_t \odot W_4 \cdot h_{t-1})$&lt;/span&gt; located at the left. This is the simple part. Now things get complicated, the number at the end tells which tree index to inject the cell state, in this case the 0. So we have to update &lt;span&gt;$a_0$&lt;/span&gt; by &lt;span&gt;$a_0 \leftarrow \text{ReLU}(a_0 + c_{t-1})$&lt;/span&gt;. Note that there are no learnable parameters in this step. Having done that we can now compute tree index 2: &lt;span&gt;$a_2 = \text{sigmoid}( a_0 \odot a_{1})$&lt;/span&gt;. And this is the new hidden state &lt;span&gt;$h_t \leftarrow a_2$&lt;/span&gt;. There is just one thing left, what is the new cell state? The value at tree index 1, which is the number we haven’t used yet. So the new cell state is the value at tree index 1 previous to activation so &lt;span&gt;$c_t \leftarrow W_3 \cdot x_t \odot W_4 \cdot h_{t-1}$&lt;/span&gt;.&lt;/p&gt;
+
+&lt;p&gt;It is a mess at the beginning but once you understand it, is awesome. You can represent any combination by a sequence and so you can learn to generate the optimal sequence. The irony here is that we are using recurrent networks to design recurrent networks. And although the authors didn’t try it, it could be interesting to iterate that process. Use an RNN to design a better RNN, then use that new RNN to design another one and so on. My guess is that it would converge, but who knows, maybe you get an infinitely better network.&lt;/p&gt;
+
+&lt;p&gt;Okay, we have learned a way to represent RNN, so, how does the LSTM look like with this new representation? It looks like this&lt;/p&gt;
+
+&lt;p class=&quot;text-center&quot;&gt;&lt;img class=&quot;&quot; src=&quot;/GranaData/assets/images/NAS/lstm_.png&quot; alt=&quot;lstm&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If you are interested you can go through the graph step by step to check that the formulas are the same.&lt;/p&gt;
+
+&lt;p&gt;Finally, the moment we were all expecting, the new and better Recurrent cell found by the authors of the NAS, the so-called NASCell (you can find it in tensorflow with that name).&lt;/p&gt;
+
+&lt;p class=&quot;text-center&quot;&gt;&lt;img class=&quot;&quot; src=&quot;/GranaData/assets/images/NAS/nascell.png&quot; alt=&quot;nascell&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In order to find it the authors required a lot of computation. This RNN is supposed to be better at language tasks than the normal LSTM. However, since this article came before big transformers were made, this recurrent cell got forgotten after that, and didn’t get much attention. Nevertheless, it is interesting to know that there are many possible RNN, not only the LSTM and the GRU. So the next time you want to try a simple RNN instead of a big transformer, you can think of using the NASCell.&lt;/p&gt;
+
+&lt;p&gt;If you liked this, then you are going the enjoy the last part of this series. In the next and last chapter I will be explaining another modification of the controller to include residual connections. Making the controller capable of designing architectures such as ResNet or EfficienNet. Stay tuned!&lt;/p&gt;
+</description>
+        <pubDate>Wed, 13 Jul 2022 00:00:00 +0000</pubDate>
+        <link>/GranaData/NAS-parte2/</link>
+        <guid isPermaLink="true">/GranaData/NAS-parte2/</guid>
+        
+        
+        <category>Deep Learning</category>
+        
+        <category>Reinforcement Learning</category>
+        
+        <category>Supervised Learning</category>
+        
+        <category>Happy Ideas</category>
+        
+      </item>
+    
+      <item>
+        <title>Neural Architecture Search</title>
+        <description>&lt;p&gt;Today we are going to dive into an idea that some may fear, and others may praise: AI training itself. Well, in reality the idea is a bit different from an AI training itself, neural architecture search consists of using a network to design other networks in a similar way a human would do it, but automatically. The process can be described as follows.&lt;/p&gt;
+
+&lt;p class=&quot;text-center&quot;&gt;&lt;img class=&quot;shadow&quot; src=&quot;/GranaData/assets/images/NAS/overview.png&quot; alt=&quot;overview&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The blue box is the network we want, it can be a Convolutional Neural Network to classify images, or a recurrent neural network to do sentiment analysis. On the other side, the red box is the network that is going to design the solution to our problem for us. However, the controller is not going to output the full code solving your problem, it is not so smart. Instead, it is going to generate the hyperparameters of your network, they can be the filter size, the number of channels of your convolutional layers, or the number of layers of your LSTM, I’ll talk in more details later which hyperparameters can be predicted.&lt;/p&gt;
+
+&lt;p&gt;But first, how are we going to train the controller? Because training the supervised model is easy, you throw some data to it and apply gradient descent. However, the controller is not a supervised model. There is no data about the hyperparameters and there is no loss function between the values it gives and the optimal values because, of course, we don’t know the optimal values. Nevertheless, we do have a reward function: the accuracy of the child network. And so we can apply the reinforcement learning paradigm. There is still one problem, the accuracy is a reward function, but it is not differentiable, and we don’t know how it relates to the hyperparameters so it seems that we cannot compute the gradient, and therefore, we can’t apply gradient descent. The currently used solution for that problem was invented by &lt;a href=&quot;https://link.springer.com/article/10.1007/BF00992696&quot;&gt;Williams&lt;/a&gt; in 1992, they derived the following formula for the gradient:&lt;/p&gt;
+&lt;div&gt;
+$$
+  \nabla_{\theta_c} J(\theta_c) = \sum_{t=1}^T \mathbb{E}_{P(a_{1:T};\theta_c)}[\nabla_{\theta_c}(\log(P(a_t|a_{(t-1):1};\theta_c)))\cdot R]
+$$
+&lt;/div&gt;
+
+&lt;p&gt;That formula deserves its own post, but for now just bear in mind this is the gradient used to train the controller. The process is fairly simple, withdraw an architecture from the controller, train the architecture in a supervised manner and get a validation accuracy. Use that accuracy as reward and train the controller using the above gradient. Repeat suficiently many times and voilà, your controller has learnt to design architectures. The process is illustrated below. Several controllers are trained in parallel due to the high number of attempts the controller needs in order to achieve good performance. Remember, the controller is learning by try and error.&lt;/p&gt;
+
+&lt;p class=&quot;text-center&quot;&gt;&lt;img class=&quot;shadow&quot; src=&quot;/GranaData/assets/images/NAS/training.png&quot; alt=&quot;training&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now, the details. What is the controller, exactly? In the original paper it was an LSTM, however, any architecture valid for correlated data can be used, like a transformer. But, the NAS article was published the same year as the transformer paper, so they could only try the LSTM because there was no transformer at the time. More precisely, this is the scheme they present in their paper:&lt;/p&gt;
+
+&lt;p class=&quot;text-center&quot;&gt;&lt;img class=&quot;shadow&quot; src=&quot;/GranaData/assets/images/NAS/controller.png&quot; alt=&quot;controller&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see the controller is predicting very simple parameters, the parameters of a CNN that we normally ignore and use by default. But don’t be fooled by its simplicity, it can get quite complex. Imagine we want to design a recurrent neural network, similar to the LSTM or the GRU. There are hidden states and hidden memory cells but, what are the connections? For the LSTM the connections are the ones shown below.&lt;/p&gt;
+
+&lt;p class=&quot;text-center&quot;&gt;&lt;img class=&quot;shadow&quot; src=&quot;/GranaData/assets/images/NAS/lstm.png&quot; alt=&quot;lstm&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;So think about all those arrows, what if I told you that with neural architecture search we can learn which arrows are the optimal? If you want to know how, wait for the next part in this series.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 12 Jul 2022 00:00:00 +0000</pubDate>
+        <link>/GranaData/NAS/</link>
+        <guid isPermaLink="true">/GranaData/NAS/</guid>
+        
+        
+        <category>Deep Learning</category>
+        
+        <category>Reinforcement Learning</category>
+        
+        <category>Supervised Learning</category>
+        
+        <category>Happy Ideas</category>
+        
+      </item>
+    
+      <item>
+        <title>The buddhist pace</title>
+        <description>&lt;p&gt;This is a story I read years ago from Reddit that has guided me through most parts of my life and whenever I want to engage in more that I can handle I remember it and calm myself down. The original story is lost, so I can only give to you my memory of it.&lt;/p&gt;
+
+&lt;p&gt;The story is about several hikers in what could possibly be their longest journey. One day they are challenged by a misterious man to complete a walk. They are told that the first one to arrive at the finish line will receive a generous prize. However, they won’t know where exactly is the finish line, their only tool will be a compass specially designed to point to the end and nothing else. No length is provided, no unevenness, and of course, no map.&lt;/p&gt;
+
+&lt;p class=&quot;text-center&quot;&gt;&lt;img class=&quot;shadow&quot; src=&quot;/GranaData/assets/images/compass.jpg&quot; alt=&quot;compass&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The hikers, confident on their experience and physical shape, started as fast as they could, some of them even running at the beginning. All except one, they called him the buddhist. He set himself a different pace, instead of going as fast as he could, he decided to go as fast as he could maintain indefinitely, which is a very different pace. He asked to himself: how long could I stay going at this velocity? If the answer was not forever, then it was too fast. But he also posed to himself another question: can I go faster? That way he set his pace, the buddhist pace, and mantained it.&lt;/p&gt;
+
+&lt;p&gt;At the beginning the other hikers overtook the buddhist since they were almost running, like if they were in a marathon. But it was not a marathon, it was a different kind of race. With that in mind the buddhist forgot about the others and simply continued his way at the velocity he decided. The days passed and the buddhist didn’t meet the other hikers, they have taken a big advantage, but nonetheless he remained still, constant, and with the same pace always, with no rest but without accelerating himself, always the same speed.&lt;/p&gt;
+
+&lt;p&gt;The race continued and the days passed, a week after it has started the buddhist finally met the other hikers. To his surprise, they were exhausted and walking really slow. After a week going so fast they had consumed all their batteries and were left with no energy. The buddhist looked at them, fresher than a lettuce, and continued. Now it was him the one overtaking the others. They were also astonished. The buddhist started so slow and they started so fast, how is it that he is here overtaking us and we can no longer compete with him? ‘In the long run, being constant is better than sprinting.’ The buddhist answered. The others couldn’t help themselves but assume that the victory was for the buddhist.&lt;/p&gt;
+
+&lt;p class=&quot;text-center&quot;&gt;&lt;img class=&quot;shadow&quot; src=&quot;/GranaData/assets/images/finish.jpg&quot; alt=&quot;compass&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;What is remarkable about this story is that it is a good metaphor of life. You never know when it is going to end and you have to keep improving without losing its way. Sometimes you feel the urge to accelarate. For instance, the summer comes and you want to be in good shape so you start exercising as much as you can and begin a very restrictive diet. At first you will see benefits very fast (like the other hikers) but then you will be exhausted and find very difficult to continue the rythm. On the other hand, if you keep an exercise routine which is not so demanding, but you maintain it always, then, in some years you’ll be in perfect shape. More importantly, you will be able to maintain the shape without effort, as the buddhist maintained its pace.&lt;/p&gt;
+
+&lt;p&gt;For me this story is a guide on my career, my philosophy. Researching can be really rewarding when it is successful, but in data science you never know when it is going to be a success. Even expert researchers have to experiment a lot to find the architecture that works. Although you may have some intuition, some compass, you ignore where the finish line is. Whenever I want to spend more hours fine-tuning a model, or coding a different architecture, or reading extra articles, I remember the buddhist and stop. More days will come. It is better to be constant than to engage in many things and then getting exhausted. As the buddhist would say: ‘set a pace, and maintain that pace’.&lt;/p&gt;
+</description>
+        <pubDate>Sun, 26 Jun 2022 00:00:00 +0000</pubDate>
+        <link>/GranaData/the-buddhist-pace/</link>
+        <guid isPermaLink="true">/GranaData/the-buddhist-pace/</guid>
+        
+        
+        <category>Stories</category>
+        
+        <category>Philosophy</category>
+        
+      </item>
+    
+  </channel>
+</rss>
