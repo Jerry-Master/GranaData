@@ -245,6 +245,10 @@ span.post-read {
     color: rgba(0, 0, 0, .44);
 }
 
+span.post-date a{
+    color: rgba(0, 0, 0, .44);
+}
+
 span.post-read-more {
     align-items: center;
     display: inline-block;
@@ -545,6 +549,17 @@ ul.tags li a:hover {
     padding: 3px 10px;
     text-align: center;
     border-radius: 999em;
+    font-size: 0.85rem;
+    display: inline-block;
+}
+
+.btn.readtime {
+    border-color: #000;
+    color: #1C9963;
+    padding: 3px 10px;
+    text-align: right;
+    border-radius: 999em;
+    border-width: 2px;
     font-size: 0.85rem;
     display: inline-block;
 }

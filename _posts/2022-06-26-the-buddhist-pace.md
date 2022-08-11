@@ -9,6 +9,7 @@ comments: false
 share: false
 image: assets/images/buddha.jpeg
 image_post: false
+time_read: 3
 ---
 
 This is a story I read years ago from Reddit that has guided me through most parts of my life and whenever I want to engage in more that I can handle I remember it and calm myself down. The original story is lost, so I can only give to you my memory of it.

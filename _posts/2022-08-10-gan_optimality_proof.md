@@ -2,13 +2,14 @@
 layout: post
 title:  "GAN optimality proof"
 author: jose
-categories: [ GAN, Theory ]
+categories: [ GAN, Theory, unsupervised learning ]
 featured: false
 hidden: false
 comments: false
 share: false
 use_math: true
 image: assets/images/GAN/gan-cat.png
+time_read: 15
 ---
 
 The so-called Generative Adversarial Networks have been with us since 2014, producing amazing results lately. Today I am bringing the proof of why they work. That is, a proof that states GANs are optimal in the limit when no parametric model is taken into account. But first, what is a GAN and what "amazing results" am I talking about?
