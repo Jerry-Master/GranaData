@@ -8,7 +8,7 @@ hidden: false
 comments: false
 share: false
 image: assets/images/StableDiffusion/SDImage.png
-use_math: false
+use_math: true
 time_read: 10
 ---
 
