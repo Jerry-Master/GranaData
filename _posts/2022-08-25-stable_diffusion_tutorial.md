@@ -44,9 +44,13 @@ Enter any name you like, I will use StableDiffusion for obvious reasons. You can
 
 <p class="text-center"><img class="shadow" src="{{site.baseurl}}/assets/images/StableDiffusion/HFToken2.png" alt="Token HF page 2" /></p>
 
-And you should end up with something like this. Copy the token and let's go to Kaggle.
+And you should end up with something like this. Copy the token and save it for later use in Kaggle.
 
 <p class="text-center"><img class="shadow" src="{{site.baseurl}}/assets/images/StableDiffusion/HFToken3.png" alt="Token HF page 3" /></p>
+
+Before you can use this token, you need to agree to the terms and conditions of the Stable Diffusion model. Go to the page [https://huggingface.co/CompVis/stable-diffusion-v1-4](https://huggingface.co/CompVis/stable-diffusion-v1-4), access the repository and accept the terms and conditions. If you cannot see the tick box, you just need to log in.
+
+<p class="text-center"><img class="shadow" src="{{site.baseurl}}/assets/images/StableDiffusion/access.png" alt="Terms" /></p>
 
 Same process, to create your account go to [https://www.kaggle.com/](https://www.kaggle.com/) and register yourself. 
 
@@ -62,11 +66,11 @@ Once you are logged in, we can start generating images. I have created a noteboo
 
 <p class="text-center"><img class="shadow" src="{{site.baseurl}}/assets/images/StableDiffusion/kaggleSD2.png" alt="Kaggle SD notebook 2" /></p>
 
-Ok, if it is your first time at kaggle there are a few things to explain before running the notebook. Once you are inside the notebook editor, to start the notebook you have to click the On button, but first you need to make sure the GPU is enabled. To do this, click the bottom right arrow.
+Ok, if it is your first time at kaggle there are a few things to explain before running the notebook. Once you are inside the notebook editor, to start the notebook you have to click the On button, but first you need to make sure the GPU is enabled and that the internet is enabled too. To do this, click the bottom right arrow.
 
 <p class="text-center"><img class="shadow" src="{{site.baseurl}}/assets/images/StableDiffusion/notebook.png" alt="notebook" /></p>
 
-You should see this
+You should see this, 
 
 <p class="text-center"><img class="shadow" src="{{site.baseurl}}/assets/images/StableDiffusion/notebook2.png" alt="notebook 2" /></p>
 
