@@ -75,4 +75,4 @@ The acronyms means [Kullback-Leibler divergence](https://en.wikipedia.org/wiki/K
 
 We are almost finished, there is a property of the JSD that states it is a nonnegative value, being zero if and only if both distributions are equal. That property translates into $C(G) \ge -\log(4)$ with equality if and only if $p_{data} = p_g$ exactly as desired. Magic, isn't it?
 
-Unfortunately, this theorem only states that the optimal generator exists but it doesn't give a way of finding it. In my next post on the GANs series I will show the proof of convergence for the algorithm also proposed by Ian Goodfellow which proves that such generators can be found, at least in theory.
+Unfortunately, this theorem only states that the optimal generator exists but it doesn't give a way of finding it. In my [next post]({{site.baseurl}}/gan-convergence-proof){:target="_blank"} on the GANs series I will show the proof of convergence for the algorithm also proposed by Ian Goodfellow which proves that such generators can be found, at least in theory.

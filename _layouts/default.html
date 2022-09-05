@@ -19,7 +19,10 @@
 <script src="{{ site.baseurl }}/assets/js/jquery.min.js"></script>
 
 {% if page.use_math %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
 {% include mathjax_support.html %}
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/h-hg/docsify-pseudocode/dist/docsify-pseudocode.min.js"></script>
 {% endif %}
 
 </head>
@@ -43,6 +46,25 @@ ga('send', 'pageview');
 		<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 	</noscript>
+
+    {% if page.use_math %}
+    <script>
+        window.$docsify = {
+    pseudocode: {
+        indentSize: '1.2em',
+        commentDelimiter: '//',
+        lineNumber: false,
+        lineNumberPunc: ':',
+        noEnd: false,
+        titlePrefix: 'Algorithm'
+    }
+    }
+    </script>
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/h-hg/docsify-pseudocode/dist/docsify-pseudocode.min.js"></script>
+    {% endif %}
 	
 
 
