@@ -8,6 +8,8 @@ License: https://www.wowthemes.net/freebies-license/
     .container {max-width:80%;}
 }
 
+.inlined { display:inline; }
+
 .container {
     max-width: 85%;
 }

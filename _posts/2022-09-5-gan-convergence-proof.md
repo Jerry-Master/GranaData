@@ -8,6 +8,7 @@ hidden: false
 comments: false
 share: false
 use_math: true
+pseudocode: true
 image: assets/images/GAN/gan-cat2.png
 time_read: 16
 ---
