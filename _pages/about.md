@@ -30,7 +30,7 @@ comments: false
 
 <p>Thank you for your support! Your donation helps me to maintain and improve this blog.</p>
 
-<a target="_blank" href="404.html" class="btn btn-danger">Buy me a coffee</a>
+<a target="_blank" href="https://patreon.com/granadata?utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=creatorshare_creator" class="btn btn-danger">Buy me a coffee</a>
 
 </div>
 </div>
