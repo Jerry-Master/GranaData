@@ -5,7 +5,7 @@ description: "Data science from Granada to the world."
 logo: 'assets/images/logo.png'
 favicon: 'assets/images/favicon.ico'
 url: https://jerry-master.github.io
-baseurl: /GranaData
+baseurl: 
 google_analytics: 'UA-46278016-1'
 disqus: 'demowebsite'
 mailchimp-list: 'https://github.us18.list-manage.com/subscribe/post?u=b0e63e3e42776975c7190aee7&amp;id=a0648cb149'
