@@ -379,5 +379,5 @@ The {% ihighlight python %}err_change{% endihighlight %} variable is for adding 
 
 # Conclusion
 
-In this post we have seen how to properly design a HMM for following the result of a padel match. We have learnt to use the NetworkX library to create the graphs and the Gephi program to visualize the process. In the next post of this series we will learn how to actually test wether the HMM works. Stay tuned.
+In this post we have seen how to properly design a HMM for following the result of a padel match. We have learnt to use the NetworkX library to create the graphs and the Gephi program to visualize the process. In the [next post]({{site.baseurl}}/HMM-padel-part3){:target="_blank"} of this series we will learn how to actually test whether the HMM works. Stay tuned.
 
