@@ -71,7 +71,7 @@ We now have found the optimal discrimator so we can now compute the value functi
 \end{align*}
 $$</div>
 
-The acronyms means [Kullback-Leibler divergence](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence) and [Jensen-Shannon divergence](https://en.wikipedia.org/wiki/Jensen%E2%80%93Shannon_divergence). For a more in-depth explanation of this rearrangment you can look at this [great post](https://srome.github.io/An-Annotated-Proof-of-Generative-Adversarial-Networks-with-Implementation-Notes/).
+The acronyms means [Kullback-Leibler divergence](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence) and [Jensen-Shannon divergence](https://en.wikipedia.org/wiki/Jensen%E2%80%93Shannon_divergence). For a more in-depth explanation of this rearrangement you can look at this [great post](https://srome.github.io/An-Annotated-Proof-of-Generative-Adversarial-Networks-with-Implementation-Notes/).
 
 We are almost finished, there is a property of the JSD that states it is a nonnegative value, being zero if and only if both distributions are equal. That property translates into $C(G) \ge -\log(4)$ with equality if and only if $p_{data} = p_g$ exactly as desired. Magic, isn't it?
 

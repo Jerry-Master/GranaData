@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Stable Diffusion Tutorial"
+title:  "Stable Diffusion Tutorial (Deprecated)"
 author: jose
 categories: [ Tutorial ]
 featured: false
