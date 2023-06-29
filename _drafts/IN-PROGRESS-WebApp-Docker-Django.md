@@ -15,10 +15,10 @@ time_read: -1
 Following the philosophy of my blog, this will be a very specific post. You can find many resources on the internet about how to deploy a web app.
 I will even be referencing many of those here. But the main difference with those posts is that mine is going to be straight to the point.
 The following is a tutorial on how to create a web app from scratch. The backend will be on Django and the database will be Postgresql.
-The app will be running on AWS and to deploy it there we will create a Docker image. Last but not least, I'll explain how to buy a domain and link the domain to the AWS ip address. Let's get ours hands dirty!
+The app will be running on AWS and to deploy it there we will create a Docker image. Last but not least, I'll explain how to buy a domain and link the domain to the AWS ip address. Let's get ours hands dirty! Also, don't worry about the code, it is all available [here](https://github.com/Jerry-Master/GranaData/tree/main/_code/django_docker_aws){:target="_blank"}.
 
 
-## Django and Postgresql
+# Django and Postgresql
 
 Let's start by creating a minimal python environment with just Django. You can do it either via python or conda. For reproducibility, please use python3.10 and Django 4.2.2. Open a terminal and run the following:
 
@@ -36,7 +36,7 @@ conda activate .venv
 pip install django==4.2.2 psycopg2-binary
 ```
 
-### Postgresql server setup
+## Postgresql server setup
 
 The next step is to create a prosgresql server. To install postgresql go to the [official page](https://www.postgresql.org/download/){:target="_blank"}. Once installed, you need to start running the server on your system:
 
@@ -60,7 +60,7 @@ postgres=# exit;
 
 The commands are self-explanatory, just replace `mydatabase`, `myuser` and `mypassword` with what you deem appropiate. Now you have the database ready to use locally, you can connect to it using any database management system you want, I recommend [Dbeaver](https://dbeaver.io/download/){:target="_blank"}. The connection is through localhost and port 5432. Later on we will see how to automate this process but for now, this is how it is done locally.
 
-### Django webapp setup
+## Django webapp setup
 
 Given the database, we need a web on top. With the python environment activated, run the following using any name you want:
 
@@ -225,14 +225,116 @@ Open a browser, go to `http://127.0.0.1:8000/simpleapp/create_user/` and you wil
 pg_ctl -D /usr/local/var/postgres stop
 ```
 
-## Docker
+# Docker
+
+Setting everything from scratch is time consuming but if you only need to do it once, it is affordable. The problem comes when you want to migrate to other machines or you want to scale. Having to go through all the process above everytime is annoying. As I mentioned before, it would be nice to automate it. That's when Docker comes into play. It is a way to pack everything up so that it can run on your machine, the cloud or a microwave, if it has Docker installed, of course. A Docker is basically made of a few configuration files that are used to construct an image that does whatever you want, in our case handle data through a web app. Having introduced the concept, let's build a Docker for our web app.
+
+This section is mostly inspired by [this other tutorial](https://learndjango.com/tutorials/django-docker-and-postgresql-tutorial){:target="_blank"}. Hand over there if you feel curious. Also, I recommend you giving a look at the [official Docker beginner tutorial](https://docker-curriculum.com/){:target="_blank"} for more information on how to set up Docker and the basics of it.
+
+To start, create a Dockerfile inside of the Django project directory. Specify the following information on it:
+
+```dockerfile
+FROM python:3.10.2-slim-bullseye
+
+WORKDIR /code
+
+COPY . .
+RUN pip install -r requirements.txt
+```
+
+You also need to create a `requirements.txt` with this:
+
+```txt
+django==4.2.2
+psycopg2-binary
+```
+
+You could simply install it with pip, but when the project grows you will be thankfull to have it all in a `requirements.txt` file. So, that's the container of the webapp. Simple, right? However, we still need to connect it to a posgres database. For that we need to use docker compose to run another container with the database and connect them. For that, create a `docker-compose.yml` file with the following:
+
+```txt
+version: "3.9"
+
+services:
+  web:
+    build: .
+    command: sh start.sh
+    environment:
+      - DB_PASSWORD
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:14
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: pg_isready -U myuser -d mydatabase
+      interval: 1s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+```
+
+You will need to substiture `myuser` and `mydatabase` with what you like most. To explain a bit what is happening here, we are running a postgres container, then performing healthy checks to be sure the database is running and after that we launch the webapp container. You could provide the password also there, but for security reasons is better to provide it through an environment variable, just like before. The database is stored in the folder `postgres_data` locally, so that whenever you kill the container you don't lose the data. The port 5432 is forwarded locally so you can connect to the database from your machine when the container is running and see the data.
+
+Wait! We have not finished yet. We need to create the `start.sh` and modify the `myprojectname/settings.py` file. The `DATABASES` variable should look like this:
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mydatabase',
+        'USER': 'myuser',
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': 'db',
+        'PORT': '5432',
+    }
+}
+```
+
+The only change is on `HOST`. It is now set up to `db` which is the name of the posgres container. And the `start.sh` script is the following:
+
+```python
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver 0.0.0.0:8000
+```
+
+It is creating all the migrations needed to set up all the models from Django into postgres. Finally, just run the container:
+
+```bash
+docker compose up
+```
+
+To stop it, do `ctrl+C` and then `docker compose rm`. That's it, that's all you need to do to restart your webapp from anywhere. You can now take your code to any machine and you won't need to set up posgres, python and django from scratch. Just install docker and run `docker compose up`. Also, it is a good practice to include a `.dockerignore`, just like `.gitignore`. For this simple app I have
+
+```txt
+postgres_data/
+Dockerfile
+docker-compose.yml
+*/__pycache__/
+*/*/__pycache__/
+*/*/*/__pycache__/
+```
+
+This way I don't load any unnecessary files to the container, making it faster. So now that we have everything packed up in our bag, let's travel. Let's deploy the web to AWS for others to use it.
+
+# AWS
+
+## Account and IAM roles
+
+## ECS cluster setup
 
 
-## AWS
-
-### Account and IAM roles
-
-### ECS cluster setup
-
-
-## Web Domain
+# Web Domain

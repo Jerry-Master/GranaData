@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': 'webapp',
         'USER': 'jose',
         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
