@@ -8,8 +8,8 @@ hidden: false
 comments: false
 share: false
 use_math: false
-image: null
-time_read: -1
+image: assets/images/aws-logo.png
+time_read: 35
 ---
 
 Following the philosophy of my blog, this will be a very specific post. You can find many resources on the internet about how to deploy a web app.
@@ -447,3 +447,7 @@ Let's see how we can access the server database locally. Open you favourite DB p
 # Web Domain
 
 Nice, we have our fantastic webapp up and running, but wait, are you going to share to your friends the page 50.283.48.100? Obviously not, you need a fancy domain like myawesomepage.com or something that describes your project. To achieve that you need to first buy a domain and then link that domain to your IP. Domains that are not on high demand typically cost around 10$ to 20$. You can buy them on [Namecheap](https://www.namecheap.com/){:target="_blank"}. Once you have it you need to do several things on the AWS side. You will need to fix the IP so that it doesn't change, otherwise the DNS redirection will get broken over time. After that you need to create nameservers and then route your domain to that IP. Let's go step by step. To fix the IP go to the section Elastic IP in the left bar of the EC2 menu. Create such Elastic IP and then, in actions, associate it to your instance. Once you have done that, you will need to create the hosted zone. For that, search in AWS the Route 53 service. Once there, click on Create hosted zone. Insert your domain and create it. Before we continue, two more records need to be created. Create one with Type A and your previous Elastic IP under the value section, everything else as default. Repeat now but add 'www' in subdomain so that your page can be accessed either by its domain or adding www at the beginning. Once you have done that, go to your domain on Namecheap and click on manage. Select custom DNS and enter the four nameservers that were created previously. If you didn't understand something, you can check the tutorials I followed both for [the AWS](https://techgenix.com/namecheap-aws-ec2-linux/){:target="_blank"} and [Namecheap part](https://www.namecheap.com/support/knowledgebase/article.aspx/10371/2208/how-do-i-link-my-domain-to-amazon-web-services/){:target="_blank"}. DNS redirection may take up to 48 hours. There is one last thing to modify, remember that you need to include the IP in `ALLOWED_HOSTS`? Well, you also need to include your domain there. Change that and you will have your marvelous webpage running.
+
+# Conclusion
+
+Congratulations! You have managed to reach to the end of this tutorial. If you followed the steps carefully you now know how to create your own web apps. The first time you do it is quite tiresome, but once you know how to do it you can get your millionaire idea up and running at the moment. Let's recap. First, you need to create your Django app. Then, you create a Docker to launch it easily. After that, you create an AWS instance and deploy your app there. Finally, you link your domain to the instance IP. Once you are done you can enjoy your creation!
