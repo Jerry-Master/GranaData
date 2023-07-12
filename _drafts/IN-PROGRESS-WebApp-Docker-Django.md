@@ -252,7 +252,7 @@ psycopg2-binary
 You could simply install it with pip, but when the project grows you will be thankfull to have it all in a `requirements.txt` file. So, that's the container of the webapp. Simple, right? However, we still need to connect it to a posgres database. For that we need to use docker compose to run another container with the database and connect them. For that, create a `docker-compose.yml` file with the following:
 
 ```txt
-version: "3.9"
+version: "3"
 
 services:
   web:
@@ -332,9 +332,118 @@ This way I don't load any unnecessary files to the container, making it faster. 
 
 # AWS
 
+Amazon Web Services are a way to deploy your code into servers that you don't need to manage. This way instead of the cost of setting up a whole server, you just pay for the hours used. Nevertheless, you won't save yourself the cost of configuring everything. Even though configuring AWS may be simpler than configuring a server, it is still an important investment of time. For that, I will provide here the bare minimum to make our webapp work on AWS. You will still need to read the AWS docs extensively, there are many tutorials online, but Amazon keeps changing the interface every so often. The only web that is for sure updated is the [AWS official docs page](https://docs.aws.amazon.com/){:target="_blank"}.
+
 ## Account and IAM roles
 
-## ECS cluster setup
+Before we can start configuring the server, we need to configure an account. For that you will need access keys. You can create access keys for you root account but it is not recommended. AWS recommends that you create role with less permissions than your root account (specially without billing permissions) and to use those access keys. In the past this was made using the Identity and Access Management (IAM) app. Now, it is being migrated to IAM Identity Center. Both methods still work as of this writing but I will explain the second one which is more updated. The following is a reduced version of [this](https://docs.aws.amazon.com/singlesignon/latest/userguide/getting-started.html){:_target="_blank"}. Go to the [AWS console](https://console.aws.amazon.com/){:_target="_blank"}. There look for the IAM Identity Center. Once on the IAM Identity Center you will need to create an user, create a permission set and link both. In the section User click to Add User and fill the neccesary information. Then, on permission sets, click on Create permission set and create the predefined role AdministratorAccess. After that, go to AWS accounts, select the account under root and click Assign users or groups. Select your created user, click next, select the role, click next, review it and click submit. Finally, to activate that user, you must open the mail you provided and register that user with some password. Before you continue, go to Dashboard and save your AWS access portal URL, that is the URL you need to use to log in with that user. Now, click that URL and sign in. Once you are logged in you should see your user and two links at the right: one for Management console and one for Command line or programatic access. Click the latter and you will see your access keys.
 
+The next step is to install and configure the AWS CLI. Go [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html){:target="_blank"} and follow the steps for the installation. Once installed execute `aws configure` and provide the access key and secret access key obtained previously. It will also ask for a region, I will be using `us-east-1`. If you choose a different one you may encounter problems later on because the free tiers differ across regions. And for the output format choose `json`. You are now (almost) ready to start launching instances.
+
+
+## EC2 Instances
+
+Having created our account it is time to create an instance where to deploy our webapp. If your page gets too large you may be interested in storing the database in S3 buckets, but for now I will store code and data in the same instance. You can find the docs for EC2 [here](https://docs.aws.amazon.com/ec2/index.html){:target="_blank"}. As before, I will summarize it to just use what we need. First, create the instance. For that go to the [EC2 console](https://us-east-1.console.aws.amazon.com/ec2){:target="_blank"}. Under Instances section, click Launch instances. There give it a name, select the OS and arch (I recommend Ubuntu and x86-64), select the instance type (I will be using t2.micro cuase it is free), select a key-pair or create since you probably don't have one and leave everything as default. Once you launched it you can now access your machine through ssh. In the instances section, you can click on your created instance and then click on Connect and it will give you instructions on how to connect. The next steps are to install Docker, copy your webapp to the instance, change the firewall of the instance to allow http and postgres traffic and finally deploy the app. 
+
+### Installing Docker (again)
+
+If you have chosen Ubuntu as your OS you can follow the instructions [here](https://docs.docker.com/engine/install/ubuntu/){:target="_blank"}. You just basically need to execute the following commands after accessing the machine:
+
+```bash
+sudo apt-get update -y
+sudo apt-get install ca-certificates curl gnupg -y
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update -y
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+```
+
+And if you want to check that everything is working just do
+
+```bash
+sudo docker run hello-world
+```
+
+### Upload your code to EC2
+
+You can copy your entire directory recursively into you EC2 instance with scp:
+
+```bash
+scp -r -i YOUR_KEY ./* ubuntu@YOUR_EC2_ADDRESS:.
+```
+
+`YOUR_KEY` is the key pair previously created and `YOUR_EC2_ADDRESS` may look something like `ec2-30-29-46-221.compute-1.amazonaws.com`. It is the same address that you use to ssh into your machine.
+
+### Changing the firewall
+
+In AWS, the instances have some security rules that control the inbound and outbound traffic of your app. By default all the ports are closed except for 22 which is the ssh port. We will need to open the port 80 and 5432 since they are the http and postgres ports. If you have an SSL certificate you could open the port 443 for https, but we will just use those two for now. Let's go back to the [EC2 console](https://us-east-1.console.aws.amazon.com/ec2){:target="_blank"} and go to Security Groups. Click on Create security group. Give it a name and add two inbound rules. You can just select HTTP and Postgresql in the dropdown menu and it will set the port for you automatically. Then, on source, select Anywhere IPv4 and click Create security group. Now go back to your created instance and click Actions > Security > Change security groups. There simply add the newly created security group and you are free to go.
+
+## Deploy the app
+
+In order to deploy our app we need to make one change to our `docker-compose.yml`. Initially we were redirecting port 8000 into 8000, we are now going to redirect it to 80 which the http port. The line to change will end up like this
+
+```txt
+ports:
+  - 80:8000
+```
+
+Finally, ssh into your machine with docker installed and execute
+
+```bash
+sudo DB_PASSWORD=... docker compose up -d
+```
+
+Remember that you have to specify the password of the database as a environment variable. Okay, the app is running but, how can we access it? Well, we cannot. We still need to make some changes. Stop the container and let's finish this:
+
+```bash
+sudo DB_PASSWORD=... docker compose down
+```
+
+The first thing to notice is what is the IP that we can use to acces this page. In the AWS console, when you enter your instance it displays somewhere "Public IPv4 address". That is the IP of your app. However, if you where to enter there, Django will not let you in. That is because you need to allow that host. For that, go the `setting.py` of your app and add it:
+
+```python
+ALLOWED_HOSTS = ['YOUR_IP']
+```
+
+Also, even after changing this, when you access your ip you don't see the page. That is because the base url is not pointing anywhere, but we can fix that. Create a view that only has the redirection:
+
+```python
+from django.shortcuts import redirect
+
+def redirect_to_create_user(request):
+    return redirect('/simpleapp/create_user')
+```
+
+Then, in your main `urls.py` add `path('', redirect_to_create_user)`, it will end up like this:
+
+```python
+from django.contrib import admin
+from django.urls import path
+from django.urls import include
+from .views import redirect_to_create_user
+
+urlpatterns = [
+    path('', redirect_to_create_user),
+    path('admin/', admin.site.urls),
+    path('simpleapp/', include('simpleapp.urls')),
+]
+```
+
+Now, copy again all the files into your machine and deploy the webapp:
+
+```bash
+sudo DB_PASSWORD=... docker compose up -d
+```
+
+### Accessing the DataBase
+
+Let's see how we can access the server database locally. Open you favourite DB program (mine is DBeaver) and create a new connection. This time you will have to provide an URL instead of localhost. Everythin else is the same as when you did it locally. The port is 5432, the user is what your gave it, and the database name is what you name it. If you have configured properly the EC2 security group you could now access your database locally.
 
 # Web Domain
+
+Nice, we have our fantastic webapp up and running, but wait, are going to share to your friends the page 50.283.48.100? Obviously not, you need a fancy domain like myawesomepage.com or something that describes your project. To achieve that you need to first buy a domain and then link that domain to your IP. Domains that are not in high demand typically cost around 10$ to 20$. 

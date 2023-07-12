@@ -17,8 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
+from .views import redirect_to_create_user
 
 urlpatterns = [
+    path('', redirect_to_create_user),
     path('admin/', admin.site.urls),
     path('simpleapp/', include('simpleapp.urls')),
 ]
