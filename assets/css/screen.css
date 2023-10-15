@@ -999,3 +999,18 @@ iframe {
     font-weight: bold;
     font-style: normal;
 }
+
+
+.image-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px; /* Adjust this value if you want more or less spacing between images */
+    justify-content: center;
+    align-items: center;
+}
+
+.image-container img {
+    max-width: 100%; /* This ensures the image doesn't overflow its container */
+    display: block;  /* Removes any unwanted space below the image */
+    margin: 0 auto;  /* Centers the image if it's narrower than its container */
+}
