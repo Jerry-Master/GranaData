@@ -3,7 +3,6 @@ layout: post
 title:  "How to make a full audiobook with AI tools."
 author: jose
 categories: [ Stories, Tutorial, AI ]
-tags: [ AI ]
 featured: false
 hidden: false
 comments: false

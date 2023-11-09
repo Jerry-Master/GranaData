@@ -2,7 +2,7 @@
 layout: post
 title:  "GAN convergence proof"
 author: jose
-categories: [ GAN, Theory, unsupervised learning ]
+categories: [ GAN, Theory, unsupervised learning, Deep Learning ]
 featured: false
 hidden: false
 comments: false
