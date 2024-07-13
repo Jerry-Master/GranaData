@@ -8,6 +8,7 @@ featured: false
 hidden: false
 comments: false
 share: false
+use_math: true
 ---
 
 Uno de enero, todo el mundo se propone cambiar algún hábito. Pocos los consiguen. En mi caso no me propuse nada pero surgió una idea que he venido arrastrando durante todo el año. Ese mismo día le pregunté a un amigo mío que me recomendara un libro para leer. Llevo años sin leer asiduamente y ese día sin saber exactamente el motivo decidí preguntar por un buen manuscrito para hojear. La respuesta de él fue "Momentos estelares de la humanidad" de Stefan Zweig. Tarde más de un mes en comprarlo y otro mes en leerlo. Cuando acabé llegué a la conclusión de que no podía ser menos de mi agrado. No obstante, volví a probar suerte. La siguiente recomendación fue "El señor de las moscas" de William Golding. Este sí fue de mi agrado. Y a partir de ahí, surgió un hábito. Este año estoy viajando a través de los gustos literarios de mis amigos y amigas. Libro tras libro. Leer el libro favorito de alguien te revela mucho sobre su forma de ser. Y también te abre la mente a lecturas que de normal rechazarías. Requiere disciplina. De momento llevo 9 ejemplares añadidos a mi colección siendo el último del que vengo a hablar hoy.
@@ -80,6 +81,116 @@ Esto es el efecto de regresión a la media. Un ejemplo más palpable sería la i
 ## Fallos médicos
 
 [Un análisis](https://doi.org/10.1016/j.amjmed.2008.01.001){:target="_blank"} sobre errores médicos en la UCI concluyó que "los médicos que creían estar 'completamente seguros' de su diagnóstico ante mortem estaban equivocados en el 40 por ciento de los casos". De forma completamente independiente, en el libro también se relata [la historia](https://pure.mpg.de/rest/items/item_2225074_9/component/file_3569491/content){:target="_blank"} de un médico del siglo XX que siempre acertaba en sus diagnósticos de tifus pero resultó que era porque tocaba las lenguas de los pacientes sin lavarse causando la propia enfermedad. Posteriormente también [se muestra](https://doi.org/10.1023/a:1005595519944){:target="_blank"} como los psiquiátras evaluaban de forma diferente el riesgo de violencia de un paciente en función de si la información se le presentaba en formato frecuencial o absoluto, es decir, quien leía que hay un 10% de probabilidades de violencia se sentía menos reacio a liberar a un paciente que quien leía que 10 de cada 100 pacientes similares son violentos. En concreto, el 41% denegaron el alta al paciente en el primer caso y el 21% en el segundo caso.
+
+## Efecto espectador
+
+[Este](https://psycnet.apa.org/record/1968-08862-001){:target="_blank"} es posiblemente de los estudios más antiguos del libro. John M. Darley realizó el siguiente experimento un tanto macabro. Había diversos participantes cada uno en una salita aislada con un micrófono en su interior. Cada persona solo podía hablar cuando era su turno. En una de las intervenciones el interlocutor mencionaba su inclinación a sufrir ataques de ansiedad. Poco después, el actor que interpretaba ese papel fingía surfir uno de esos ataques y pedía ayuda a la vez que parecía ahogarse. En medio de su sufrimiento su micrófono se corta y se da pie al siguiente participante a hablar. ¿Cuántos creéis que pidieron ayuda? De los 15 participantes, 4 pidieron ayuda inmediatamente, seis no salieron de la cabina y cinco salieron algo después de que el micrófono se cortara. Este efecto muestra que cuando hay otras personas alrededor, nos sentimos menos proclives a actuar frente a emergencias.
+
+Ahora ya sabe que una primera estimación de la probabilidad de ayuda es del 27% en casos de emergencia (4 de 15). Dado ese conocimiento, si se le presentasen otros 15 individuos y se le pidiera que identificara quién saldrá a ayudar y quién no, ¿acertaría el porcentaje? Presentado así, lo más lógico seguramente sea predecir de nuevo que solo 4 irán raudos a salvar al afectado. Pero [otro estudio](https://psycnet.apa.org/record/1976-04569-001){:target="_blank"} mostró que conocer la tasa base no afecta en las predicciones de la población. Incluso aún sabiendo que un evento tiene una determinada probabilidad, si nuestra creencia es contraria a ese hecho, las predicciones se alejarán de esa probabilidad. Algo similar sucede con la inversión en bolsa. El consejo financiero más básico es aguantar tu posición y esperar a que el mercado responda. Históricamente el precio de las acciones ha subido alrededor de un 10%. Es solo cuestión de esperar. Pero muchas personas creen tener información privilegiada del mercado que les permitirá sacar ventaja de las fluctuaciones diarias. Esta ilusión de sagacidad es lo que lleva a que los inversores individuales pierdan sistemáticamente contra las instituciones financieras. Estimándose que un [2.2% del PIB](https://faculty.haas.berkeley.edu/odean/papers%20current%20versions/justhowmuchdoindividualinvestorslose_rfs_2009.pdf){:target="_blank"} se transfiere de inversores individiduales que realizan una compraventa frecuente hacia las instituciones financieras. De igual manera, también [se ha observado](https://www.wbs.ac.uk/news/are-women-better-investors-than-men/){:target="_blank"} que las mujeres son consistemente mejores inversoras que los hombres. Saber hacer uso de la estadística y no jugar a la lotería tiene sus ventajas.
+
+## Entornos de poca validez
+
+La ilusión de sagacidad antes presentada en gran parte se debe a intentar predecir algo que es impredecible. En eso consiste un entorno de poca validez. Para poder llegar a ser un experto no es solo suficiente con dedicar 10.000 horas de tu tiempo. También tienes que recibir un feedback consistente y estadísticamente significativo. El azar puede llegar a alterar la percepción de la habilidad. Uno de los ejemplos que se suele exponer es el de los radiólogos. Es una disciplina en la cual el feedback es tardío y en muchos casos no es concluyente al 100%. Esto lleva a que ser experto en radiología sea más difícil que serlo en otras disciplinas dónde hay una respuesta inmediata y clara respecto a tus acciones. Similar a radiología es la histopatología. Durante mi colaboración con el Vall d'Hebrón era perceptible la complicación del asunto. Determinar si una célula es o no cancerígena tiene un cierto componente aleatorio. Kahneman explicaba también que determinar la valía de un soldado en pos de un examen psicológico dependía más del azar de lo que le gustaría. 
+
+Afortunadamente hay soluciones. Cuando se necesita un determinado juicio de valor es posible conseguir un resultado más objetivo. El autor del libro explicaba que lo que él hizo fue separa la prueba en diversas subpruebas de menor alcance. Cada uno mucho más específica que la evaluación general. A su vez, el resultado de cada entrevista se asignaba a un profesional distinto el cual solo daba una puntuación subjetiva de su percepción de ese aspecto. Posteriormente, todas las puntuaciones se combinaban en un único resultado. De esta forma se consigue domar un poco más la intuición. Este sistema de evaluación por tokens también lo desplegó un antiguo profesor mío de literatura para evaluar debates. Fernando Fedriani hizo su [tesis doctoral](https://dialnet.unirioja.es/servlet/tesis?codigo=77759){:target="_blank"} en un sistema de evaluación del debate. De nuevo, mediante la creación de tokens se consigue que el evaluador reduzca sus sesgos a unos atributos concretos. Al promediar los resultados los efectos azarosos quedan reducidos, resultando en un método más objetivo.
+
+En el ámbito médico también es posible dotar a los profesionales de herramientas para conseguir mejores diagnósticos. Sin embargo, al igual que el autor del libro, los especialistas se niegan a aceptar esos cambios. A pesar del cuerpo de evidencia creciente, sigue habiendo reticencias a actualizar la metodología actual. 
+
+## Pre mortem
+
+Una técnica exitosa para mitigar los efectos de los sesgos humanos es lo que el autor denomina como el pre mortem. Es un ejercicio simple. Considere este escenario. Es un ejecutivo de una empresa que está planeando un proyecto a largo plazo. A hecho la investigación pertinente y sabe los riesgos y posibles beneficios. Sin embargo, es posible que haya sobrestimado la posibildad de éxito. Así que la solución es la siguiente. Imagínese que ha pasado un año y el proyecto ha fracasado estrepitosamente, ¿por qué? Intente dar una explicación de qué ha salido mal. Así es como Kahneman descubrió que los ejecutivos conseguían estimar con mayor precisión los verdaderos riesgos asi como los plazos necesarios para llevar a cabo sus proyectos.
+
+## Ley Weber-Fechner
+
+Esta ley psicofísica es una formulación matemática de la percepción humana a los estímulos. Fechner descubrió que la percepción de un estímulo escala acorde al logaritmo de la magnitud del mismo. De manera parecida sucede en la percepción de la utilidad de dinero. De forma aproximada Kahneman nos muestra el siguiente gráfico:
+
+<p class="text-center"><img class="" src="{{site.baseurl}}/assets/images/fast_slow/utility.png" alt="gaussian pdf" /></p>
+
+Y nos explica que para quien es rico 200€ valen menos que para quien es pobre. Nada remarcable. De igual manera perder 200€ te duele más si solo tienes 200€ que si tienes 200.000€. Y parece evidente también que perder duele más que ganar. Son hipótesis sencillas y bastante aceptable. Pero las conclusiones que se deducen de ellas veremos que no lo son tanto. Primero a través de dos preguntas, y luego más rigurosamente con el teorema de Rabin. Empecemos por la primera pregunta, tiene que que escoger entre dos opciones:
+
+* 25% probabilidad de ganar 240€ y 75% probabilidad de perder 760€.
+* 25% probabilidad de ganar 250€ y 75% probabilidad de perder 750€.
+
+Ahora se presentan otras dos elecciones diferentes. Primero elija entre:
+
+* 100% probabilidad de ganar 240€.
+* 25% probabilidad de ganar 1000€ y 75% probabilidad de no ganar nada.
+
+Y luego elija entre:
+
+* 100% probabilidad de perder 750€.
+* 75% probabilidad de perder 1000€ y 25% probabilidad de no perder nada.
+
+Si es como la mayoría de participantes del artículo del apéndice B del libro seguramente tenga aversión al riesgo en las ganancias apostando por la cantidad segura e inclinación al riesgo en la pérdidas apostando por la posibilidad de no perder nada. De igual manera en la primera pregunta habrá escogido la opción dos sin dudarlo. Pues ahora bien. Si escogió la opción segura de ganar 240€ y la incierta de no perder nada, eso es equivalente a la opción 1 de la primera pregunta que claramente rechazó. Un mismo problema enmarcado de dos formas distintas lleva a decisiones opuestas.
+
+Kahneman trabajó durante mucho tiempo con un compañero llamado Amos. Amos comprobó que este efecto marco se podía usar para manipular las decisiones de los expertos en salud pública. En una conferencia sobre lo que denominaban enfermedad asiática a la mitad de los asistentes les presentó una versión que ilustraba una posible solución junto las posible vidas salvadas. A la otra mitad les mostró el programa pero les explicó cuántas personas morirían. En esencia es lo mismo, si de 1000 personas 100 fallecen, eso implica que 900 sobreviven. No cambia en absoluto la eficacia del tratamiento el exponerlo en términos de fallecimientos que de salvaciones. Pero los funcionarios que asistieron sí que tomaron decisiones diferentes en función de la versión escuchada. 
+
+Otro caso peculiar es sobre las deducciones fiscales de las herencias. Thomas C. Schelling explicaba en su libro Choices and Consequences uno de estos efectos marco. A sus alumnos les hizo esta pregunta:
+
+> ¿Debe la deducción fiscal por hijo ser mayor para el rico que para el pobre?
+
+Y contestaron que no. Era injusto dar mayor ventaja al rico. Después formuló la pregunta al revés. Supongamos que quien no tiene hijos debe pagar un impuesto por ello y que quien tiene hijos no tiene deducción fiscal. Es lo mismo que antes pero formulado en términos de pérdidas y no de ganancias. Ahora la pregunta es:
+
+> ¿Debe el pobre sin hijos pagar el mismo impuesto que el rico sin hijos?
+
+De nuevo la respuesta es que no. Quien tiene más paga más. Esta situación Schelling explicaba que era contradictoria. Si el rico sin hijos pagaría más impuestos, entonces en comparación el que tiene hijos que no los paga es como si tuviera una deducción fiscal más grande. Reformular el problema hace que la respuesta cambie por completo.
+
+Estos son solo algunos ejemplos, en el libro se describen más situaciones igual de contradictorias. Como la del marco estrecho y ancho. Quien tenga curiosidad puede leerse el libro.
+
+## [Teorema de calibración de Mathew Rabin](http://www.dklevine.com/archive/refs47667.pdf){:target="_blank"}
+
+Este teorema es en esencia el apartado anterior pero formalizado matemáticamente. Es una prueba de que si rechazas este juego:
+
+> 50% probabilidad de perder 100€ y 50% probabilidad de ganar 110€.
+
+También deberías rechazar este otro:
+
+> 50% probabilidad de perder 1000€ y 50% probabilidad de ganar 2.000.000€.
+
+Lo que resulta contradictorio. El teorema se enmarca dentro de la teoría de la utilidad esperada donde las decisiones se toman en base a la esperanza de utilidad y no en función del dinero esperado. Se define una función $U(w)$ que devuelve el valor de la utilidad sobre una cantidad de dinero $w$. Y un maximizador como ellos lo llaman es aquel que se basa en esa función para decidir. Por ejemplo, rechazar la primera apuesta descrita anteriormente se traduce en $0.5 \cdot U(w-100) + 0.5 \cdot U(w+110) < U(w)$. Y aceptar la segunda es equivalente a $0.5 \cdot U(w-1000) + 0.5 \cdot U(w+2.000.000) > U(w)$. Pues la implicación de que aceptar una conlleva aceptar la otra y vice versa no es otra cosa que una descripción de la función de utilidad. En el apartado de la ley de Weber se mostraba que la utilidad del dinero es una función cóncava. Esto nos viene a decir que si trazas una recta sobre dos puntos en la curva, esta quedará por debajo de la propia función. Y esa es la hipótesis final que faltaba para rematar el teorema que dice como sigue:
+
+<div class="teorema"> 
+Supongamos que para toda $w$ la función $U(w)$ es estrictamente creciente y cóncava. Supongamos también que existen $w_1$ y $w_2$ con $w_1 > w_2$ y que existen $g$ y $l$ con $g > l > 0$ tales que para todo $w \in [w_1, w_2]$
+<div>$$0.5 \cdot U(w-l) + 0.5 \cdot U(w+g) < U(w)$$</div>
+entonces para todo $w \in [w_1, w_2]$ y para todo $x>0$ se cumplen estas dos condiciones, estando la primera sujeta a que $g \le 2\cdot l$:
+<div>\begin{align}
+U(w) - U(w - x) \geq& 
+\begin{cases} 
+2 \left( \sum_{i=1}^{k^*(x)} \left( \frac{g}{l} \right)^{i-1} r(w) \right) & \text{si } w - w_1 + 2l \geq x \geq 2l, \\
+2 \left[ \left( \sum_{i=1}^{k^*(w - w_1 + 2l)} \left( \frac{g}{l} \right)^{i-1} r(w) \right) \right. \\
+\left. + \left[ x - (w - w_1 + l) \right] \left( \frac{g}{l} \right)^{k^*(w - w_1 + 2l)} r(w) \right] & \text{si } x \geq w - w_1 + 2l;
+\end{cases}
+\\
+U(w + x) - U(w) \leq &
+\begin{cases} 
+\sum_{i=0}^{k^{**}(x)} \left( \frac{l}{g} \right)^i r(w) & \text{si } x \leq w_2 - w, \\
+\sum_{i=0}^{k^{**}(w_2)} \left( \frac{l}{g} \right)^i r(w) + \left[ x - w_2 \right] \left( \frac{l}{g} \right)^{k^{**}(w_2)} r(w) & \text{si } x \geq w_2 - w,
+\end{cases}
+\end{align}
+</div>
+donde $k^*(x) = \lfloor x / 2l \rfloor$, $k^{**}(x) = \lfloor x / g + 1 \rfloor$ y $r(w) = U(w) - U(w-l)$
+</div>
+
+Quien quiera ver la demostración puede dirigirse [al artículo original](http://www.dklevine.com/archive/refs47667.pdf){:target="_blank"}. De este teorema tan enrevesado se deduce un colorario que es el que se ha usado para justificar los escenarios del principio:
+
+<div class="corolario">
+Supongamos que para toda $w$ la función $U(w)$ es estrictamente creciente y cóncava. Supongamos también que existen $w_1$ y $w_2$ con $w_1 > w_2$ y que existen $g$ y $l$ con $g > l > 0$ tales que para todo $w \in [w_1, w_2]$
+<div>$$0.5 \cdot U(w-l) + 0.5 \cdot U(w+g) < U(w)$$</div>
+Entonces para todo entero positivo $k$ y para todo $m < m(k)$ se cumple también
+<div>$$0.5 \cdot U(w- 2\cdot k \cdot l) + 0.5 \cdot U(w+m \cdot g) < U(w)$$</div>
+siendo este multiplicador $m(k)$ tal que así:
+<div>
+\begin{equation}
+m(k) \equiv 
+\begin{cases}
+\frac{\ln \left[ 1 - \left( 1 - \frac{l}{g} \right) 2 \sum_{i=1}^{k} \left( \frac{g}{l} \right)^i \right]}{ \ln \frac{l}{g}} - 1 & \text{if } 1 - \left( 1 - \frac{l}{g} \right) 2 \sum_{i=1}^{k} \left( \frac{g}{l} \right)^i > 0, \\
+\infty & \text{if } 1 - \left( 1 - \frac{l}{g} \right) 2 \sum_{i=1}^{k} \left( \frac{g}{l} \right)^i \leq 0.
+\end{cases}
+\end{equation}
+</div>
+</div>
+
+Cabe decir que en la demostración de este corolario se asume que $[w_1, w_2] = \mathbb{R}$. O sea, que la negativa a aceptar o rechazar los juegos propuestos al principio es irrelevante de la fortuna inicial. El propio Rabin reconoce este hecho y dice que incluso si el comportamiento del jugador varía en función de la fortuna inicial, se pueden llegar a conclusiones similares pero requiere de más operaciones algebraicas todavía y el resultado es algo menos fuerte. Para terminar de ejemplificar este corolario veámos qué sucedía en el primer juego. Rechazarlo significaba que $0.5 \cdot U(w-100) + 0.5 \cdot U(w+110) < U(w)$, por lo tanto con este corolario si tomamos $k=5$ nos queda que $1 - \left( 1 - \frac{l}{g} \right) 2 \sum_{i=1}^{k} \left( \frac{g}{l} \right)^i \approx -0.22 < 0$ por tanto $m$ puede ser cualquier valor quedando que $0.5 \cdot U(w-1000) + 0.5 \cdot U(w+m\cdot 110) < U(w)$, o lo que es lo mismo, que rechazaríamos jugar aunque el premio fuera de dos millones de euros.
 
 ## Conclusión
 
