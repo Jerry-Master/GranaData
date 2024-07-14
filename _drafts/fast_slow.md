@@ -106,7 +106,7 @@ Esta ley psicofísica es una formulación matemática de la percepción humana a
 
 <p class="text-center"><img class="" src="{{site.baseurl}}/assets/images/fast_slow/utility.png" alt="gaussian pdf" /></p>
 
-Y nos explica que para quien es rico 200€ valen menos que para quien es pobre. Nada remarcable. De igual manera perder 200€ te duele más si solo tienes 200€ que si tienes 200.000€. Y parece evidente también que perder duele más que ganar. Son hipótesis sencillas y bastante aceptable. Pero las conclusiones que se deducen de ellas veremos que no lo son tanto. Primero a través de dos preguntas, y luego más rigurosamente con el teorema de Rabin. Empecemos por la primera pregunta, tiene que que escoger entre dos opciones:
+Y nos explica que para quien es rico 200€ valen menos que para quien es pobre. Nada remarcable. De igual manera perder 200€ te duele más si solo tienes 200€ que si tienes 200.000€. Y parece evidente también que perder duele más que ganar. Son hipótesis sencillas y bastante aceptables. Pero las conclusiones que se deducen de ellas veremos que no lo son tanto. Primero a través de dos preguntas, y luego más rigurosamente con el teorema de Rabin. Empecemos por la primera pregunta, tiene que que escoger entre dos opciones:
 
 * 25% probabilidad de ganar 240€ y 75% probabilidad de perder 760€.
 * 25% probabilidad de ganar 250€ y 75% probabilidad de perder 750€.
@@ -135,7 +135,7 @@ Y contestaron que no. Era injusto dar mayor ventaja al rico. Después formuló l
 
 De nuevo la respuesta es que no. Quien tiene más paga más. Esta situación Schelling explicaba que era contradictoria. Si el rico sin hijos pagaría más impuestos, entonces en comparación el que tiene hijos que no los paga es como si tuviera una deducción fiscal más grande. Reformular el problema hace que la respuesta cambie por completo.
 
-Estos son solo algunos ejemplos, en el libro se describen más situaciones igual de contradictorias. Como la del marco estrecho y ancho. Quien tenga curiosidad puede leerse el libro.
+Enmarcar una propuesta en términos de pérdidas o de ganancias altera la conducta de quien toma la decisión. De igual modo tomar varias decisiones una detrás de otra o una sola que englobe todos los escenarios de golpe también altera el resultado. En el libro se menciona un ejemplo de [este artículo del propio Kahneman](https://link.springer.com/content/pdf/10.1007/BF01073401.pdf){:target="_blank"}. En él se preguntaba por cuánto se estaba a dispuesto a pagar para salvar delfines respecto a cuánto se estaba dispuesto a pagar para ayudar trabajadores del campo que padecen cáncer de piel. En el libro nos cuentan que se está más dispuesto a dar más dinero a los delfines, aunque la diferencia no es muy elevada (12.57\\$ vs 12.18\\$, con elefantes sí que es algo mayor la diferencia). El autor explica que si se presentasen a la vez estas cuestiones nos daríamos cuenta de que en un caso estamos ayudando a una persona y en otro no, por lo que la cifra se revertiría, aunque no aporta evidencia de ello. Sin embargo, de lo que sí aporta evidencia es de las sanciones de las agencias reguladoras estadounidenses. Una multa en materia de seguridad laboral está acotada en 7000 dólares mientras que la Ley de Conservación de Aves Silvestres contempla multas de hasta 25000 dólares. Dentro de cada agencia las sanciones son coherentes entre sí, pero al no haber una puesta en común, los resultados terminan siendo muy dispares. Si hubiese un marco regulatorio común, estos resultados no se observarían.
 
 ## [Teorema de calibración de Mathew Rabin](http://www.dklevine.com/archive/refs47667.pdf){:target="_blank"}
 
@@ -171,7 +171,7 @@ U(w + x) - U(w) \leq &
 donde $k^*(x) = \lfloor x / 2l \rfloor$, $k^{**}(x) = \lfloor x / g + 1 \rfloor$ y $r(w) = U(w) - U(w-l)$
 </div>
 
-Quien quiera ver la demostración puede dirigirse [al artículo original](http://www.dklevine.com/archive/refs47667.pdf){:target="_blank"}. De este teorema tan enrevesado se deduce un colorario que es el que se ha usado para justificar los escenarios del principio:
+Quien quiera ver la demostración original puede dirigirse [al artículo original](http://www.dklevine.com/archive/refs47667.pdf){:target="_blank"}. Pero no está muy pulida. Por ejemplo, la hipótesis de $0.5 \cdot U(w-l) + 0.5 \cdot U(w+g) < U(w)$ es innecesaria en la demostración. La propiedad descrita del teorema es válida para toda función cóncava. Una demostración algo más pulida con un análisis más riguroso de las hipótesis se halla en [este artículo](https://www.sciencedirect.com/science/article/pii/S0165176521004341){:target="_blank"} más moderno. De este teorema tan enrevesado se deduce un colorario que es el que se ha usado para justificar los escenarios del principio:
 
 <div class="corolario">
 Supongamos que para toda $w$ la función $U(w)$ es estrictamente creciente y cóncava. Supongamos también que existen $w_1$ y $w_2$ con $w_1 > w_2$ y que existen $g$ y $l$ con $g > l > 0$ tales que para todo $w \in [w_1, w_2]$
@@ -190,8 +190,74 @@ m(k) \equiv
 </div>
 </div>
 
-Cabe decir que en la demostración de este corolario se asume que $[w_1, w_2] = \mathbb{R}$. O sea, que la negativa a aceptar o rechazar los juegos propuestos al principio es irrelevante de la fortuna inicial. El propio Rabin reconoce este hecho y dice que incluso si el comportamiento del jugador varía en función de la fortuna inicial, se pueden llegar a conclusiones similares pero requiere de más operaciones algebraicas todavía y el resultado es algo menos fuerte. Para terminar de ejemplificar este corolario veámos qué sucedía en el primer juego. Rechazarlo significaba que $0.5 \cdot U(w-100) + 0.5 \cdot U(w+110) < U(w)$, por lo tanto con este corolario si tomamos $k=5$ nos queda que $1 - \left( 1 - \frac{l}{g} \right) 2 \sum_{i=1}^{k} \left( \frac{g}{l} \right)^i \approx -0.22 < 0$ por tanto $m$ puede ser cualquier valor quedando que $0.5 \cdot U(w-1000) + 0.5 \cdot U(w+m\cdot 110) < U(w)$, o lo que es lo mismo, que rechazaríamos jugar aunque el premio fuera de dos millones de euros.
+Aquí es dónde realmente sí que se usa la hipótesis de que $0.5 \cdot U(w-l) + 0.5 \cdot U(w+g) < U(w)$. Cabe decir que en la demostración de este corolario se asume que $[w_1, w_2] = \mathbb{R}$, es decir, que de las dos ramas de la función por partes del teorema solo se usa la rama de arriba la cual simplifica los cálculos. Traducido esto significa que la negativa a aceptar o rechazar los juegos propuestos al principio es irrelevante de la fortuna inicial. El propio Rabin reconoce este hecho y dice que incluso si el comportamiento del jugador varía en función de la fortuna inicial, se pueden llegar a conclusiones similares pero requiere de más operaciones algebraicas todavía y el resultado es algo menos fuerte. Para terminar de ejemplificar este corolario veámos qué sucedía en el primer juego. Rechazarlo significaba que $0.5 \cdot U(w-100) + 0.5 \cdot U(w+110) < U(w)$, por lo tanto con este corolario si tomamos $k=5$ nos queda que $1 - \left( 1 - \frac{l}{g} \right) 2 \sum_{i=1}^{k} \left( \frac{g}{l} \right)^i \approx -0.22 < 0$ por tanto $m$ puede ser cualquier valor quedando que $0.5 \cdot U(w-1000) + 0.5 \cdot U(w+2\cdot 10^6) < U(w)$, o lo que es lo mismo, que rechazaríamos jugar aunque el premio fuera de dos millones de euros.
+
+## Valores decisorios
+
+La asimetría entre la búsqueda del riesgo en las pérdidas y la aversión al riesgo en las ganancias se extiende un poco más en un patrón de cuatro opciones:
+
+<p class="text-center"><img class="" src="{{site.baseurl}}/assets/images/fast_slow/cuatro.png" alt="gaussian pdf" /></p>
+
+En un intento por explicar esta situación y además resolver la problemática del teorema anterior, Amos y Kahneman hacen una modificación a la función de utilidad añadiendo una función de ponderación de probabilidades. Esta función ha ido evolucionando con el tiempo. El concepto es sencillo, si tienes dos opciones eliges la que tiene mayor valor. Pero calcular ese valor es complicado. En el modelo más básico los agentes racionales simplemente eligen la opción que repercute más ganancias y menos pérdidas, es decir, siguiendo la notación anterior eliges la opción donde $w$ es mayor ($V=w$). Tras analizar que los eventos tienen probabilidades se mide el valor esperado de la ganancia y no la ganancia per se, o sea, 
+
+<div>$$V=\mathbb{E}[w] = Pr(A_1) \cdot w_1 + \dots + Pr(A_n) \cdot w_n$$</div>
+
+Cuando se consigue entender que el valor monetario no corresponde con el valor real se añade una función de utilidad que es la $U(w)$ y el valor real pasa a ser 
+
+<div>$$V=\mathbb{E}[U(w)] = Pr(A_1) \cdot U(w_1) + \dots + Pr(A_n) \cdot U(w_n)$$</div>
+
+Y finalmente, para parchear las incongruencias que resultan del comportamiento humano se añaden ponderaciones a las probabilidades obteniendo la formulación de la teoría de perspectivas:
+
+<div>$$V=\pi(Pr(A_1)) \cdot U(w_1) + \dots + \pi(Pr(A_n)) \cdot U(w_n)$$</div>
+
+Es difícil hacer más flexible el marco teórico. Y en concreto cabe preguntarse si $\pi(x) = x$ o no, porque de ser así es una complicación innecesaria. Eso es lo que hicieron Amos y Kahneman en [su artículo sobre esta teoría](https://web.mit.edu/curhan/www/docs/Articles/15341_Readings/Behavioral_Decision_Theory/Kahneman_Tversky_1979_Prospect_theory.pdf){:target="_blank"}. Para estimar las ponderaciones preguntaron a los participantes sobre qué decisiones tomarían. Siendo las decisiones como esta:
+
+* 50% de probabilidad de ganar 1000€ y 50% probabilidad de no ganar nada.
+* 100% probabilidad de ganar 450€.
+
+Variando las cuantías monetarias y las probabilidades de este tipo de preguntas se puede estimar la función de ponderación $\pi(\cdot)$ de los participantes. El resultado lo presenta en la tabla 4 del capítulo 29.
+
+<p class="text-center"><img class="" src="{{site.baseurl}}/assets/images/fast_slow/tabla.png" alt="gaussian pdf" /></p>
+
+Quedando palpado el hecho de que $\pi(x) \neq x$. En la traducción al español llaman a esta función de ponderación el valor decisorio. Traducción que no considero muy acertada dada la connotación de la propia formulación. Es cierto que es un valor decisorio porque el experimento utiliza el valor a partir del cual prefieres la opción segura a la opción azarosa. Sin embargo, si se mira desde los ojos del marco teórico esa tabla tiene más sentido si se habla de ponderaciones. En cualquier caso, lo que el estudio de estos valores muestra es que las personas no ponderan las probabilidades de forma lineal. Un incremento del $2\%$ de la probabilidad tiene mucho más peso si es del $98\%$ al $100\%$ que si es del $61\%$ al $63\%$.
+
+# Efecto ancla
+
+Este efecto queda ilustrado y medido con [el siguiente experimento](https://psycnet.apa.org/record/1996-24980-001){:target="_blank"}. En él se les preguntó a los participantes una de estas dos cuestiones:
+
+* ¿Es la altura de la secuoya más alta mayor o menor de 1.200 pies?
+* ¿Cuál es su estimación de la altura de la secuoya más alta?
+
+El valor inicial que se da en la pregunta es lo que denominan ancla. Los valores de las preguntas previas eran 844 y 282 respectivamente. Como se puede observar, la presencia del ancla mueve la media en dirección del valor inicial mencionado en la pregunta. Esto es el efecto ancla, que hace que las estimaciones estén condicionadas por el primer valor que se escucha. Y el índice de anclaje es el ratio entre la diferencia de las medias y la diferencia de la media sin ancla y el ancla. O sea, en el caso anterior sería $(844 - 282) / (1200 - 282) = 0.55$, un cincuenta y cinco por ciento.
+
+Este efecto afecta a todos los mortales. Los expertos tasadores inmobiliarios y los jueces no son excepciones. En [otro estudio](https://psycnet.apa.org/record/1987-12447-001){:target=_blank"} se vio que el índice de anclaje de los tasadores era del 41%. Sus tasaciones se veían afectadas por cifras que los investigadores les habían dado momentos antes de visitar las viviendas. El grupo de control que no tenía conocimientos inmobiliarios sufría un anclaje del 48%, ligeramente superior. Y más sorprendente es el índice de anclaje de los jueces. [Un estudio](https://psycnet.apa.org/record/2006-00011-005){:target="_blank"} con jueces alemanes mostró que su índice de anclaje era del 50%. En ese experimento a los jueces se les hacía tirar un dado antes de evaluar las condenas. Los dados estaban trucados para que salieran 3 o 9. El resultado fue que los jueces a los que le salía un 9 tendían a dar condenas más altas que aquello que el dado les marcaba un 3. Este no es el único condicionante mencionado en el libro que afecta a los jueces. En otro capítulo Kahneman nos cuenta como los jueces israelíes tendían a negar la condicional a los reclusos que las solicitaban si el momento de evaluar el informe se daba próximo a la hora de comer. En [ese experimento](https://pubmed.ncbi.nlm.nih.gov/21482790/){:target="_blank"} los jueces no sabían que les estaban estudiando.
+
+## Ley de los pequeños números
+
+Ese es el nombre que Kahneman le dio a la ignorancia del tamaño muestral a la hora de sacar conclusiones. En muestras pequeñas es posible encontrar resultados sorprendentes debido a la varianza del proceso. Para obtener una conclusión certeza uno debe asegurarse de tener una muestra grande para que no quede lugar a dudas. En ese capítulo me llamaron la atención dos ejemplos de esta ley. El primero es el hecho de que los condados con menor tasa de cáncer renal son rurales. La vida en el pueblo es más sana se podría concluir. Pero también es un hecho que los condados con mayor tasa de cáncer renal también son rurales. Debido a que estos condados tienen menor población, la tasa de cáncer renal sufre una mayor varianza. Esto hace que sean los pueblos pequeños los que destaquen con estadísticas muy grandes y también muy pequeñas por puro azar. El segundo ejemplo es más llamativo porque costó 1700 millones de dólares a la fundación Gates. Querían averiguar qué colegios eran mejores y llegaron a la conclusión de que los más pequeños. Lo que los llevó a promover la creación de escuelas más pequeñas. Lo más probable es que sus resultados se debieran precisamente a ley de los pequeños números.
+
+## Efecto de dotación
+
+Este efecto se ilustra con el ejemplo de [un artículo](https://www.unz.com/print/MilkenInstituteRev-2001q2-00022/){:target="_blank"} de Alan B. Krueger. En él se habla de cómo los encuestados no estarían dispuestos a pagar 3000\\$ por una entrada de la super bowl porque es muy cara pero a su vez no venderían una entrada por menos de 3000\\$. El efecto de dotación es el término usado para referirse a la diferencia entre los precios de compra y venta de los usuarios cuando se trata de bienes de uso vs bienes de intercambio. En las transacciones habituales se vende un objeto que costó 20€ por esa misma cantidad. Pero cuando el poseedor del producto le asocia un valor emocional, el precio de venta y el de compra difieren. El alcance de este efecto y las formas de hacerlo desaparecer aún están por estudiar comenta Kahneman.
+
+La explicación que da Kahneman de este efecto de dotación se basa en la asimetría de las ganancias y las pérdidas. Perder 1€ duele más de la alegría que da ganarlo, como se veían en las gráficas previas de la función de utilidad. Esto hace que se genere esa asimetría de los precios de compra y venta. Esta misma aversión a la pérdida [se estudió](https://psycnet.apa.org/record/2018-70020-001){:target="_blank"} en el entorno matrimonial quedando registrado que el éxito a largo plazo depende más de evitar lo negativo que de perseguir lo positivo.
+
+## Felicidad
+
+Hacia el final del libro se trata sobre varios resultados referentes al estudio de la felicidad. La metodología tiene sus puntos débiles, y considero que quedan bastante bien plasmados en [este post reciente](https://www.maximumtruth.org/p/data-dive-money-does-not-buy-much?utm_source=substack&publication_id=280463&post_id=145002402&utm_medium=email&utm_content=share&utm_campaign=email-share&isFreemail=true&r=ru93c&triedRedirect=true){:target="_blank"} de Maxim Lott. Aún así son resultados interesantes los que se presentan en el libro. El más remarcable es que la felicidad crece con los ingresos pero se estanca en 75000 dólares al año. Hay múltiples fuentes de este dato, en el libro se basan en [este artículo](https://www.pnas.org/doi/10.1073/pnas.1011492107){:target="_blank"} de 2010 realizado por el propio Kahneman. Cuando veo este resultado siempre pienso que me gustaría que hubiese resultados similares en España. El índice de bienestar Gallup-Healthways que es el que se mide en ese estudio solo involucra estadounidenses. Eso hace que sea muy difícil interpretar el resultado. Porque 75000 dólares en Estados Unidos y en 2010 no tienen un equivalente sencillo de calcular en la España de 2024. 
+
+Otro hallazgo curioso es que el sufrimiento se distribuye de forma poco uniforme. En [el artículo](https://journals.sagepub.com/doi/10.1111/j.1467-9280.1996.tb00354.x){:target="_blank"} titulado "La mayor parte de la gente es feliz" nos cuentan que en general la gente no experimenta episodios desagradables salvo una minoría que sufre por todos los demás. El resultado se remonta a 1996, mucho antes de las redes sociales y la globalización, por lo que es posible ya no sea tan aplicable.
+
+Y el último resultado que presento en esta entrada del blog es la gráfica de satisfacción en la vida antes y después del matrimonio
+
+<p class="text-center"><img class="" src="{{site.baseurl}}/assets/images/fast_slow/matrimonio.png" alt="gaussian pdf" /></p>
+
+Dejo al lector que la interprete como quiera.
 
 ## Conclusión
 
-Mi conclusión es que el ser humano es imbécil por naturaleza. 
+El objetivo del autor con este libro es proporcionar nuevo vocabulario al lector para sus charletas frente a la maquinilla del café, al mismo tiempo que intenta informar a la sociedad de los sesgos cognitivos que todos padecemos. Es la obra de toda una vida dedicada a la investigación pero desprovista de formalismos y en un lenguaje bastante accesible. Evidentemente el autor tiene sus opiniones y su visión es claramente parcial, algo que él mismo reconoce en el libro cuando habla de una de sus rivalidades con sus adversarios intelectuales. Pero los experimentos son los que son y los datos son datos, no opiniones. Cada cual ha de formarse su propia opinión en base a esos datos con calma y sin prisas. Para mí al principio mi reacción a todos estos resultados no era otra que pensar que el ser humano es imbécil y cabezota. Tras reflexionar debidamente finalmente he concluido que la conducta humana es mucho más compleja de lo que parece. Nuestras experiencias nos forman intuiciones del mundo que habitamos que con frecuencia no son completamente acertadas. Nuestra capacidad ejecutiva se ve afectada por factores externos que raras veces controlamos y tener conocimiento de ello no resuelve el problema. Las apariencias engañan y es muy difícil ser plenamente objetivo y racional. No obstante, cada día se sabe más y se descubren nuevas herramientas para amortiguar el impacto de los sesgos cognitivos. La sociedad evoluciona lentamente, pero lo hace en la dirección correcta.
+
+## Extra
+
+Este experimento no es del libro, lo cual es imposible porque es de hace pocos años, pero me llamó mucho la atención. Yo lo conocí por [este tweet](https://twitter.com/Aella_Girl/status/1594144435000213505){:target="_blank"}. En él se dice a los participantes que giren una ruleta en su cabeza que tienen un $20\%$ de probabilidad de salir amarillo y un $80\%$ de salir rojo. Después se hace una encuesta preguntando a la gente que de qué color ha salido la ruleta al girar en su cabeza. El resultado de la encuesta es que alrededor del $80\%$ dijeron que salía rojo y alrededor del $20\%$ dijeron que salía amarillo. Otras personas han reproducido el mismo resultado con otros porcentajes y otras redes sociales y los porcentajes de la encuesta suelen estar en un margen del $5\%$ respecto a las probabilidades imaginarias. Curioso, ¿verdad?
