@@ -50,14 +50,14 @@ So far so good but, the generator as presented above is just a deterministic fun
 
 Finally, let's prove the theorem. The first step is to find the optimal discriminator given the generator. After that, that value is substituted into the formulas and everything is rearranged into something with an obvious lower bound. I will skip many computational details, you can just check them by hand or if they don't seem trivial to you, email me and I will write an appendix with more details. Let's go, first part:
 
-<div class="prop"> If $G$ is fixed, the optimal $D$ is 
+<div id="prop" class="prop"> If $G$ is fixed, the optimal $D$ is 
 <div>$$ D^*(\textbf{x}) = \frac{p_{data}(\textbf{x})}{p_{data}(\textbf{x}) + p_{g}(\textbf{x})} $$</div>
 </div>
 
 <div class="proof"> We have $V(G,D)=\mathbb{E}_{\textbf{x} \sim p_{data}}[\log(D(\textbf{x}))] + \mathbb{E}_{\textbf{z} \sim p_{\textbf{z}}}[\log(1-D(G(\textbf{z})))]$, in order to combine both integrals we need them to depend on the same variable $\textbf{x}$. To do so we are going to exploit the fact that $\textbf{z} \sim p_{\textbf{z}} \Rightarrow G(\textbf{z}) \sim p_g$. This fact, in conjunction with the <a href="https://en.wikipedia.org/wiki/Radon%E2%80%93Nikodym_theorem">Radon-Nikodym Theorem</a> lets us conclude that $\mathbb{E}_{\textbf{z} \sim p_{\textbf{z}}}[\log(1-D(G(\textbf{z})))] = \mathbb{E}_{\textbf{x} \sim p_{g}}[\log(1-D(\textbf{x}))]$. Where $\textbf{x} = G(\textbf{z})$. Now, if we express the expectations in integral form we get the following
 <div>$$ \int_{\textbf{x}} p_{data}(\textbf{x})\log(D(\textbf{x})) + p_g(\textbf{x})\log(1-D(\textbf{x})) d\textbf{x} $$</div>
 
-The integrand is now bounded by a function that does not depend on $D$ and so that bound is the optimum. That bound is found by differentiating with respect to $D$ and equalling to zero. The integrand there is basically $a \log(D) + b\log(1-D)$, which has the maximum at $\frac{a}{a+b}$ if $a$, $b$ are constant with respect to $D$. I still have <a href="https://datascience.stackexchange.com/questions/113390/minor-error-in-ian-goodfellows-gan-optimality-proof">my doubts</a> with respect to that assumption, but assuming it we get that the maximum is reached when $D=\frac{p_{data}}{p_{data}+p_g}$ which ends the proof.
+The integrand is now bounded by a function that does not depend on $D$ and so that bound is the optimum. That bound is found by differentiating with respect to $D$ and equalling to zero. The integrand there is basically $a \log(D) + b\log(1-D)$, which has the maximum at $\frac{a}{a+b}$ if $a$, $b$ are constant with respect to $D$. I still have <a id="my-doubts" href="https://datascience.stackexchange.com/questions/113390/minor-error-in-ian-goodfellows-gan-optimality-proof">my doubts</a> with respect to that assumption, but assuming it we get that the maximum is reached when $D=\frac{p_{data}}{p_{data}+p_g}$ which ends the proof.
 </div>
 
 We now have found the optimal discrimator so we can now compute the value function for that optimal discriminator. If we call $C(G)=\max_{D}(V(D,G))$ the value of the value function for the optimal discriminator, we just want to find the minimum of $C(G)$ for any given generator. The "rearrangement" I mentioned above is the following
