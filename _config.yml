@@ -8,7 +8,7 @@ url: https://granadata.art
 baseurl: 
 google_analytics: 'UA-46278016-1'
 disqus: 'demowebsite'
-mailchimp-list: 'https://github.us18.list-manage.com/subscribe/post?u=b0e63e3e42776975c7190aee7&amp;id=a0648cb149'
+mailchimp-list: 'https://gmail.us4.list-manage.com/subscribe/post?u=6bc2f64e5d9109bd06bf859c5&amp;id=68bbfe755b&amp;f_id=005c05e9f0'
 include: ["_pages"]
 permalink: /:title/
 mode: night

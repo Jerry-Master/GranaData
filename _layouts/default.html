@@ -170,7 +170,14 @@ ga('send', 'pageview');
 <div class="alertbar">
 	<div class="container text-center">
 		<span> Never miss a <b>story</b> from us, subscribe to this blog</span>
-        <form action="{{site.mailchimp-list}}" method="post" name="mc-embedded-subscribe-form" class="wj-contact-form validate" target="_blank" novalidate>
+        <form
+          class="wj-contact-form validate"
+          action="{{site.mailchimp-list}}"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+        >
             <div class="mc-field-group center-inputs">
                 <input type="email" placeholder="Email" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
                 <input type="submit" value="Subscribe" name="subscribe" class="button">
