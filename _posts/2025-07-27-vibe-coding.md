@@ -8,7 +8,7 @@ hidden: false
 comments: false
 share: false
 image: assets/images/vibe-coding.png
-time-read: 8
+time_read: 8
 ---
 
 At the beginning of this year 2025, Andrej Karpathy coined the term: ["vibe-coding"](https://x.com/karpathy/status/1886192184808149383){:target="_blank"}. And since then we have seen the AI discourse become even less serious over time. The typical FOMO discourse (Fear Of Missing Out) continues to say that if you are not using AI you are missing out, that AI will replace us all, that what previously took years now takes hours and so on. I am a big fan of AI and want it to succeed. My side is definitely with [e/acc](https://effectiveaccelerationism.substack.com/p/repost-effective-accelerationism){:target="_blank"}, but I also want to throw a bit of clarity to all this madness. AI is progress and cannot be stopped, but we must think critically and analyse exactly what is the point in which we found ourselves right now. Vibe-coding is being monetised which means the PRs (Public Relations) are everywhere trying to convince us to buy their products. [Replit](https://replit.com/){:target="_blank"} is one of those tools that sells itself as a way to build apps just with natural language. It is quite impressive and I have tested and created [one webpage](https://preparaomegrx.es/){:target="_blank"} entirely with it. Nevertheless, Replit is also responsible for [deleting another company's codebase](https://www.businessinsider.com/replit-ceo-apologizes-ai-coding-tool-delete-company-database-2025-7){:target="_blank"}. As I said I want to bring some light to the discourse and this post is going to be an informed analysis on how to do vibe-coding properly, what are its risks and when is it worth it. 
