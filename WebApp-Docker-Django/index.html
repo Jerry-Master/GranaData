@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="icon" href="/assets/images/favicon.ico">
+
+<title>Deploying AWS webapp tutorial | GranaData</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Deploying AWS webapp tutorial | GranaData</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Deploying AWS webapp tutorial" />
+<meta name="author" content="jose" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Following the philosophy of my blog, this will be a very specific post. You can find many resources on the internet about how to deploy a web app. I will even be referencing many of those here. But the main difference with those posts is that mine is going to be straight to the point. The following is a tutorial on how to create a web app from scratch. The backend will be on Django and the database will be Postgresql. The app will be running on AWS and to deploy it there we will create a Docker image. Last but not least, I’ll explain how to buy a domain and link the domain to the AWS ip address. Let’s get ours hands dirty! Also, don’t worry about the code, it is all available here." />
+<meta property="og:description" content="Following the philosophy of my blog, this will be a very specific post. You can find many resources on the internet about how to deploy a web app. I will even be referencing many of those here. But the main difference with those posts is that mine is going to be straight to the point. The following is a tutorial on how to create a web app from scratch. The backend will be on Django and the database will be Postgresql. The app will be running on AWS and to deploy it there we will create a Docker image. Last but not least, I’ll explain how to buy a domain and link the domain to the AWS ip address. Let’s get ours hands dirty! Also, don’t worry about the code, it is all available here." />
+<link rel="canonical" href="https://granadata.art/WebApp-Docker-Django/" />
+<meta property="og:url" content="https://granadata.art/WebApp-Docker-Django/" />
+<meta property="og:site_name" content="GranaData" />
+<meta property="og:image" content="https://granadata.art/assets/images/aws-logo.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-07-12T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://granadata.art/assets/images/aws-logo.png" />
+<meta property="twitter:title" content="Deploying AWS webapp tutorial" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jose"},"dateModified":"2023-07-12T00:00:00+00:00","datePublished":"2023-07-12T00:00:00+00:00","description":"Following the philosophy of my blog, this will be a very specific post. You can find many resources on the internet about how to deploy a web app. I will even be referencing many of those here. But the main difference with those posts is that mine is going to be straight to the point. The following is a tutorial on how to create a web app from scratch. The backend will be on Django and the database will be Postgresql. The app will be running on AWS and to deploy it there we will create a Docker image. Last but not least, I’ll explain how to buy a domain and link the domain to the AWS ip address. Let’s get ours hands dirty! Also, don’t worry about the code, it is all available here.","headline":"Deploying AWS webapp tutorial","image":"https://granadata.art/assets/images/aws-logo.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://granadata.art/WebApp-Docker-Django/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://granadata.art/assets/images/logo.png"},"name":"jose"},"url":"https://granadata.art/WebApp-Docker-Django/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+<link href="/assets/css/screen.css" rel="stylesheet">
+
+<link href="/assets/css/main.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<!-- Twitter cards -->
+<meta name="twitter:site"    content="@GranaDataJose">
+<meta name="twitter:creator" content="@GranaDataJose">
+<meta name="twitter:title"   content="Deploying AWS webapp tutorial">
+
+
+<meta name="twitter:description" content="Data science from Granada to the world.">
+
+
+
+<meta name="twitter:card"  content="summary_large_image">
+<meta name="twitter:image" content="https://granadata.art/assets/images/aws-logo.png">
+
+<!-- end of Twitter cards -->
+
+</head>
+
+
+<!-- change your GA id in _config.yml -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46278016-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+
+<body class="layout-post">
+	<!-- defer loading of font and font awesome -->
+    <noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    
+	
+
+
+<!-- Begin Menu Navigation
+================================================== -->
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark shadow fixed-top mediumnavigation nav-down">
+
+    <div class="container pr-0">
+
+    <!-- Begin Logo -->
+    <a class="navbar-brand" href="/">
+    <img src="/assets/images/logo.png" alt="GranaData">
+    </a>
+    <!-- End Logo -->
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMediumish">
+
+        <!-- Begin Menu -->
+
+            <ul class="navbar-nav mr-auto">
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/index.html">Blog</a>
+                </li>
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/about">About</a>
+                </li>
+                
+            </ul>
+            <ul class="navbar-nav ml-auto">
+
+                <script src="/assets/js/lunr.js"></script>
+
+
+<style>
+    .lunrsearchresult .title {color: #d9230f;}
+    .lunrsearchresult .url {color: silver;}
+    .lunrsearchresult a {display: block; color: #777;}
+    .lunrsearchresult a:hover, .lunrsearchresult a:focus {text-decoration: none;}
+    .lunrsearchresult a:hover .title {text-decoration: underline;}
+</style>
+
+
+<form class="bd-search" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+    <input type="text" class="form-control text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+</form>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+
+            </ul>
+
+        <!-- End Menu -->
+
+    </div>
+
+    </div>
+</nav>
+<!-- End Navigation
+================================================== -->
+
+<div class="site-content">
+
+<div class="container">
+
+<!-- Site Title
+================================================== -->
+<div class="mainheading">
+    <h1 class="sitetitle">GranaData</h1>
+    <p class="lead">
+        Data science from Granada to the world.
+    </p>
+</div>
+
+<!-- Content
+================================================== -->
+<div class="main-content">
+    <!-- Begin Article
+================================================== -->
+<div class="container inside-container">
+    
+    <div class="row">
+
+        <!-- Post Share -->
+        
+        <!-- Post -->
+        
+        
+            <div class="mainheading">
+
+                <!-- Author Box -->
+                
+                <div class="row post-top-meta">
+                    <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-right mb-4 mb-md-0">
+                        
+                        <img class="author-thumb" src="/assets/images/JoseAvatar.png" alt="Jose">
+                        
+                    </div>
+                    <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left">
+                        <a target="_blank" class="link-dark" href="https://jerry-master.github.io/Home-Page/">Jose</a>
+                        <a target="_blank" href="https://twitter.com/GranaDataJose" class="btn follow">Follow</a>
+                        
+                        <a target="_blank" href="/read_time" class="btn readtime">35 min read</a>
+                        
+                        <span class="author-description">Data scientist from Alcalá la Real. Studied at BarcelonaTech, worked as a researcher at the UGR and UPC, was a machine learning engineer at El Ranchito and Nemeda and now work in Koh Young Research Spain. Always wanting to explain my knowledge to the world.</span>
+                    </div>
+                </div>
+                
+
+                <!-- Post Title -->
+                <h1 class="posttitle">Deploying AWS webapp tutorial</h1>
+
+            </div>
+
+            <!-- Adsense if enabled from _config.yml (change your pub id and slot) -->
+            
+            <!-- End Adsense -->
+
+            <!-- Post Featured Image -->
+            
+            <!-- End Featured Image -->
+
+            <!-- Post Content -->
+            <div class="article-post">
+                <!-- Toc if any -->
+                
+                <!-- End Toc -->
+                <p>Following the philosophy of my blog, this will be a very specific post. You can find many resources on the internet about how to deploy a web app.
+I will even be referencing many of those here. But the main difference with those posts is that mine is going to be straight to the point.
+The following is a tutorial on how to create a web app from scratch. The backend will be on Django and the database will be Postgresql.
+The app will be running on AWS and to deploy it there we will create a Docker image. Last but not least, I’ll explain how to buy a domain and link the domain to the AWS ip address. Let’s get ours hands dirty! Also, don’t worry about the code, it is all available <a href="https://github.com/Jerry-Master/GranaData/tree/main/_code/django_docker_aws" target="_blank">here</a>.</p>
+
+<h1 id="django-and-postgresql">Django and Postgresql</h1>
+
+<p>Let’s start by creating a minimal python environment with just Django. You can do it either via python or conda. For reproducibility, please use python3.10 and Django 4.2.2. Open a terminal and run the following:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>python3.10 <span class="nt">-m</span> venv .venv
+<span class="nb">source</span> .venv/bin/activate <span class="c"># For Windows use: .\.venv\Script\activate</span>
+pip <span class="nb">install </span><span class="nv">django</span><span class="o">==</span>4.2.2 psycopg2-binary
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>For the Conda installation:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>conda create <span class="nt">--name</span> .venv <span class="nv">python</span><span class="o">=</span>3.10
+conda activate .venv
+pip <span class="nb">install </span><span class="nv">django</span><span class="o">==</span>4.2.2 psycopg2-binary
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="postgresql-server-setup">Postgresql server setup</h2>
+
+<p>The next step is to create a prosgresql server. To install postgresql go to the <a href="https://www.postgresql.org/download/" target="_blank">official page</a>. Once installed, you need to start running the server on your system:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="nb">mkdir</span> /usr/local/var/postgres  <span class="c"># Create folder if it does not exist</span>
+initdb <span class="nt">-D</span> /usr/local/var/postgres  <span class="c"># Initialize database cluster</span>
+pg_ctl <span class="nt">-D</span> /usr/local/var/postgres start  <span class="c"># Start server</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>This will start the server and save everything into the <code class="language-html highlighter-rouge">/usr/local/var/postgres</code> folder. For Window users, replace <code class="language-html highlighter-rouge">pg_ctl</code> and <code class="language-html highlighter-rouge">initdb</code> with the path to the <code class="language-html highlighter-rouge">pg_ctl.exe</code> and <code class="language-html highlighter-rouge">initdb.exe</code> binaries, which may be something similar to <code class="language-html highlighter-rouge">"C:\Program Files\PostgreSQL\14\bin\pg_ctl.exe"</code> and use any data directory you want.</p>
+
+<p>Once the server is running we need to create a database, for that, you need to run postgres in a terminal and execute the relevant SQL code:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>psql postgres  <span class="c"># Start SQL shell</span>
+<span class="nv">postgres</span><span class="o">=</span><span class="c"># CREATE DATABASE mydatabase;</span>
+<span class="nv">postgres</span><span class="o">=</span><span class="c"># CREATE USER myuser WITH PASSWORD 'mypassword';</span>
+<span class="nv">postgres</span><span class="o">=</span><span class="c"># GRANT ALL PRIVILEGES ON DATABASE mydatabase TO myuser;</span>
+<span class="nv">postgres</span><span class="o">=</span><span class="c"># exit;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>The commands are self-explanatory, just replace <code class="language-html highlighter-rouge">mydatabase</code>, <code class="language-html highlighter-rouge">myuser</code> and <code class="language-html highlighter-rouge">mypassword</code> with what you deem appropiate. Now you have the database ready to use locally, you can connect to it using any database management system you want, I recommend <a href="https://dbeaver.io/download/" target="_blank">Dbeaver</a>. The connection is through localhost and port 5432. Later on we will see how to automate this process but for now, this is how it is done locally.</p>
+
+<h2 id="django-webapp-setup">Django webapp setup</h2>
+
+<p>Given the database, we need a web on top. With the python environment activated, run the following using any name you want:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>django-admin startproject myprojectname
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>This will create the basic skeleton for a Django project. We now have to configure the database and create a simple app to store data. Go to <code class="language-html highlighter-rouge">settings.py</code> and locate the <code class="highlight language-python" data-lang="python"><span class="n">INSTALLED_APPS</span></code> variable. Append <code class="highlight language-python" data-lang="python"><span class="sh">'</span><span class="s">django.db.backends.postgresql</span><span class="sh">'</span><span class="p">,</span></code> to the list, it should be like this:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="sh">'</span><span class="s">django.contrib.admin</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">django.contrib.auth</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">django.contrib.contenttypes</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">django.contrib.sessions</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">django.contrib.messages</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">django.contrib.staticfiles</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">django.db.backends.postgresql</span><span class="sh">'</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Also locate the <code class="highlight language-python" data-lang="python"><span class="n">DATABASES</span></code> variable and modify it to contain the information necessary to connect to the posgresql database:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">'</span><span class="s">default</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="sh">'</span><span class="s">ENGINE</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">django.db.backends.postgresql</span><span class="sh">'</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">NAME</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">mydatabase</span><span class="sh">'</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">USER</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">myuser</span><span class="sh">'</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">PASSWORD</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">mypassword</span><span class="sh">'</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">HOST</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">localhost</span><span class="sh">'</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">PORT</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">5432</span><span class="sh">'</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Since storing passwords in plain text is normally not a good idea, I recommend you use environment variables for that:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">'</span><span class="s">default</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="sh">'</span><span class="s">ENGINE</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">django.db.backends.postgresql</span><span class="sh">'</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">NAME</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">mydatabase</span><span class="sh">'</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">USER</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">myuser</span><span class="sh">'</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">PASSWORD</span><span class="sh">'</span><span class="p">:</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">DB_PASSWORD</span><span class="sh">'</span><span class="p">,</span> <span class="sh">''</span><span class="p">),</span>  <span class="c1"># Don't forget to import os
+</span>        <span class="sh">'</span><span class="s">HOST</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">localhost</span><span class="sh">'</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">PORT</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">5432</span><span class="sh">'</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>You can now provide the password through environment variables:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="nb">export </span><span class="nv">DB_PASSWORD</span><span class="o">=</span><span class="s1">'mypassword'</span>  <span class="c"># Unix</span>
+<span class="nb">set </span>DB_PASSWORD <span class="s2">"mypassword"</span>  <span class="c"># CMD Windows</span>
+<span class="nv">$env</span>:DB_PASSWORD<span class="o">=</span><span class="s2">"mypassword"</span>  <span class="c"># PowerShell Windows</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Finally, let’s create a simple page. Start by typing:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>python manage.py startapp simpleapp
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Now, modify <code class="language-html highlighter-rouge">settings.py</code> to include it by adding it to the <code class="highlight language-python" data-lang="python"><span class="n">INSTALLED_APPS</span></code> variable:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="sh">'</span><span class="s">django.contrib.admin</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">django.contrib.auth</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">django.contrib.contenttypes</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">django.contrib.sessions</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">django.contrib.messages</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">django.contrib.staticfiles</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">django.db.backends.postgresql</span><span class="sh">'</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">simpleapp</span><span class="sh">'</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>After that, we will add a very simple model and view to handle data. Our model will only contain names of users. Go to <code class="language-html highlighter-rouge">simpleapp/models.py</code> and add this:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">models</span><span class="p">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="p">.</span><span class="nc">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">name</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Then, create <code class="language-html highlighter-rouge">simpleapp/forms.py</code> and add this:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre><span class="kn">from</span> <span class="n">django</span> <span class="kn">import</span> <span class="n">forms</span>
+<span class="kn">from</span> <span class="n">.models</span> <span class="kn">import</span> <span class="n">User</span>
+
+<span class="k">class</span> <span class="nc">UserForm</span><span class="p">(</span><span class="n">forms</span><span class="p">.</span><span class="n">ModelForm</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">User</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="sh">'</span><span class="s">name</span><span class="sh">'</span><span class="p">]</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Next, modify <code class="language-html highlighter-rouge">simpleapp/views.py</code> to include the following:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre><span class="kn">from</span> <span class="n">django.views.generic.edit</span> <span class="kn">import</span> <span class="n">CreateView</span>
+<span class="kn">from</span> <span class="n">.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="n">.forms</span> <span class="kn">import</span> <span class="n">UserForm</span>
+
+<span class="k">class</span> <span class="nc">UserCreateView</span><span class="p">(</span><span class="n">CreateView</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">User</span>
+    <span class="n">form_class</span> <span class="o">=</span> <span class="n">UserForm</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="sh">'</span><span class="s">user_form.html</span><span class="sh">'</span>
+    <span class="n">success_url</span> <span class="o">=</span> <span class="sh">'</span><span class="s">/create_user
+</span></pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>You also need to create the template under a templates folder, create <code class="language-html highlighter-rouge">simpleapp/templates/user_form.html</code> and insert this:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">"submit"</span><span class="nt">&gt;</span>Create<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Last, we need to link the urls for everything to work properly. Create the file <code class="language-html highlighter-rouge">simpleapp/urls.py</code> and write:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="kn">from</span> <span class="n">django.urls</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="n">.views</span> <span class="kn">import</span> <span class="n">UserCreateView</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nf">path</span><span class="p">(</span><span class="sh">'</span><span class="s">create_user/</span><span class="sh">'</span><span class="p">,</span> <span class="n">UserCreateView</span><span class="p">.</span><span class="nf">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="sh">'</span><span class="s">create_user</span><span class="sh">'</span><span class="p">),</span>
+<span class="p">]</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Go to the main <code class="language-html highlighter-rouge">myprojectname/urls.py</code> and edit it to be like this:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre><span class="kn">from</span> <span class="n">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+<span class="kn">from</span> <span class="n">django.urls</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="n">django.urls</span> <span class="kn">import</span> <span class="n">include</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nf">path</span><span class="p">(</span><span class="sh">'</span><span class="s">admin/</span><span class="sh">'</span><span class="p">,</span> <span class="n">admin</span><span class="p">.</span><span class="n">site</span><span class="p">.</span><span class="n">urls</span><span class="p">),</span>
+    <span class="nf">path</span><span class="p">(</span><span class="sh">'</span><span class="s">simpleapp/</span><span class="sh">'</span><span class="p">,</span> <span class="nf">include</span><span class="p">(</span><span class="sh">'</span><span class="s">simpleapp.urls</span><span class="sh">'</span><span class="p">)),</span>
+<span class="p">]</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Now you are good to go. We can finally start adding rows to the database. For doing so, apply migrations and start the webapp:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Open a browser, go to <code class="language-html highlighter-rouge">http://127.0.0.1:8000/simpleapp/create_user/</code> and you will be able to input users’ names. If it is your first time using Django, this is a whole lot, I know. This is a simple example using Django’s class-based views. Things can get very, very complex. The aim of this tutorial is to set up a minimal working webapp. For more information on Django, you can go to their <a href="https://docs.djangoproject.com/en/4.2/" target="_blank">official documentation</a>. Okay, close everything and let’s start our Docker journey. To stop the webapp run <code class="language-html highlighter-rouge">ctrl+C</code> and to stop the posgresql server run:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>pg_ctl <span class="nt">-D</span> /usr/local/var/postgres stop
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h1 id="docker">Docker</h1>
+
+<p>Setting everything from scratch is time consuming but if you only need to do it once, it is affordable. The problem comes when you want to migrate to other machines or you want to scale. Having to go through all the process above everytime is annoying. As I mentioned before, it would be nice to automate it. That’s when Docker comes into play. It is a way to pack everything up so that it can run on your machine, the cloud or a microwave, if it has Docker installed, of course. A Docker is basically made of a few configuration files that are used to construct an image that does whatever you want, in our case handle data through a web app. Having introduced the concept, let’s build a Docker for our web app.</p>
+
+<p>This section is mostly inspired by <a href="https://learndjango.com/tutorials/django-docker-and-postgresql-tutorial" target="_blank">this other tutorial</a>. Hand over there if you feel curious. Also, I recommend you giving a look at the <a href="https://docker-curriculum.com/" target="_blank">official Docker beginner tutorial</a> for more information on how to set up Docker and the basics of it.</p>
+
+<p>To start, create a Dockerfile inside of the Django project directory. Specify the following information on it:</p>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="k">FROM</span><span class="s"> python:3.10.2-slim-bullseye</span>
+
+<span class="k">WORKDIR</span><span class="s"> /code</span>
+
+<span class="k">COPY</span><span class="s"> . .</span>
+<span class="k">RUN </span>pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>You also need to create a <code class="language-html highlighter-rouge">requirements.txt</code> with this:</p>
+
+<pre><code class="language-txt">django==4.2.2
+psycopg2-binary
+</code></pre>
+
+<p>You could simply install it with pip, but when the project grows you will be thankfull to have it all in a <code class="language-html highlighter-rouge">requirements.txt</code> file. So, that’s the container of the webapp. Simple, right? However, we still need to connect it to a posgres database. For that we need to use docker compose to run another container with the database and connect them. For that, create a <code class="language-html highlighter-rouge">docker-compose.yml</code> file with the following:</p>
+
+<pre><code class="language-txt">version: "3"
+
+services:
+  web:
+    build: .
+    command: sh start.sh
+    environment:
+      - DB_PASSWORD
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:14
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: pg_isready -U myuser -d mydatabase
+      interval: 1s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+</code></pre>
+
+<p>You will need to substitute <code class="language-html highlighter-rouge">myuser</code> and <code class="language-html highlighter-rouge">mydatabase</code> with what you like most. To explain a bit what is happening here, we are running a postgres container, then performing healthy checks to be sure the database is running and after that we launch the webapp container. You could provide the password also there, but for security reasons is better to provide it through an environment variable, just like before. The database is stored in the folder <code class="language-html highlighter-rouge">postgres_data</code> locally, so that whenever you kill the container you don’t lose the data. The port 5432 is forwarded locally so you can connect to the database from your machine when the container is running and see the data.</p>
+
+<p>Wait! We have not finished yet. We need to create the <code class="language-html highlighter-rouge">start.sh</code> and modify the <code class="language-html highlighter-rouge">myprojectname/settings.py</code> file. The <code class="language-html highlighter-rouge">DATABASES</code> variable should look like this:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="sh">'</span><span class="s">default</span><span class="sh">'</span><span class="p">:</span> <span class="p">{</span>
+        <span class="sh">'</span><span class="s">ENGINE</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">django.db.backends.postgresql</span><span class="sh">'</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">NAME</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">mydatabase</span><span class="sh">'</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">USER</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">myuser</span><span class="sh">'</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">PASSWORD</span><span class="sh">'</span><span class="p">:</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">'</span><span class="s">DB_PASSWORD</span><span class="sh">'</span><span class="p">,</span> <span class="sh">''</span><span class="p">),</span>
+        <span class="sh">'</span><span class="s">HOST</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">db</span><span class="sh">'</span><span class="p">,</span>
+        <span class="sh">'</span><span class="s">PORT</span><span class="sh">'</span><span class="p">:</span> <span class="sh">'</span><span class="s">5432</span><span class="sh">'</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>The only change is on <code class="language-html highlighter-rouge">HOST</code>. It is now set up to <code class="language-html highlighter-rouge">db</code> which is the name of the posgres container. And the <code class="language-html highlighter-rouge">start.sh</code> script is the following:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="n">python</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span> <span class="n">makemigrations</span>
+<span class="n">python</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span> <span class="n">migrate</span>
+<span class="n">python</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span> <span class="n">runserver</span> <span class="mf">0.0</span><span class="p">.</span><span class="mf">0.0</span><span class="p">:</span><span class="mi">8000</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>It is creating all the migrations needed to set up all the models from Django into postgres. Finally, just run the container:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>docker compose up
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>To stop it, do <code class="language-html highlighter-rouge">ctrl+C</code> and then <code class="language-html highlighter-rouge">docker compose rm</code>. That’s it, that’s all you need to do to restart your webapp from anywhere. You can now take your code to any machine and you won’t need to set up posgres, python and django from scratch. Just install docker and run <code class="language-html highlighter-rouge">docker compose up</code>. Also, it is a good practice to include a <code class="language-html highlighter-rouge">.dockerignore</code>, just like <code class="language-html highlighter-rouge">.gitignore</code>. For this simple app I have</p>
+
+<pre><code class="language-txt">postgres_data/
+Dockerfile
+docker-compose.yml
+*/__pycache__/
+*/*/__pycache__/
+*/*/*/__pycache__/
+</code></pre>
+
+<p>This way I don’t load any unnecessary files to the container, making it faster. So now that we have everything packed up in our bag, let’s travel. Let’s deploy the web to AWS for others to use it.</p>
+
+<h1 id="aws">AWS</h1>
+
+<p>Amazon Web Services are a way to deploy your code into servers that you don’t need to manage. This way instead of the cost of setting up a whole server, you just pay for the hours used. Nevertheless, you won’t save yourself the cost of configuring everything. Even though configuring AWS may be simpler than configuring a server, it is still an important investment of time. For that, I will provide here the bare minimum to make our webapp work on AWS. You will still need to read the AWS docs extensively, there are many tutorials online, but Amazon keeps changing the interface every so often. The only web that is for sure updated is the <a href="https://docs.aws.amazon.com/" target="_blank">AWS official docs page</a>.</p>
+
+<h2 id="account-and-iam-roles">Account and IAM roles</h2>
+
+<p>Before we can start configuring the server, we need to configure an account. For that you will need access keys. You can create access keys for your root account but it is not recommended. AWS recommends that you create role with less permissions than your root account (specially without billing permissions) and to use those access keys. In the past this was made using the Identity and Access Management (IAM) app. Now, it is being migrated to IAM Identity Center. Both methods still work as of this writing but I will explain the second one which is more updated. The following is a reduced version of <a href="https://docs.aws.amazon.com/singlesignon/latest/userguide/getting-started.html" target="_blank">this tutorial</a>. Go to the <a href="https://console.aws.amazon.com/" target="_blank">AWS console</a>. There look for the IAM Identity Center. Once on the IAM Identity Center you will need to create an user, create a permission set and link both. In the section User click to Add User and fill the neccesary information. Then, on permission sets, click on Create permission set and create the predefined role AdministratorAccess. After that, go to AWS accounts, select the account under root and click Assign users or groups. Select your created user, click next, select the role, click next, review it and click submit. Finally, to activate that user, you must open the mail you provided and register that user with some password. Before you continue, go to Dashboard and save your AWS access portal URL, that is the URL you need to use to log in with that user. Now, click that URL and sign in. Once you are logged in you should see your user and two links at the right: one for Management console and one for Command line or programatic access. Click the latter and you will see your access keys.</p>
+
+<p>The next step is to install and configure the AWS CLI. Go <a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html" target="_blank">here</a> and follow the steps for the installation. Once installed execute <code class="language-html highlighter-rouge">aws configure</code> and provide the access key and secret access key obtained previously. It will also ask for a region, I will be using <code class="language-html highlighter-rouge">us-east-1</code>. If you choose a different one you may encounter problems later on because the free tiers differ across regions. And for the output format choose <code class="language-html highlighter-rouge">json</code>. You are now (almost) ready to start launching instances.</p>
+
+<h2 id="ec2-instances">EC2 Instances</h2>
+
+<p>Having created our account it is time to create an instance where to deploy our webapp. If your page gets too large you may be interested in storing the database in S3 buckets, but for now I will store code and data in the same instance. You can find the docs for EC2 <a href="https://docs.aws.amazon.com/ec2/index.html" target="_blank">here</a>. As before, I will summarize it to just use what we need. First, create the instance. For that go to the <a href="https://us-east-1.console.aws.amazon.com/ec2" target="_blank">EC2 console</a>. Under Instances section, click Launch instances. There give it a name, select the OS and arch (I recommend Ubuntu and x86-64), select the instance type (I will be using t2.micro cuase it is free), select a key-pair or create since you probably don’t have one and leave everything as default. Once you launched it you can now access your machine through ssh. In the instances section, you can click on your created instance and then click on Connect and it will give you instructions on how to connect. The next steps are to install Docker, copy your webapp to the instance, change the firewall of the instance to allow http and postgres traffic and finally deploy the app.</p>
+
+<h3 id="installing-docker-again">Installing Docker (again)</h3>
+
+<p>If you have chosen Ubuntu as your OS you can follow the instructions <a href="https://docs.docker.com/engine/install/ubuntu/" target="_blank">here</a>. You just basically need to execute the following commands after accessing the machine:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="rouge-code"><pre><span class="nb">sudo </span>apt-get update <span class="nt">-y</span>
+<span class="nb">sudo </span>apt-get <span class="nb">install </span>ca-certificates curl gnupg <span class="nt">-y</span>
+<span class="nb">sudo install</span> <span class="nt">-m</span> 0755 <span class="nt">-d</span> /etc/apt/keyrings
+curl <span class="nt">-fsSL</span> https://download.docker.com/linux/ubuntu/gpg | <span class="nb">sudo </span>gpg <span class="nt">--dearmor</span> <span class="nt">-o</span> /etc/apt/keyrings/docker.gpg
+<span class="nb">sudo chmod </span>a+r /etc/apt/keyrings/docker.gpg
+<span class="nb">echo</span> <span class="se">\</span>
+  <span class="s2">"deb [arch="</span><span class="si">$(</span>dpkg <span class="nt">--print-architecture</span><span class="si">)</span><span class="s2">" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu </span><span class="se">\</span><span class="s2">
+  "</span><span class="si">$(</span><span class="nb">.</span> /etc/os-release <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="s2">"</span><span class="nv">$VERSION_CODENAME</span><span class="s2">"</span><span class="si">)</span><span class="s2">" stable"</span> | <span class="se">\</span>
+  <span class="nb">sudo tee</span> /etc/apt/sources.list.d/docker.list <span class="o">&gt;</span> /dev/null
+<span class="nb">sudo </span>apt-get update <span class="nt">-y</span>
+<span class="nb">sudo </span>apt-get <span class="nb">install </span>docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin <span class="nt">-y</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>And if you want to check that everything is working just do</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="nb">sudo </span>docker run hello-world
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="upload-your-code-to-ec2">Upload your code to EC2</h3>
+
+<p>You can copy your entire directory recursively into you EC2 instance with scp:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>scp <span class="nt">-r</span> <span class="nt">-i</span> YOUR_KEY ./<span class="k">*</span> ubuntu@YOUR_EC2_ADDRESS:.
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><code class="language-html highlighter-rouge">YOUR_KEY</code> is the key pair previously created and <code class="language-html highlighter-rouge">YOUR_EC2_ADDRESS</code> may look something like <code class="language-html highlighter-rouge">ec2-30-29-46-221.compute-1.amazonaws.com</code>. It is the same address that you use to ssh into your machine.</p>
+
+<h3 id="changing-the-firewall">Changing the firewall</h3>
+
+<p>In AWS, the instances have some security rules that control the inbound and outbound traffic of your app. By default all the ports are closed except for 22 which is the ssh port. We will need to open the port 80 and 5432 since they are the http and postgres ports. If you have an SSL certificate you could open the port 443 for https, but we will just use those two for now. Let’s go back to the <a href="https://us-east-1.console.aws.amazon.com/ec2" target="_blank">EC2 console</a> and go to Security Groups. Click on Create security group. Give it a name and add two inbound rules. You can just select HTTP and Postgresql in the dropdown menu and it will set the port for you automatically. Then, on source, select Anywhere IPv4 and click Create security group. Now go back to your created instance and click Actions &gt; Security &gt; Change security groups. There simply add the newly created security group and you are free to go.</p>
+
+<h2 id="deploy-the-app">Deploy the app</h2>
+
+<p>In order to deploy our app we need to make one change to our <code class="language-html highlighter-rouge">docker-compose.yml</code>. Initially we were redirecting port 8000 into 8000, we are now going to redirect it to 80 which the http port. The line to change will end up like this</p>
+
+<pre><code class="language-txt">ports:
+  - 80:8000
+</code></pre>
+
+<p>Finally, ssh into your machine with docker installed and execute</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="nb">sudo </span><span class="nv">DB_PASSWORD</span><span class="o">=</span>... docker compose up <span class="nt">-d</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Remember that you have to specify the password of the database as a environment variable. Okay, the app is running but, how can we access it? Well, we cannot. We still need to make some changes. Stop the container and let’s finish this:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="nb">sudo </span><span class="nv">DB_PASSWORD</span><span class="o">=</span>... docker compose down
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>The first thing to know is what is the IP that we can use to access this page. In the AWS console, when you enter your instance it displays somewhere “Public IPv4 address”. That is the IP of your app. However, if you were to enter there, Django will not let you in. That is because you need to allow that host. For that, go the <code class="language-html highlighter-rouge">setting.py</code> of your app and add it:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="p">[</span><span class="sh">'</span><span class="s">YOUR_IP</span><span class="sh">'</span><span class="p">]</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Also, even after changing this, when you access your ip you don’t see the page. That is because the base url is not pointing anywhere, but we can fix that. Create a view that only has the redirection:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="kn">from</span> <span class="n">django.shortcuts</span> <span class="kn">import</span> <span class="n">redirect</span>
+
+<span class="k">def</span> <span class="nf">redirect_to_create_user</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nf">redirect</span><span class="p">(</span><span class="sh">'</span><span class="s">/simpleapp/create_user</span><span class="sh">'</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Then, in your main <code class="language-html highlighter-rouge">urls.py</code> add <code class="language-html highlighter-rouge">path('', redirect_to_create_user)</code>, it will end up like this:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="kn">from</span> <span class="n">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+<span class="kn">from</span> <span class="n">django.urls</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="n">django.urls</span> <span class="kn">import</span> <span class="n">include</span>
+<span class="kn">from</span> <span class="n">.views</span> <span class="kn">import</span> <span class="n">redirect_to_create_user</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="nf">path</span><span class="p">(</span><span class="sh">''</span><span class="p">,</span> <span class="n">redirect_to_create_user</span><span class="p">),</span>
+    <span class="nf">path</span><span class="p">(</span><span class="sh">'</span><span class="s">admin/</span><span class="sh">'</span><span class="p">,</span> <span class="n">admin</span><span class="p">.</span><span class="n">site</span><span class="p">.</span><span class="n">urls</span><span class="p">),</span>
+    <span class="nf">path</span><span class="p">(</span><span class="sh">'</span><span class="s">simpleapp/</span><span class="sh">'</span><span class="p">,</span> <span class="nf">include</span><span class="p">(</span><span class="sh">'</span><span class="s">simpleapp.urls</span><span class="sh">'</span><span class="p">)),</span>
+<span class="p">]</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Now, copy again all the files into your machine and deploy the webapp:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="nb">sudo </span><span class="nv">DB_PASSWORD</span><span class="o">=</span>... docker compose up <span class="nt">-d</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="accessing-the-database">Accessing the DataBase</h3>
+
+<p>Let’s see how we can access the server database locally. Open you favourite DB program (mine is DBeaver) and create a new connection. This time you will have to provide an URL instead of localhost. Everything else is the same as when you did it locally. The port is 5432, the user is what you gave it, and the database name is what you name it. If you have configured properly the EC2 security group you could now access your database locally.</p>
+
+<h1 id="web-domain">Web Domain</h1>
+
+<p>Nice, we have our fantastic webapp up and running, but wait, are you going to share to your friends the page 50.283.48.100? Obviously not, you need a fancy domain like myawesomepage.com or something that describes your project. To achieve that you need to first buy a domain and then link that domain to your IP. Domains that are not on high demand typically cost around 10$ to 20$. You can buy them on <a href="https://www.namecheap.com/" target="_blank">Namecheap</a>. Once you have it you need to do several things on the AWS side. You will need to fix the IP so that it doesn’t change, otherwise the DNS redirection will get broken over time. After that you need to create nameservers and then route your domain to that IP. Let’s go step by step. To fix the IP go to the section Elastic IP in the left bar of the EC2 menu. Create such Elastic IP and then, in actions, associate it to your instance. Once you have done that, you will need to create the hosted zone. For that, search in AWS the Route 53 service. Once there, click on Create hosted zone. Insert your domain and create it. Before we continue, two more records need to be created. Create one with Type A and your previous Elastic IP under the value section, everything else as default. Repeat now but add ‘www’ in subdomain so that your page can be accessed either by its domain or adding www at the beginning. Once you have done that, go to your domain on Namecheap and click on manage. Select custom DNS and enter the four nameservers that were created previously. If you didn’t understand something, you can check the tutorials I followed both for <a href="https://techgenix.com/namecheap-aws-ec2-linux/" target="_blank">the AWS</a> and <a href="https://www.namecheap.com/support/knowledgebase/article.aspx/10371/2208/how-do-i-link-my-domain-to-amazon-web-services/" target="_blank">Namecheap part</a>. DNS redirection may take up to 48 hours. There is one last thing to modify, remember that you need to include the IP in <code class="language-html highlighter-rouge">ALLOWED_HOSTS</code>? Well, you also need to include your domain there. Change that and you will have your marvelous webpage running.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Congratulations! You have managed to reach to the end of this tutorial. If you followed the steps carefully you now know how to create your own web apps. The first time you do it is quite tiresome, but once you know how to do it you can get your millionaire idea up and running at the moment. Let’s recap. First, you need to create your Django app. Then, you create a Docker to launch it easily. After that, you create an AWS instance and deploy your app there. Finally, you link your domain to the instance IP. Once you are done you can enjoy your creation!</p>
+
+            </div>
+
+            <!-- Rating -->
+            
+
+            <!-- Post Date -->
+            <p>
+            <small>
+                <span class="post-date"><time class="post-date" datetime="2023-07-12">12 Jul 2023</time></span>           
+                
+                </small>
+            </p>
+
+            <!-- Post Categories -->
+            <div class="after-post-cats">
+                <ul class="tags mb-4">
+                    
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#AWS">AWS</a>
+                    </li>
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Django">Django</a>
+                    </li>
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Docker">Docker</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- End Categories -->
+
+            <!-- Post Tags -->
+            <div class="after-post-tags">
+                <ul class="tags">
+                    
+                    
+                </ul>
+            </div>
+            <!-- End Tags -->
+
+            <!-- Prev/Next -->
+            <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+            
+            <a class="prev d-block col-md-6" href="/HMM-padel-part3/"> &laquo; Modelling a padel match with Hidden Markov Models (Part 3)</a>
+            
+            
+            <a class="next d-block col-md-6 text-lg-right" href="/gpt4-audiobook/">How to make a full audiobook with AI tools. &raquo; </a>
+            
+            <div class="clearfix"></div>
+            </div>
+            <!-- End Categories -->
+        
+        <!-- End Post -->
+
+    </div>
+</div>
+<!-- End Article
+================================================== -->
+
+<!-- Begin Comments
+================================================== -->
+
+<!--End Comments
+================================================== -->
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+</div>
+
+
+<!-- Bottom Alert Bar
+================================================== -->
+<div class="alertbar">
+	<div class="container text-center">
+		<span> Never miss a <b>story</b> from us, subscribe to this blog</span>
+        <form
+          class="wj-contact-form validate"
+          action="https://gmail.us4.list-manage.com/subscribe/post?u=6bc2f64e5d9109bd06bf859c5&amp;id=68bbfe755b&amp;f_id=005c05e9f0"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+        >
+            <div class="mc-field-group center-inputs">
+                <input type="email" placeholder="Email" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="button">
+            </div>
+        </form>
+	</div>
+</div>
+
+    
+</div>
+
+<!-- Categories Jumbotron
+================================================== -->
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+            <div class="d-md-flex align-items-center justify-content-center h-100">
+                <h2 class="d-md-block align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+            </div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+            
+            
+                
+                    <a class="mt-1 mb-1" href="/categories#Stories">Stories (5)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Philosophy">Philosophy (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Deep-Learning">Deep Learning (7)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Reinforcement-Learning">Reinforcement Learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Supervised-Learning">Supervised Learning (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Happy-Ideas">Happy Ideas (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#GAN">GAN (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Theory">Theory (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#unsupervised-learning">unsupervised learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Tutorial">Tutorial (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Servers">Servers (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Raspberry-Pi">Raspberry Pi (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Hidden-Markov-Model">Hidden Markov Model (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Django">Django (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Docker">Docker (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AWS">AWS (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AI">AI (2)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Unsupervised-Learning">Unsupervised Learning (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Python">Python (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Psychology">Psychology (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Economy">Economy (1)</a>
+                
+            
+            
+		</div>
+	</div>
+</div>
+
+<!-- Begin Footer
+================================================== 
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                Copyright © 2025 GranaData 
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" href="https://www.wowthemes.net/mediumish-free-jekyll-template/">Mediumish Jekyll Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>-->
+<!-- End Footer
+================================================== -->
+
+</div> <!-- /.site-content -->
+
+<!-- Scripts
+================================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<script src="/assets/js/mediumish.js"></script>
+
+
+<script src="/assets/js/lazyload.js"></script>
+
+
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script> 
+
+
+<script id="dsq-count-scr" src="//demowebsite.disqus.com/count.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="icon" href="/assets/images/favicon.ico">
+
+<title>Stable Diffusion Tutorial (Deprecated) | GranaData</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Stable Diffusion Tutorial (Deprecated) | GranaData</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Stable Diffusion Tutorial (Deprecated)" />
+<meta name="author" content="jose" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Three days ago Stable Diffusion was publicly released and today I am bringing to you an easy way of using the model without the need of having any kind of extra hardware, just your laptop and wifi connection. At the end I will also leave a script in case you do have some extra hardware and want to put that RTX 3080 to good use." />
+<meta property="og:description" content="Three days ago Stable Diffusion was publicly released and today I am bringing to you an easy way of using the model without the need of having any kind of extra hardware, just your laptop and wifi connection. At the end I will also leave a script in case you do have some extra hardware and want to put that RTX 3080 to good use." />
+<link rel="canonical" href="https://granadata.art/stable_diffusion_tutorial/" />
+<meta property="og:url" content="https://granadata.art/stable_diffusion_tutorial/" />
+<meta property="og:site_name" content="GranaData" />
+<meta property="og:image" content="https://granadata.art/assets/images/StableDiffusion/SDimage.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-08-25T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://granadata.art/assets/images/StableDiffusion/SDimage.png" />
+<meta property="twitter:title" content="Stable Diffusion Tutorial (Deprecated)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jose"},"dateModified":"2022-08-25T00:00:00+00:00","datePublished":"2022-08-25T00:00:00+00:00","description":"Three days ago Stable Diffusion was publicly released and today I am bringing to you an easy way of using the model without the need of having any kind of extra hardware, just your laptop and wifi connection. At the end I will also leave a script in case you do have some extra hardware and want to put that RTX 3080 to good use.","headline":"Stable Diffusion Tutorial (Deprecated)","image":"https://granadata.art/assets/images/StableDiffusion/SDimage.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://granadata.art/stable_diffusion_tutorial/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://granadata.art/assets/images/logo.png"},"name":"jose"},"url":"https://granadata.art/stable_diffusion_tutorial/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+<link href="/assets/css/screen.css" rel="stylesheet">
+
+<link href="/assets/css/main.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<!-- Twitter cards -->
+<meta name="twitter:site"    content="@GranaDataJose">
+<meta name="twitter:creator" content="@GranaDataJose">
+<meta name="twitter:title"   content="Stable Diffusion Tutorial (Deprecated)">
+
+
+<meta name="twitter:description" content="Data science from Granada to the world.">
+
+
+
+<meta name="twitter:card"  content="summary_large_image">
+<meta name="twitter:image" content="https://granadata.art/assets/images/StableDiffusion/SDimage.png">
+
+<!-- end of Twitter cards -->
+
+</head>
+
+
+<!-- change your GA id in _config.yml -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46278016-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+
+<body class="layout-post">
+	<!-- defer loading of font and font awesome -->
+    <noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    
+	
+
+
+<!-- Begin Menu Navigation
+================================================== -->
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark shadow fixed-top mediumnavigation nav-down">
+
+    <div class="container pr-0">
+
+    <!-- Begin Logo -->
+    <a class="navbar-brand" href="/">
+    <img src="/assets/images/logo.png" alt="GranaData">
+    </a>
+    <!-- End Logo -->
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMediumish">
+
+        <!-- Begin Menu -->
+
+            <ul class="navbar-nav mr-auto">
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/index.html">Blog</a>
+                </li>
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/about">About</a>
+                </li>
+                
+            </ul>
+            <ul class="navbar-nav ml-auto">
+
+                <script src="/assets/js/lunr.js"></script>
+
+
+<style>
+    .lunrsearchresult .title {color: #d9230f;}
+    .lunrsearchresult .url {color: silver;}
+    .lunrsearchresult a {display: block; color: #777;}
+    .lunrsearchresult a:hover, .lunrsearchresult a:focus {text-decoration: none;}
+    .lunrsearchresult a:hover .title {text-decoration: underline;}
+</style>
+
+
+<form class="bd-search" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+    <input type="text" class="form-control text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+</form>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+
+            </ul>
+
+        <!-- End Menu -->
+
+    </div>
+
+    </div>
+</nav>
+<!-- End Navigation
+================================================== -->
+
+<div class="site-content">
+
+<div class="container">
+
+<!-- Site Title
+================================================== -->
+<div class="mainheading">
+    <h1 class="sitetitle">GranaData</h1>
+    <p class="lead">
+        Data science from Granada to the world.
+    </p>
+</div>
+
+<!-- Content
+================================================== -->
+<div class="main-content">
+    <!-- Begin Article
+================================================== -->
+<div class="container inside-container">
+    
+    <div class="row">
+
+        <!-- Post Share -->
+        
+        <!-- Post -->
+        
+        
+            <div class="mainheading">
+
+                <!-- Author Box -->
+                
+                <div class="row post-top-meta">
+                    <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-right mb-4 mb-md-0">
+                        
+                        <img class="author-thumb" src="/assets/images/JoseAvatar.png" alt="Jose">
+                        
+                    </div>
+                    <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left">
+                        <a target="_blank" class="link-dark" href="https://jerry-master.github.io/Home-Page/">Jose</a>
+                        <a target="_blank" href="https://twitter.com/GranaDataJose" class="btn follow">Follow</a>
+                        
+                        <a target="_blank" href="/read_time" class="btn readtime">10 min read</a>
+                        
+                        <span class="author-description">Data scientist from Alcalá la Real. Studied at BarcelonaTech, worked as a researcher at the UGR and UPC, was a machine learning engineer at El Ranchito and Nemeda and now work in Koh Young Research Spain. Always wanting to explain my knowledge to the world.</span>
+                    </div>
+                </div>
+                
+
+                <!-- Post Title -->
+                <h1 class="posttitle">Stable Diffusion Tutorial (Deprecated)</h1>
+
+            </div>
+
+            <!-- Adsense if enabled from _config.yml (change your pub id and slot) -->
+            
+            <!-- End Adsense -->
+
+            <!-- Post Featured Image -->
+            
+            <!-- End Featured Image -->
+
+            <!-- Post Content -->
+            <div class="article-post">
+                <!-- Toc if any -->
+                
+                <!-- End Toc -->
+                <p>Three days ago Stable Diffusion was publicly released and today I am bringing to you an easy way of using the model without the need of having any kind of extra hardware, just your laptop and wifi connection. At the end I will also leave a script in case you do have some extra hardware and want to put that RTX 3080 to good use.</p>
+
+<p>In case any of you didn’t know what Stable Diffusion is, it is similar to DALLE·2. It is a diffusion model able to create images from text. For example, for the prompt “Amazing, complex, intricate and highly detailed treehouse in a snow covered bonsai tree on top of a table, steampunk, vibrant colors, vibrant, beautiful, contrast, neon highlights, Highly detailed, ray tracing, digital painting, artstation, concept art, smooth, sharp focus, illustration, art by Beeple, Mike Winklemann, 8k” you get this amazing result.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/ex1.png" alt="Example images from stable diffusion" /></p>
+
+<p>If you want to be able to produce this astonishing images with just a few words and 20 seconds of computation continue reading. In the internet you may find many tutorials for using this model on Colab. However, the Colab notebooks sometimes don’t give you access to GPU resources and so you may take several minutes to generate one single image. To avoid that we are goint to run Stable Diffusion in Kaggle, their servers provide you with 30 weekly hours of GPU computation, which roughly translates to 5000 generated images, more than neccessary to satisfy your needs.</p>
+
+<p>The first step you need to do is to create a Kaggle and HuggingFace account. The Kaggle account is to have access to GPUs as I said before, and the HuggingFace account is to have access to the Stable Diffusion model. I’ll go step by step. Let’s create the HuggingFace account. Go to <a href="https://huggingface.co/">https://huggingface.co/</a>.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/huggingfaceRegister.png" alt="Hugging Face registration" /></p>
+
+<p>At the top right click on Sign Up.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/huggingfaceRegister2.png" alt="Hugging Face registration 2nd part" /></p>
+
+<p>Follow the steps and log in with your account. Then, when you are logged in go to Settings as showed in the next image.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/HFlogin.png" alt="Already logged HF page" /></p>
+
+<p>Now, go to the Access Tokens section.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/HFSettings.png" alt="Settings HF page" /></p>
+
+<p>Finally, let’s create our needed token. Click on New token.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/HFToken.png" alt="Token HF page" /></p>
+
+<p>Enter any name you like, I will use StableDiffusion for obvious reasons. You can use write or read permissions, but you only need read permissions so I advise you to leave it like that.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/HFToken2.png" alt="Token HF page 2" /></p>
+
+<p>And you should end up with something like this. Copy the token and save it for later use in Kaggle.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/HFToken3.png" alt="Token HF page 3" /></p>
+
+<p>Before you can use this token, you need to agree to the terms and conditions of the Stable Diffusion model. Go to the page <a href="https://huggingface.co/CompVis/stable-diffusion-v1-4">https://huggingface.co/CompVis/stable-diffusion-v1-4</a>, access the repository and accept the terms and conditions. If you cannot see the tick box, you just need to log in.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/access.png" alt="Terms" /></p>
+
+<p>Same process, to create your account go to <a href="https://www.kaggle.com/">https://www.kaggle.com/</a> and register yourself.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/kaggleRegister.png" alt="Kaggle registration" /></p>
+
+<p>Again, just follow the steps.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/kaggleRegister2.png" alt="Kaggle registration 2" /></p>
+
+<p>Once you are logged in, we can start generating images. I have created a notebook with everything explained. To go to the notebook just go to this link: <a href="https://www.kaggle.com/code/josepc/stable-diffusion-nsfw/notebook">https://www.kaggle.com/code/josepc/stable-diffusion-nsfw/notebook</a>. You should see something like this. Click on the 3 dots at the top right corner. And then go to Copy &amp; edit notebook.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/kaggleSD.png" alt="Kaggle SD notebook" /></p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/kaggleSD2.png" alt="Kaggle SD notebook 2" /></p>
+
+<p>Ok, if it is your first time at kaggle there are a few things to explain before running the notebook. Once you are inside the notebook editor, to start the notebook you have to click the On button, but first you need to make sure the GPU is enabled and that the internet is enabled too. To do this, click the bottom right arrow.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/notebook.png" alt="notebook" /></p>
+
+<p>You should see this,</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/notebook2.png" alt="notebook 2" /></p>
+
+<p>If you don’t see the GPU there, then click on it and set it to GPU. Leave everything else as it is and start the notebook. Once the notebook started some extra bars appear to show the GPU is running.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/notebook3.png" alt="notebook 3" /></p>
+
+<p>To run each cell, click on it and do shift+Enter. Everything is explained there, but I’ll go cell by cell again here explaining what you need to modify to make it work for you.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/cell.png" alt="cell 1" /></p>
+
+<p>The first cell is just for installing libraries, run it as it is. The second one is where you actually need to enter your token. Modify the highlighted line copying there your HuggingFace token previously created. Keep in mind that the token should be enclosed by commas.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/cell2.png" alt="cell 2" /></p>
+
+<p>Once you hit shift+Enter, it will start downloading the model. It takes a few, you can see the progress like this. That 1.72G bar is the biggest one, when that is finished you are almost done.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/download.png" alt="download" /></p>
+
+<p>The third cell is for moving the model to the GPU, just run it normally with shift+Enter.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/cell3.png" alt="cell 3" /></p>
+
+<p>The fourth cell is the important one, here is where you are actually generating the images. There are two variables that you need to modify. The first one is <code class="language-html highlighter-rouge">num_images</code>, set it to the number of images you want to generate from a given prompt, but I advise you not to use more than 4 images at once for reasons I will mention at the end. The second variable is the <code class="language-html highlighter-rouge">prompt</code> variable, modify it to include your desired prompt. Delete the text in between commas (it is quite big) and write what you want. The result should be something like this: <code class="language-html highlighter-rouge">prompt = ['GIVEN TEXT'] * num_images</code>, don’t change the format or it won’t work. Just write your prompt inside the commas.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/cell4.png" alt="cell 4" /></p>
+
+<p>Once you hit shift+Enter, a progress bar will appear. When the value reaches 51 you are done. It takes nearly 20 seconds per image.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/counter.png" alt="progress bar" /></p>
+
+<p>The last two cells are for visualizing and saving the images. Just hit shift+Enter and there you have it, fabulous new images that noone has ever seen before.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/cellOutput.png" alt="cell output" /></p>
+
+<h2 id="possible-errors">Possible errors</h2>
+
+<p>There is the chance that you ran into an error call CUDA out of memory. When that happens, the only solution is to reset the notebook and rerun everything. If you create images in batches of 4, then it is quite difficult for that error to happen. But if for some reason you see a big red error message, just ignore it and restart your notebook. For those interested, the reason why that error happens is because there is a memory leakage into the GPU, the model creates some auxiliary tensors and then forgets of their existence. You cannot delete them because they are internal to the model, and the cache memory manager cannot delete them because they are still active, although never used. To solve it one would have to find the references of the allocated tensors and deallocate them manually, but it is easier to just restart the environment.</p>
+
+<p>The error looks like this, so that it doesn’t take you by surprise. If you go to the end of the large message you will see this.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/error.png" alt="error message" /></p>
+
+<h2 id="nsfw-version">NSFW version</h2>
+
+<p>The tutorial I showed you is for using the standard Stable Diffusion version from Hugging Face which has a safety checker to ensure you don’t generate nasty images. However, since the model is Open Source, it is possible to modify the code to remove that safety checker. In the name of liberty, I created another version of the notebook removing that safety checker. If you go to <a href="https://www.kaggle.com/code/josepc/stable-diffusion-nsfw">the original link</a> of the notebook, you will see that there is a box stating Version 2 of 2.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/version.png" alt="version" /></p>
+
+<p>If you click it you can see the first version which contains two extra cells to remove the safety checker. You can run that version or copy those cells into your copy of the other version. These are the cells. The first one is for loading extra libraries, and the second one is the actual code removing the checker.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/libs.png" alt="extra libs" /></p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/code.png" alt="extra code" /></p>
+
+<p>This last cell is quite large, but the only important change was done at the end. Commenting out those two lines is the only thing needed.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/code2.png" alt="extra code 2" /></p>
+
+<p>After removing the checker you just change the original call function with the modified one.</p>
+
+<p class="text-center"><img class="shadow" src="/assets/images/StableDiffusion/code3.png" alt="extra code 3" /></p>
+
+<p>But you don’t need to understand this, just copy and use it. I have taken the time to make it work for you.</p>
+
+<h2 id="script-version">Script version</h2>
+
+<p>Since I have explained everything before I will just leave the script version here for those of you that have access to some server with GPUs or those of you rich enough to have GPUs in your houses. The usage is quite simple, there are only 3 flags that you need to know: the number of images to generate, the prompt and the token. The <code class="language-html highlighter-rouge">save_path</code> can be left with the default value. The whole script is pasted below.</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre>Creates several images from a given prompt.
+
+optional arguments:
+  -h, --help            Usage python3 StableDiffusion.py -n N --promp Text --token HuggingFaceToken [--save_path dir]]]
+  -n N                  Number of images to output.
+  --prompt PROMPT       Prompt to generate image.
+  --token TOKEN         HuggingFace token to download the model.
+  --save_path SAVE_PATH
+                        Path to the folder to save the results.
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="n">os</span>
+<span class="kn">import</span> <span class="n">inspect</span>
+<span class="kn">import</span> <span class="n">warnings</span>
+<span class="kn">from</span> <span class="n">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="n">torch</span>
+<span class="kn">from</span> <span class="n">torch</span> <span class="kn">import</span> <span class="n">autocast</span>
+<span class="kn">from</span> <span class="n">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="n">transformers</span> <span class="kn">import</span> <span class="n">CLIPFeatureExtractor</span><span class="p">,</span> <span class="n">CLIPTextModel</span><span class="p">,</span> <span class="n">CLIPTokenizer</span>
+<span class="kn">from</span> <span class="n">diffusers.models</span> <span class="kn">import</span> <span class="n">AutoencoderKL</span><span class="p">,</span> <span class="n">UNet2DConditionModel</span>
+<span class="kn">from</span> <span class="n">diffusers.pipeline_utils</span> <span class="kn">import</span> <span class="n">DiffusionPipeline</span>
+<span class="kn">from</span> <span class="n">diffusers.schedulers</span> <span class="kn">import</span> <span class="n">DDIMScheduler</span><span class="p">,</span> <span class="n">LMSDiscreteScheduler</span><span class="p">,</span> <span class="n">PNDMScheduler</span>
+<span class="kn">from</span> <span class="n">diffusers</span> <span class="kn">import</span> <span class="n">StableDiffusionPipeline</span>
+<span class="kn">import</span> <span class="n">argparse</span>
+
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="p">.</span><span class="nc">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="sh">'</span><span class="s">Creates several images from a given prompt.</span><span class="sh">'</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">parser</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">'</span><span class="s">-h</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">--help</span><span class="sh">'</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="sh">'</span><span class="s">help</span><span class="sh">'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">argparse</span><span class="p">.</span><span class="n">SUPPRESS</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="sh">'</span><span class="s">Usage python3 StableDiffusion.py -n N --promp Text --token HuggingFaceToken [--save_path dir]]]</span><span class="sh">'</span><span class="p">)</span>
+<span class="n">parser</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">'</span><span class="s">-n</span><span class="sh">'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="sh">'</span><span class="s">1</span><span class="sh">'</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="sh">'</span><span class="s">Number of images to output.</span><span class="sh">'</span><span class="p">)</span>
+<span class="n">parser</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">'</span><span class="s">--prompt</span><span class="sh">'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="sh">'</span><span class="s">Prompt to generate image.</span><span class="sh">'</span><span class="p">)</span>
+<span class="n">parser</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">'</span><span class="s">--token</span><span class="sh">'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="sh">'</span><span class="s">HuggingFace token to download the model.</span><span class="sh">'</span><span class="p">)</span>
+<span class="n">parser</span><span class="p">.</span><span class="nf">add_argument</span><span class="p">(</span><span class="sh">'</span><span class="s">--save_path</span><span class="sh">'</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="sh">'</span><span class="s">outputs</span><span class="sh">'</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="sh">'</span><span class="s">Path to the folder to save the results.</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="nf">parse_args</span><span class="p">()</span>
+
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">StableDiffusionPipeline</span><span class="p">.</span><span class="nf">from_pretrained</span><span class="p">(</span><span class="sh">"</span><span class="s">CompVis/stable-diffusion-v1-4</span><span class="sh">"</span><span class="p">,</span> 
+                                               <span class="n">revision</span><span class="o">=</span><span class="sh">"</span><span class="s">fp16</span><span class="sh">"</span><span class="p">,</span> 
+                                               <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="p">.</span><span class="n">float16</span><span class="p">,</span> 
+                                               <span class="n">use_auth_token</span><span class="o">=</span><span class="n">args</span><span class="p">.</span><span class="n">token</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">Loaded model</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="nd">@torch.no_grad</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">NSFWcall</span><span class="p">(</span>
+    <span class="n">self</span><span class="p">,</span>
+    <span class="n">prompt</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
+    <span class="n">width</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
+    <span class="n">num_inference_steps</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="n">guidance_scale</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">7.5</span><span class="p">,</span>
+    <span class="n">eta</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">generator</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">torch</span><span class="p">.</span><span class="n">Generator</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
+    <span class="n">output_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="sh">"</span><span class="s">pil</span><span class="sh">"</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sh">"""</span><span class="s"> Modified version to remove the NSFW filter. </span><span class="sh">"""</span>
+    <span class="k">if</span> <span class="sh">"</span><span class="s">torch_device</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">.</span><span class="nf">pop</span><span class="p">(</span><span class="sh">"</span><span class="s">torch_device</span><span class="sh">"</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="p">.</span><span class="nf">warn</span><span class="p">(</span>
+            <span class="sh">"</span><span class="s">`torch_device` is deprecated as an input argument to `__call__` and will be removed in v0.3.0.</span><span class="sh">"</span>
+            <span class="sh">"</span><span class="s"> Consider using `pipe.to(torch_device)` instead.</span><span class="sh">"</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Set device as before (to be removed in 0.3.0)
+</span>        <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">device</span> <span class="o">=</span> <span class="sh">"</span><span class="s">cuda</span><span class="sh">"</span> <span class="k">if</span> <span class="n">torch</span><span class="p">.</span><span class="n">cuda</span><span class="p">.</span><span class="nf">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="sh">"</span><span class="s">cpu</span><span class="sh">"</span>
+        <span class="n">self</span><span class="p">.</span><span class="nf">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">`prompt` has to be of type `str` or `list` but is </span><span class="si">{</span><span class="nf">type</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">height</span> <span class="o">%</span> <span class="mi">8</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">width</span> <span class="o">%</span> <span class="mi">8</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nc">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">`height` and `width` have to be divisible by 8 but are </span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s"> and </span><span class="si">{</span><span class="n">width</span><span class="si">}</span><span class="s">.</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="c1"># get prompt text embeddings
+</span>    <span class="n">text_input</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">tokenizer</span><span class="p">(</span>
+        <span class="n">prompt</span><span class="p">,</span>
+        <span class="n">padding</span><span class="o">=</span><span class="sh">"</span><span class="s">max_length</span><span class="sh">"</span><span class="p">,</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">tokenizer</span><span class="p">.</span><span class="n">model_max_length</span><span class="p">,</span>
+        <span class="n">truncation</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">return_tensors</span><span class="o">=</span><span class="sh">"</span><span class="s">pt</span><span class="sh">"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">text_embeddings</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">text_encoder</span><span class="p">(</span><span class="n">text_input</span><span class="p">.</span><span class="n">input_ids</span><span class="p">.</span><span class="nf">to</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">device</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># here `guidance_scale` is defined analog to the guidance weight `w` of equation (2)
+</span>    <span class="c1"># of the Imagen paper: https://arxiv.org/pdf/2205.11487.pdf . `guidance_scale = 1`
+</span>    <span class="c1"># corresponds to doing no classifier free guidance.
+</span>    <span class="n">do_classifier_free_guidance</span> <span class="o">=</span> <span class="n">guidance_scale</span> <span class="o">&gt;</span> <span class="mf">1.0</span>
+    <span class="c1"># get unconditional embeddings for classifier free guidance
+</span>    <span class="k">if</span> <span class="n">do_classifier_free_guidance</span><span class="p">:</span>
+        <span class="n">max_length</span> <span class="o">=</span> <span class="n">text_input</span><span class="p">.</span><span class="n">input_ids</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">uncond_input</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">tokenizer</span><span class="p">(</span>
+            <span class="p">[</span><span class="sh">""</span><span class="p">]</span> <span class="o">*</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="sh">"</span><span class="s">max_length</span><span class="sh">"</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="n">max_length</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="sh">"</span><span class="s">pt</span><span class="sh">"</span>
+        <span class="p">)</span>
+        <span class="n">uncond_embeddings</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">text_encoder</span><span class="p">(</span><span class="n">uncond_input</span><span class="p">.</span><span class="n">input_ids</span><span class="p">.</span><span class="nf">to</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">device</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># For classifier free guidance, we need to do two forward passes.
+</span>        <span class="c1"># Here we concatenate the unconditional and text embeddings into a single batch
+</span>        <span class="c1"># to avoid doing two forward passes
+</span>        <span class="n">text_embeddings</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">cat</span><span class="p">([</span><span class="n">uncond_embeddings</span><span class="p">,</span> <span class="n">text_embeddings</span><span class="p">])</span>
+
+    <span class="c1"># get the intial random noise
+</span>    <span class="n">latents</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">randn</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">unet</span><span class="p">.</span><span class="n">in_channels</span><span class="p">,</span> <span class="n">height</span> <span class="o">//</span> <span class="mi">8</span><span class="p">,</span> <span class="n">width</span> <span class="o">//</span> <span class="mi">8</span><span class="p">),</span>
+        <span class="n">generator</span><span class="o">=</span><span class="n">generator</span><span class="p">,</span>
+        <span class="n">device</span><span class="o">=</span><span class="n">self</span><span class="p">.</span><span class="n">device</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># set timesteps
+</span>    <span class="n">accepts_offset</span> <span class="o">=</span> <span class="sh">"</span><span class="s">offset</span><span class="sh">"</span> <span class="ow">in</span> <span class="nf">set</span><span class="p">(</span><span class="n">inspect</span><span class="p">.</span><span class="nf">signature</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">scheduler</span><span class="p">.</span><span class="n">set_timesteps</span><span class="p">).</span><span class="n">parameters</span><span class="p">.</span><span class="nf">keys</span><span class="p">())</span>
+    <span class="n">extra_set_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">accepts_offset</span><span class="p">:</span>
+        <span class="n">extra_set_kwargs</span><span class="p">[</span><span class="sh">"</span><span class="s">offset</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">self</span><span class="p">.</span><span class="n">scheduler</span><span class="p">.</span><span class="nf">set_timesteps</span><span class="p">(</span><span class="n">num_inference_steps</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_set_kwargs</span><span class="p">)</span>
+
+    <span class="c1"># if we use LMSDiscreteScheduler, let's make sure latents are mulitplied by sigmas
+</span>    <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">scheduler</span><span class="p">,</span> <span class="n">LMSDiscreteScheduler</span><span class="p">):</span>
+        <span class="n">latents</span> <span class="o">=</span> <span class="n">latents</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">scheduler</span><span class="p">.</span><span class="n">sigmas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># prepare extra kwargs for the scheduler step, since not all schedulers have the same signature
+</span>    <span class="c1"># eta (η) is only used with the DDIMScheduler, it will be ignored for other schedulers.
+</span>    <span class="c1"># eta corresponds to η in DDIM paper: https://arxiv.org/abs/2010.02502
+</span>    <span class="c1"># and should be between [0, 1]
+</span>    <span class="n">accepts_eta</span> <span class="o">=</span> <span class="sh">"</span><span class="s">eta</span><span class="sh">"</span> <span class="ow">in</span> <span class="nf">set</span><span class="p">(</span><span class="n">inspect</span><span class="p">.</span><span class="nf">signature</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">scheduler</span><span class="p">.</span><span class="n">step</span><span class="p">).</span><span class="n">parameters</span><span class="p">.</span><span class="nf">keys</span><span class="p">())</span>
+    <span class="n">extra_step_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">accepts_eta</span><span class="p">:</span>
+        <span class="n">extra_step_kwargs</span><span class="p">[</span><span class="sh">"</span><span class="s">eta</span><span class="sh">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">eta</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nf">tqdm</span><span class="p">(</span><span class="nf">enumerate</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">scheduler</span><span class="p">.</span><span class="n">timesteps</span><span class="p">)):</span>
+        <span class="c1"># expand the latents if we are doing classifier free guidance
+</span>        <span class="n">latent_model_input</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nf">cat</span><span class="p">([</span><span class="n">latents</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">do_classifier_free_guidance</span> <span class="k">else</span> <span class="n">latents</span>
+        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">scheduler</span><span class="p">,</span> <span class="n">LMSDiscreteScheduler</span><span class="p">):</span>
+            <span class="n">sigma</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">scheduler</span><span class="p">.</span><span class="n">sigmas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">latent_model_input</span> <span class="o">=</span> <span class="n">latent_model_input</span> <span class="o">/</span> <span class="p">((</span><span class="n">sigma</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="c1"># predict the noise residual
+</span>        <span class="n">noise_pred</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">unet</span><span class="p">(</span><span class="n">latent_model_input</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">encoder_hidden_states</span><span class="o">=</span><span class="n">text_embeddings</span><span class="p">)[</span><span class="sh">"</span><span class="s">sample</span><span class="sh">"</span><span class="p">]</span>
+
+        <span class="c1"># perform guidance
+</span>        <span class="k">if</span> <span class="n">do_classifier_free_guidance</span><span class="p">:</span>
+            <span class="n">noise_pred_uncond</span><span class="p">,</span> <span class="n">noise_pred_text</span> <span class="o">=</span> <span class="n">noise_pred</span><span class="p">.</span><span class="nf">chunk</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">noise_pred</span> <span class="o">=</span> <span class="n">noise_pred_uncond</span> <span class="o">+</span> <span class="n">guidance_scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">noise_pred_text</span> <span class="o">-</span> <span class="n">noise_pred_uncond</span><span class="p">)</span>
+
+        <span class="c1"># compute the previous noisy sample x_t -&gt; x_t-1
+</span>        <span class="k">if</span> <span class="nf">isinstance</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">scheduler</span><span class="p">,</span> <span class="n">LMSDiscreteScheduler</span><span class="p">):</span>
+            <span class="n">latents</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">scheduler</span><span class="p">.</span><span class="nf">step</span><span class="p">(</span><span class="n">noise_pred</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">latents</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_step_kwargs</span><span class="p">)[</span><span class="sh">"</span><span class="s">prev_sample</span><span class="sh">"</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">latents</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">scheduler</span><span class="p">.</span><span class="nf">step</span><span class="p">(</span><span class="n">noise_pred</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">latents</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_step_kwargs</span><span class="p">)[</span><span class="sh">"</span><span class="s">prev_sample</span><span class="sh">"</span><span class="p">]</span>
+
+    <span class="c1"># scale and decode the image latents with vae
+</span>    <span class="n">latents</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mf">0.18215</span> <span class="o">*</span> <span class="n">latents</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">vae</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="n">latents</span><span class="p">)</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="p">(</span><span class="n">image</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">).</span><span class="nf">clamp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="p">.</span><span class="nf">cpu</span><span class="p">().</span><span class="nf">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="nf">numpy</span><span class="p">()</span>
+
+    <span class="c1"># run safety checker
+</span>    <span class="c1">#safety_cheker_input = self.feature_extractor(self.numpy_to_pil(image), return_tensors="pt").to(self.device)
+</span>    <span class="c1">#image, has_nsfw_concept = self.safety_checker(images=image, clip_input=safety_cheker_input.pixel_values)
+</span>
+    <span class="k">if</span> <span class="n">output_type</span> <span class="o">==</span> <span class="sh">"</span><span class="s">pil</span><span class="sh">"</span><span class="p">:</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">numpy_to_pil</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="sh">"</span><span class="s">sample</span><span class="sh">"</span><span class="p">:</span> <span class="n">image</span><span class="p">,</span> <span class="sh">"</span><span class="s">nsfw_content_detected</span><span class="sh">"</span><span class="p">:</span> <span class="bp">False</span><span class="p">}</span>
+
+<span class="c1"># Change the call function to remove NSFW filter
+</span><span class="n">StableDiffusionPipeline</span><span class="p">.</span><span class="n">__call__</span> <span class="o">=</span> <span class="n">NSFWcall</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">Removed NSFW filter</span><span class="sh">'</span><span class="p">)</span>
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">pipe</span><span class="p">.</span><span class="nf">to</span><span class="p">(</span><span class="sh">"</span><span class="s">cuda</span><span class="sh">"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">Loaded model into GPU</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="n">prompts</span> <span class="o">=</span> <span class="p">[</span><span class="n">args</span><span class="p">.</span><span class="n">prompt</span><span class="p">]</span> <span class="o">*</span> <span class="n">args</span><span class="p">.</span><span class="n">n</span>
+<span class="k">with</span> <span class="nf">autocast</span><span class="p">(</span><span class="sh">"</span><span class="s">cuda</span><span class="sh">"</span><span class="p">):</span>
+    <span class="n">images</span> <span class="o">=</span> <span class="nf">pipe</span><span class="p">(</span><span class="n">prompts</span><span class="p">)[</span><span class="sh">"</span><span class="s">sample</span><span class="sh">"</span><span class="p">]</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">Executed model</span><span class="sh">'</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="n">save_path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sh">'</span><span class="s">/</span><span class="sh">'</span><span class="p">:</span>
+    <span class="n">args</span><span class="p">.</span><span class="n">save_path</span> <span class="o">=</span> <span class="n">args</span><span class="p">.</span><span class="n">save_path</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isdir</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">save_path</span><span class="p">):</span>
+    <span class="n">os</span><span class="p">.</span><span class="nf">mkdir</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">save_path</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">image</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+    <span class="n">image</span><span class="p">.</span><span class="nf">save</span><span class="p">(</span><span class="n">args</span><span class="p">.</span><span class="n">save_path</span><span class="o">+</span><span class="sh">"</span><span class="s">/output</span><span class="sh">"</span><span class="o">+</span><span class="nf">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="sh">"</span><span class="s">.png</span><span class="sh">"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">Saved images</span><span class="sh">'</span><span class="p">)</span>
+ </code></pre></figure>
+
+            </div>
+
+            <!-- Rating -->
+            
+
+            <!-- Post Date -->
+            <p>
+            <small>
+                <span class="post-date"><time class="post-date" datetime="2022-08-25">25 Aug 2022</time></span>           
+                
+                </small>
+            </p>
+
+            <!-- Post Categories -->
+            <div class="after-post-cats">
+                <ul class="tags mb-4">
+                    
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Tutorial">Tutorial</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- End Categories -->
+
+            <!-- Post Tags -->
+            <div class="after-post-tags">
+                <ul class="tags">
+                    
+                    
+                </ul>
+            </div>
+            <!-- End Tags -->
+
+            <!-- Prev/Next -->
+            <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+            
+            <a class="prev d-block col-md-6" href="/NAS-parte3/"> &laquo; Neural Architecture Search (Part 3)</a>
+            
+            
+            <a class="next d-block col-md-6 text-lg-right" href="/headless-raspberry-setup/">Headless installation of Ubuntu on Rasbperry &raquo; </a>
+            
+            <div class="clearfix"></div>
+            </div>
+            <!-- End Categories -->
+        
+        <!-- End Post -->
+
+    </div>
+</div>
+<!-- End Article
+================================================== -->
+
+<!-- Begin Comments
+================================================== -->
+
+<!--End Comments
+================================================== -->
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+</div>
+
+
+<!-- Bottom Alert Bar
+================================================== -->
+<div class="alertbar">
+	<div class="container text-center">
+		<span> Never miss a <b>story</b> from us, subscribe to this blog</span>
+        <form
+          class="wj-contact-form validate"
+          action="https://gmail.us4.list-manage.com/subscribe/post?u=6bc2f64e5d9109bd06bf859c5&amp;id=68bbfe755b&amp;f_id=005c05e9f0"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+        >
+            <div class="mc-field-group center-inputs">
+                <input type="email" placeholder="Email" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="button">
+            </div>
+        </form>
+	</div>
+</div>
+
+    
+</div>
+
+<!-- Categories Jumbotron
+================================================== -->
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+            <div class="d-md-flex align-items-center justify-content-center h-100">
+                <h2 class="d-md-block align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+            </div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+            
+            
+                
+                    <a class="mt-1 mb-1" href="/categories#Stories">Stories (5)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Philosophy">Philosophy (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Deep-Learning">Deep Learning (7)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Reinforcement-Learning">Reinforcement Learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Supervised-Learning">Supervised Learning (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Happy-Ideas">Happy Ideas (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#GAN">GAN (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Theory">Theory (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#unsupervised-learning">unsupervised learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Tutorial">Tutorial (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Servers">Servers (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Raspberry-Pi">Raspberry Pi (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Hidden-Markov-Model">Hidden Markov Model (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Django">Django (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Docker">Docker (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AWS">AWS (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AI">AI (2)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Unsupervised-Learning">Unsupervised Learning (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Python">Python (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Psychology">Psychology (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Economy">Economy (1)</a>
+                
+            
+            
+		</div>
+	</div>
+</div>
+
+<!-- Begin Footer
+================================================== 
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                Copyright © 2025 GranaData 
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" href="https://www.wowthemes.net/mediumish-free-jekyll-template/">Mediumish Jekyll Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>-->
+<!-- End Footer
+================================================== -->
+
+</div> <!-- /.site-content -->
+
+<!-- Scripts
+================================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<script src="/assets/js/mediumish.js"></script>
+
+
+<script src="/assets/js/lazyload.js"></script>
+
+
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script> 
+
+
+<script id="dsq-count-scr" src="//demowebsite.disqus.com/count.js"></script>
+
+
+</body>
+</html>

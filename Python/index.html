@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="icon" href="/assets/images/favicon.ico">
+
+<title>How to build a python library | GranaData</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>How to build a python library | GranaData</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="How to build a python library" />
+<meta name="author" content="jose" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="When I was halfway through my bachelor’s thesis I decided to package everything into a python package to facilitate easier usage for the next student. However, instead of just following a simple and nice tutorial I decided to read and study the relevant PEPs and the official setuptools documentation. That was quite time consuming but also very worth it. I will always recommend getting as deep as you can in every topic you are interested. This post is a summary of the fundamental takeaways. Packaging in python has changed over the last years, so what you will find here is probably not used in some of the packages you already know. The post is structured as follows: first, the summary. Then, some extra details. And finally, some anecdotes." />
+<meta property="og:description" content="When I was halfway through my bachelor’s thesis I decided to package everything into a python package to facilitate easier usage for the next student. However, instead of just following a simple and nice tutorial I decided to read and study the relevant PEPs and the official setuptools documentation. That was quite time consuming but also very worth it. I will always recommend getting as deep as you can in every topic you are interested. This post is a summary of the fundamental takeaways. Packaging in python has changed over the last years, so what you will find here is probably not used in some of the packages you already know. The post is structured as follows: first, the summary. Then, some extra details. And finally, some anecdotes." />
+<link rel="canonical" href="https://granadata.art/Python/" />
+<meta property="og:url" content="https://granadata.art/Python/" />
+<meta property="og:site_name" content="GranaData" />
+<meta property="og:image" content="https://granadata.art/assets/images/Python-logo.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-03-24T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://granadata.art/assets/images/Python-logo.png" />
+<meta property="twitter:title" content="How to build a python library" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jose"},"dateModified":"2024-03-24T00:00:00+00:00","datePublished":"2024-03-24T00:00:00+00:00","description":"When I was halfway through my bachelor’s thesis I decided to package everything into a python package to facilitate easier usage for the next student. However, instead of just following a simple and nice tutorial I decided to read and study the relevant PEPs and the official setuptools documentation. That was quite time consuming but also very worth it. I will always recommend getting as deep as you can in every topic you are interested. This post is a summary of the fundamental takeaways. Packaging in python has changed over the last years, so what you will find here is probably not used in some of the packages you already know. The post is structured as follows: first, the summary. Then, some extra details. And finally, some anecdotes.","headline":"How to build a python library","image":"https://granadata.art/assets/images/Python-logo.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://granadata.art/Python/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://granadata.art/assets/images/logo.png"},"name":"jose"},"url":"https://granadata.art/Python/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+<link href="/assets/css/screen.css" rel="stylesheet">
+
+<link href="/assets/css/main.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<!-- Twitter cards -->
+<meta name="twitter:site"    content="@GranaDataJose">
+<meta name="twitter:creator" content="@GranaDataJose">
+<meta name="twitter:title"   content="How to build a python library">
+
+
+<meta name="twitter:description" content="Data science from Granada to the world.">
+
+
+
+<meta name="twitter:card"  content="summary_large_image">
+<meta name="twitter:image" content="https://granadata.art/assets/images/Python-logo.png">
+
+<!-- end of Twitter cards -->
+
+</head>
+
+
+<!-- change your GA id in _config.yml -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46278016-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+
+<body class="layout-post">
+	<!-- defer loading of font and font awesome -->
+    <noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    
+	
+
+
+<!-- Begin Menu Navigation
+================================================== -->
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark shadow fixed-top mediumnavigation nav-down">
+
+    <div class="container pr-0">
+
+    <!-- Begin Logo -->
+    <a class="navbar-brand" href="/">
+    <img src="/assets/images/logo.png" alt="GranaData">
+    </a>
+    <!-- End Logo -->
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMediumish">
+
+        <!-- Begin Menu -->
+
+            <ul class="navbar-nav mr-auto">
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/index.html">Blog</a>
+                </li>
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/about">About</a>
+                </li>
+                
+            </ul>
+            <ul class="navbar-nav ml-auto">
+
+                <script src="/assets/js/lunr.js"></script>
+
+
+<style>
+    .lunrsearchresult .title {color: #d9230f;}
+    .lunrsearchresult .url {color: silver;}
+    .lunrsearchresult a {display: block; color: #777;}
+    .lunrsearchresult a:hover, .lunrsearchresult a:focus {text-decoration: none;}
+    .lunrsearchresult a:hover .title {text-decoration: underline;}
+</style>
+
+
+<form class="bd-search" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+    <input type="text" class="form-control text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+</form>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+
+            </ul>
+
+        <!-- End Menu -->
+
+    </div>
+
+    </div>
+</nav>
+<!-- End Navigation
+================================================== -->
+
+<div class="site-content">
+
+<div class="container">
+
+<!-- Site Title
+================================================== -->
+<div class="mainheading">
+    <h1 class="sitetitle">GranaData</h1>
+    <p class="lead">
+        Data science from Granada to the world.
+    </p>
+</div>
+
+<!-- Content
+================================================== -->
+<div class="main-content">
+    <!-- Begin Article
+================================================== -->
+<div class="container inside-container">
+    
+    <div class="row">
+
+        <!-- Post Share -->
+        
+        <!-- Post -->
+        
+        
+            <div class="mainheading">
+
+                <!-- Author Box -->
+                
+                <div class="row post-top-meta">
+                    <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-right mb-4 mb-md-0">
+                        
+                        <img class="author-thumb" src="/assets/images/JoseAvatar.png" alt="Jose">
+                        
+                    </div>
+                    <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left">
+                        <a target="_blank" class="link-dark" href="https://jerry-master.github.io/Home-Page/">Jose</a>
+                        <a target="_blank" href="https://twitter.com/GranaDataJose" class="btn follow">Follow</a>
+                        
+                        <a target="_blank" href="/read_time" class="btn readtime">4 min read</a>
+                        
+                        <span class="author-description">Data scientist from Alcalá la Real. Studied at BarcelonaTech, worked as a researcher at the UGR and UPC, was a machine learning engineer at El Ranchito and Nemeda and now work in Koh Young Research Spain. Always wanting to explain my knowledge to the world.</span>
+                    </div>
+                </div>
+                
+
+                <!-- Post Title -->
+                <h1 class="posttitle">How to build a python library</h1>
+
+            </div>
+
+            <!-- Adsense if enabled from _config.yml (change your pub id and slot) -->
+            
+            <!-- End Adsense -->
+
+            <!-- Post Featured Image -->
+            
+            <!-- End Featured Image -->
+
+            <!-- Post Content -->
+            <div class="article-post">
+                <!-- Toc if any -->
+                
+                <!-- End Toc -->
+                <p>When I was halfway through my bachelor’s thesis I decided to package everything into a python package to facilitate easier usage for the next student. However, instead of just following a simple and nice tutorial I decided to read and study the relevant PEPs and the official setuptools documentation. That was quite time consuming but also very worth it. I will always recommend getting as deep as you can in every topic you are interested. This post is a summary of the fundamental takeaways. Packaging in python has changed over the last years, so what you will find here is probably not used in some of the packages you already know. The post is structured as follows: first, the summary. Then, some extra details. And finally, some anecdotes.</p>
+
+<h1 id="packaging-your-code">Packaging your code</h1>
+
+<p>The process is very simple once you know how to do it. You just need to put every code file inside a folder, add a pyproject.toml file, run some commands and you are done. For example, my library was called tumourkit, so I put everything I got so far into a folder called tumourkit. Now, the most basic pyproject.toml can be this:</p>
+
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="rouge-code"><pre><span class="nn">[build-system]</span>
+<span class="py">requires</span> <span class="p">=</span> <span class="py">["setuptools&gt;</span><span class="p">=</span><span class="mf">61.0</span><span class="s">"]</span><span class="err">
+</span><span class="py">build-backend</span> <span class="p">=</span> <span class="s">"setuptools.build_meta"</span>
+
+<span class="nn">[project]</span>
+<span class="py">name</span> <span class="p">=</span> <span class="s">"tumourkit"</span>
+<span class="py">authors</span> <span class="p">=</span> <span class="p">[</span>
+  <span class="err">{</span> <span class="py">name</span> <span class="p">=</span> <span class="s">"Jose Pérez Cano"</span><span class="p">,</span> <span class="py">email</span> <span class="p">=</span> <span class="s">"joseperez2000@hotmail.es"</span> <span class="err">}</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="py">description</span> <span class="p">=</span> <span class="s">"A SDK for tumour study"</span>
+<span class="py">requires-python</span> <span class="p">=</span> <span class="py">"&gt;</span><span class="p">=</span><span class="mf">3.8</span><span class="s">"</span><span class="err">
+</span><span class="py">dynamic</span> <span class="p">=</span> <span class="p">[</span><span class="s">"version"</span><span class="p">,</span> <span class="s">"dependencies"</span><span class="p">]</span>
+
+<span class="nn">[tool.setuptools.dynamic]</span>
+<span class="nn">dependencies</span> <span class="o">=</span> <span class="p">{</span> <span class="py">file</span> <span class="p">=</span> <span class="s">"requirements.txt"</span> <span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Here, the file structure should be</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>root-folder
+├── tumourkit
+│   ├── ...
+├── pyproject.toml
+├── requirements.txt
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>With that, you just need to install some packages <code class="language-html highlighter-rouge">python -m pip install twine build wheel</code> and run two commands: <code class="language-html highlighter-rouge">python -m build</code> and <code class="language-html highlighter-rouge">python -m twine upload dist/*</code>. With that you are done.</p>
+
+<p>You will be probably thinking that this is very simple, and you are right. Packaging code can get quite complex, but for the most part it is just this. There are some extra additions you can consider. Like adding a readme, exposing some command line programs, tagging the package or including a license. Many of the previous changes can be done by simply adding some lines to the project section:</p>
+
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre><span class="nn">[project]</span>
+<span class="err">...</span>
+<span class="py">readme</span> <span class="p">=</span> <span class="s">"README.md"</span>
+<span class="nn">license</span> <span class="o">=</span> <span class="p">{</span> <span class="py">file</span> <span class="p">=</span> <span class="s">"LICENSE"</span> <span class="p">}</span>
+<span class="py">classifiers</span> <span class="p">=</span> <span class="p">[</span>
+    <span class="s">"Development Status :: 2 - Pre-Alpha"</span><span class="p">,</span>
+    <span class="s">"Environment :: Console"</span><span class="p">,</span>
+    <span class="s">"Intended Audience :: Healthcare Industry"</span><span class="p">,</span>
+    <span class="s">"Programming Language :: Python :: 3.8"</span><span class="p">,</span>
+    <span class="s">"Programming Language :: Python :: 3.9"</span><span class="p">,</span>
+    <span class="s">"Programming Language :: Python :: 3.10"</span><span class="p">,</span>
+    <span class="s">"Typing :: Stubs Only"</span><span class="p">,</span>
+    <span class="err">...</span>
+<span class="p">]</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>There are many classifiers, a full list can be found <a href="https://pypi.org/classifiers/" target="_blank">here</a>. And the file structure should now include the extra files:</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>root-folder
+├── tumourkit
+│   ├── ...
+├── pyproject.toml
+├── requirements.txt
+├── README.md
+├── LICENSE
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>For the commands it is also very simple. Suppose you have a function called <code class="language-html highlighter-rouge">main</code> under the file <code class="language-html highlighter-rouge">tumourkit/example.py</code> and you want to call that command <code class="language-html highlighter-rouge">my_example</code>. Then you could add these lines to the toml:</p>
+
+<div class="language-toml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="nn">[project.scripts]</span>
+<span class="py">my_example</span> <span class="p">=</span> <span class="s">"tumourkit.example:main"</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>So now, when the library is installed running <code class="language-html highlighter-rouge">my_example</code> in the terminal is equivalent to running that function. You don’t need to have the classical <code class="language-html highlighter-rouge">if __name__=='__main__'</code>, in fact it will get ignored. The choosing of the license could be a topic for another day. For now, I will just mention that my library ended up being AGPL-3.0.</p>
+
+<p>Even though this is enough for a package to be distributed, many of the packages you know have far more files than just the four I mentioned. That is because packages also have documentation, testing, building, excluded / included non-code files and many more. For every extra thing you add to your package, you will need an extra file that contains information about that. In my case I only added one more file which is <code class="language-html highlighter-rouge">.readthedocs.yaml</code>. This file is read by the read the docs servers and contains the information on how to build the documentation. The file was just copied from <a href="https://docs.readthedocs.io/en/stable/config-file/v2.html" target="_blank">their page</a>. This is something to be done incrementally. Whenever something is required you look up the relevant documentation and include it. Following the philosophy of doing things incrementally, it is also a good practice to <a href="https://keepachangelog.com/en/1.1.0/" target="_blank">keep a CHANGELOG.md</a> and follow <a href="https://semver.org/" target="_blank">semantic versioning</a>.</p>
+
+<h1 id="the-rabbit-hole">The rabbit hole</h1>
+
+<p>All of the above is now very well explained <a href="https://packaging.python.org/en/latest/tutorials/packaging-projects/#" target="_blank">here</a>. But when I decided to do it, it was a period of transition. There were some online tutorials that still referred to the old-fashioned setuptools way of doing things. Until only very recently, setuptools was the only way of doing things. You needed a <code class="language-html highlighter-rouge">setup.py</code> file that was run to build the egg files that where then installed or uploaded. But the python foundation decided it was time to democratize it. PEP 517 specified how to create new build backends so that others could emerge. We now have poetry, flit, hatchling and others. Also, to simplify the configuration file, in PEP 518 the pyproject.toml was introduced. This was written in 2016 and 2017. But it took a few years until backends started to appear. Between 2018 and 2019 setuptools added support for pyproject.toml in version 40 and you no longer needed to add the <code class="language-html highlighter-rouge">setup.py</code> file even if you use setuptools. I did my thesis in 2023. It would seem as if 4 years were enough for the world to adapt to those changes. But it wasn’t. I think in most cases packages are built once and used forever, but never fully maintained. The cost of being up to date with those changes is quite high with no reward at all. I dit it this way because it was my first time, so I thought I better be doing it the updated way. But I can understand that you don’t want to change the way everything is configured now that it is working.</p>
+
+<p>Python is always evolving. In the past months the PEP 703 showed up proposing a way to remove the GIL, which is probably one of the most representative aspects of the language, together with the garbage collector. And some very characteristic features like pip, were not in the beginning. In the beginning there was distutils and easy_install. It was in 2013 with PEP 453 that pip was proposed as the default. However, community often rejects wide adoption as with the type hints. They were proposed in PEP 484 in 2014 but as of today, I can only find them in very mature libraries. Amateurs just use python without types. And that is fine. There is no need to be knowledgeable about everything. Sometimes the basics are more than enough. That is something I really like about computer science. You can do a lot knowing so little, but if you want to know more, there is always more.</p>
+
+<h1 id="anecdote">Anecdote</h1>
+
+<p>I was hired by the university when I was doing my bachelor’s thesis to develop an algorithm that could solve a problem. That means you obtain money in exchange for some freedom on what you can and cannot do. In my case that meant to provide guidance to others in the project and that I wasn’t the one taking the decisions about priorities. Packaging code is time consuming, and therefore I needed to ask my “boss” about whether or not I should spend time on that. However, I just wanted to do it, so I dit it. But since I needed to justify myself I did the following. On a friday night I emailed my tutors asking for permission. I knew they were busy so they wouldn’t respond until next monday. During saturday I spent more than 10 hours reading and making changes to the code so that it could be a package. There were around 5 thousand lines of code, but luckily I could refactor everything in one day. When sunday arrived, I just emailed again saying the absence of response was an approval and that I have just done everything that was needed. They couldn’t say no, after all, the work is already done. Normally, you won’t get blamed for doing more, only for doing less. If you want to build something, just do it.</p>
+
+            </div>
+
+            <!-- Rating -->
+            
+
+            <!-- Post Date -->
+            <p>
+            <small>
+                <span class="post-date"><time class="post-date" datetime="2024-03-24">24 Mar 2024</time></span>           
+                
+                </small>
+            </p>
+
+            <!-- Post Categories -->
+            <div class="after-post-cats">
+                <ul class="tags mb-4">
+                    
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Python">Python</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- End Categories -->
+
+            <!-- Post Tags -->
+            <div class="after-post-tags">
+                <ul class="tags">
+                    
+                    
+                    <li>
+                        <a class="smoothscroll" href="/tags#Python">#Python</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- End Tags -->
+
+            <!-- Prev/Next -->
+            <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+            
+            <a class="prev d-block col-md-6" href="/hack_life/"> &laquo; The Hack Life</a>
+            
+            
+            <a class="next d-block col-md-6 text-lg-right" href="/fast_slow/">Pensar rápido, pensar despacio &raquo; </a>
+            
+            <div class="clearfix"></div>
+            </div>
+            <!-- End Categories -->
+        
+        <!-- End Post -->
+
+    </div>
+</div>
+<!-- End Article
+================================================== -->
+
+<!-- Begin Comments
+================================================== -->
+
+<!--End Comments
+================================================== -->
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+</div>
+
+
+<!-- Bottom Alert Bar
+================================================== -->
+<div class="alertbar">
+	<div class="container text-center">
+		<span> Never miss a <b>story</b> from us, subscribe to this blog</span>
+        <form
+          class="wj-contact-form validate"
+          action="https://gmail.us4.list-manage.com/subscribe/post?u=6bc2f64e5d9109bd06bf859c5&amp;id=68bbfe755b&amp;f_id=005c05e9f0"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+        >
+            <div class="mc-field-group center-inputs">
+                <input type="email" placeholder="Email" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="button">
+            </div>
+        </form>
+	</div>
+</div>
+
+    
+</div>
+
+<!-- Categories Jumbotron
+================================================== -->
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+            <div class="d-md-flex align-items-center justify-content-center h-100">
+                <h2 class="d-md-block align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+            </div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+            
+            
+                
+                    <a class="mt-1 mb-1" href="/categories#Stories">Stories (5)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Philosophy">Philosophy (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Deep-Learning">Deep Learning (7)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Reinforcement-Learning">Reinforcement Learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Supervised-Learning">Supervised Learning (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Happy-Ideas">Happy Ideas (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#GAN">GAN (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Theory">Theory (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#unsupervised-learning">unsupervised learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Tutorial">Tutorial (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Servers">Servers (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Raspberry-Pi">Raspberry Pi (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Hidden-Markov-Model">Hidden Markov Model (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Django">Django (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Docker">Docker (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AWS">AWS (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AI">AI (2)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Unsupervised-Learning">Unsupervised Learning (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Python">Python (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Psychology">Psychology (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Economy">Economy (1)</a>
+                
+            
+            
+		</div>
+	</div>
+</div>
+
+<!-- Begin Footer
+================================================== 
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                Copyright © 2025 GranaData 
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" href="https://www.wowthemes.net/mediumish-free-jekyll-template/">Mediumish Jekyll Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>-->
+<!-- End Footer
+================================================== -->
+
+</div> <!-- /.site-content -->
+
+<!-- Scripts
+================================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<script src="/assets/js/mediumish.js"></script>
+
+
+<script src="/assets/js/lazyload.js"></script>
+
+
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script> 
+
+
+<script id="dsq-count-scr" src="//demowebsite.disqus.com/count.js"></script>
+
+
+</body>
+</html>

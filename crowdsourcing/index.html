@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="icon" href="/assets/images/favicon.ico">
+
+<title>Crowdsourcing methods for cancer detection | GranaData</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Crowdsourcing methods for cancer detection | GranaData</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Crowdsourcing methods for cancer detection" />
+<meta name="author" content="jose" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="I recently survived the reviewing process of a scientific article called: “Annotation protocol and crowdsourcing multiple instance learning classification of skin histological images: The CR-AI4SkIN dataset” and today I want to explain what all those fancy words mean. The article is currently accessible through this link although Elsevier will paywall it in some weeks. Ironically enough, this is my first published article despite it being the second article I wrote. The peer review process is so unpredictable that some articles take 18 months to review while others take 2 months. At the end of this post I will also talk in more detail about how broken the peer review system is, with examples of the things we were asked to do to publish this article." />
+<meta property="og:description" content="I recently survived the reviewing process of a scientific article called: “Annotation protocol and crowdsourcing multiple instance learning classification of skin histological images: The CR-AI4SkIN dataset” and today I want to explain what all those fancy words mean. The article is currently accessible through this link although Elsevier will paywall it in some weeks. Ironically enough, this is my first published article despite it being the second article I wrote. The peer review process is so unpredictable that some articles take 18 months to review while others take 2 months. At the end of this post I will also talk in more detail about how broken the peer review system is, with examples of the things we were asked to do to publish this article." />
+<link rel="canonical" href="https://granadata.art/crowdsourcing/" />
+<meta property="og:url" content="https://granadata.art/crowdsourcing/" />
+<meta property="og:site_name" content="GranaData" />
+<meta property="og:image" content="https://granadata.art/assets/images/crowdsourcing/bayesnet.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-11-09T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://granadata.art/assets/images/crowdsourcing/bayesnet.png" />
+<meta property="twitter:title" content="Crowdsourcing methods for cancer detection" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jose"},"dateModified":"2023-11-09T00:00:00+00:00","datePublished":"2023-11-09T00:00:00+00:00","description":"I recently survived the reviewing process of a scientific article called: “Annotation protocol and crowdsourcing multiple instance learning classification of skin histological images: The CR-AI4SkIN dataset” and today I want to explain what all those fancy words mean. The article is currently accessible through this link although Elsevier will paywall it in some weeks. Ironically enough, this is my first published article despite it being the second article I wrote. The peer review process is so unpredictable that some articles take 18 months to review while others take 2 months. At the end of this post I will also talk in more detail about how broken the peer review system is, with examples of the things we were asked to do to publish this article.","headline":"Crowdsourcing methods for cancer detection","image":"https://granadata.art/assets/images/crowdsourcing/bayesnet.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://granadata.art/crowdsourcing/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://granadata.art/assets/images/logo.png"},"name":"jose"},"url":"https://granadata.art/crowdsourcing/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(','\\)'] ],
+      displayMath: [ ['$$', '$$'], ['\\[','\\]'] ],
+      processEscapes: true,
+      processEnvironments: true,
+    }
+});
+MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/h-hg/docsify-pseudocode/dist/docsify-pseudocode.min.js"></script>
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+<link href="/assets/css/screen.css" rel="stylesheet">
+
+<link href="/assets/css/main.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<!-- Twitter cards -->
+<meta name="twitter:site"    content="@GranaDataJose">
+<meta name="twitter:creator" content="@GranaDataJose">
+<meta name="twitter:title"   content="Crowdsourcing methods for cancer detection">
+
+
+<meta name="twitter:description" content="Data science from Granada to the world.">
+
+
+
+<meta name="twitter:card"  content="summary_large_image">
+<meta name="twitter:image" content="https://granadata.art/assets/images/crowdsourcing/bayesnet.png">
+
+<!-- end of Twitter cards -->
+
+</head>
+
+
+<!-- change your GA id in _config.yml -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46278016-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+
+<body class="layout-post">
+	<!-- defer loading of font and font awesome -->
+    <noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    
+	
+
+
+<!-- Begin Menu Navigation
+================================================== -->
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark shadow fixed-top mediumnavigation nav-down">
+
+    <div class="container pr-0">
+
+    <!-- Begin Logo -->
+    <a class="navbar-brand" href="/">
+    <img src="/assets/images/logo.png" alt="GranaData">
+    </a>
+    <!-- End Logo -->
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMediumish">
+
+        <!-- Begin Menu -->
+
+            <ul class="navbar-nav mr-auto">
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/index.html">Blog</a>
+                </li>
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/about">About</a>
+                </li>
+                
+            </ul>
+            <ul class="navbar-nav ml-auto">
+
+                <script src="/assets/js/lunr.js"></script>
+
+
+<style>
+    .lunrsearchresult .title {color: #d9230f;}
+    .lunrsearchresult .url {color: silver;}
+    .lunrsearchresult a {display: block; color: #777;}
+    .lunrsearchresult a:hover, .lunrsearchresult a:focus {text-decoration: none;}
+    .lunrsearchresult a:hover .title {text-decoration: underline;}
+</style>
+
+
+<form class="bd-search" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+    <input type="text" class="form-control text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+</form>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+
+            </ul>
+
+        <!-- End Menu -->
+
+    </div>
+
+    </div>
+</nav>
+<!-- End Navigation
+================================================== -->
+
+<div class="site-content">
+
+<div class="container">
+
+<!-- Site Title
+================================================== -->
+<div class="mainheading">
+    <h1 class="sitetitle">GranaData</h1>
+    <p class="lead">
+        Data science from Granada to the world.
+    </p>
+</div>
+
+<!-- Content
+================================================== -->
+<div class="main-content">
+    <!-- Begin Article
+================================================== -->
+<div class="container inside-container">
+    
+    <div class="row">
+
+        <!-- Post Share -->
+        
+        <!-- Post -->
+        
+        
+            <div class="mainheading">
+
+                <!-- Author Box -->
+                
+                <div class="row post-top-meta">
+                    <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-right mb-4 mb-md-0">
+                        
+                        <img class="author-thumb" src="/assets/images/JoseAvatar.png" alt="Jose">
+                        
+                    </div>
+                    <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left">
+                        <a target="_blank" class="link-dark" href="https://jerry-master.github.io/Home-Page/">Jose</a>
+                        <a target="_blank" href="https://twitter.com/GranaDataJose" class="btn follow">Follow</a>
+                        
+                        <a target="_blank" href="/read_time" class="btn readtime">11 min read</a>
+                        
+                        <span class="author-description">Data scientist from Alcalá la Real. Studied at BarcelonaTech, worked as a researcher at the UGR and UPC, was a machine learning engineer at El Ranchito and Nemeda and now work in Koh Young Research Spain. Always wanting to explain my knowledge to the world.</span>
+                    </div>
+                </div>
+                
+
+                <!-- Post Title -->
+                <h1 class="posttitle">Crowdsourcing methods for cancer detection</h1>
+
+            </div>
+
+            <!-- Adsense if enabled from _config.yml (change your pub id and slot) -->
+            
+            <!-- End Adsense -->
+
+            <!-- Post Featured Image -->
+            
+            <!-- End Featured Image -->
+
+            <!-- Post Content -->
+            <div class="article-post">
+                <!-- Toc if any -->
+                
+                <!-- End Toc -->
+                <p>I recently survived the reviewing process of a scientific article called: “Annotation protocol and crowdsourcing multiple instance learning classification of skin histological images: The CR-AI4SkIN dataset” and today I want to explain what all those fancy words mean. The article is currently accessible through <a href="https://authors.elsevier.com/c/1hypg3KEGaNNII" target="_blank">this link</a> although Elsevier will paywall it in some weeks. Ironically enough, this is my first published article despite it being the second article I wrote. The peer review process is so unpredictable that some articles take 18 months to review while others take 2 months. At the end of this post I will also talk in more detail about how broken the peer review system is, with examples of the things we were asked to do to publish this article.</p>
+
+<h1 id="the-problem">The problem</h1>
+
+<p>The problem at stake here is skin cancer classification. One of the most used tests to analyse the seriousness of a tumour is a biopsy. It is a technique that consists of extracting a piece of the affected organ and digitalizing the image for a physician to look at. The magnification of the microscope allows the cells to be seen in the image and so the pathologist can recognise cancerous structures and tell if they are malignant or benign. An example of such image which are called Whole Slide Images (WSI) in the case of lung is below:</p>
+
+<p class="text-center"><img class="" src="/assets/images/crowdsourcing/wsi-lung.png" alt="wsi" /></p>
+
+<p>The tiny little red square that you see there corresponds to this zoomed in image:</p>
+
+<p class="text-center"><img class="" src="/assets/images/crowdsourcing/square.png" alt="zoom" /></p>
+
+<p>As you can see those images are massive, and analysing them requires time and effort. Not only that, each tissue is different, the above was for lung, but the skin looks more like this:</p>
+
+<p class="text-center"><img class="" src="/assets/images/crowdsourcing/square-skin.jpg" alt="skin" /></p>
+
+<p>And worse than that, there are several different ways to stain the cells. This is the cheapest staining which is called Hematoxylin and Eoxin, but there are others like the immunohistochemistry that creates a better distinction between tumoural and non-tumoural cells but are more expensive. The problem we tackled in the article was to detect if a given WSI corresponded to malignant tissue or not.</p>
+
+<p>This type of problem can also be described in the context of Multiple Instance Learning (MIL). In a MIL setting you have to classify a bag of elements into a given class where each individual element has its own class that influences the overall class of the bag. For instance, imagine you want to give a score of how good a basketball team is. If you have Stephen Curry or Lebron James in the team the overall score goes up. The difference in the MIL setting is that you don’t know how good each player is, you just know how the team performed in the last matches. And you try to infer based on that. If you know the team scored 30 three-point shots then you may assume there is one hyperscorer and if in another match the team does not score one single three-point shot then you may be inclined to think that hyperscorer is not playing. This is the type of latent information that we try to discover in a MIL setting. By analysing bag of images we try to find some patterns in the individual images that help analyse other bags of images, without ever knowing anything specific about those images, just knowing about the whole bag.</p>
+
+<p class="text-center"><img class="" src="/assets/images/crowdsourcing/basket-unknown.png" alt="zoom" /></p>
+
+<p>To be more specific, what we want is to split the WSI into smaller images and be able to classify the WSI only by classifying all the zoomed in patches and then aggregating the result. If we detect one patch to be malignant, then the WSI is quite probable malignant, no matter whether the other images are malignant or not. By looking at many malignant WSI it is possible to extract patterns about the smaller patches and learn to classify those as well. One reasonable question is why? Why is useful to split the image in little pieces? Why not classify the WSI as a whole? The reason is because it is not technically possible at the moment. Training a convolutional neural network (or worse, a transformer) may require TBs of GPU RAM which is impossible right now. And even if that were possible, the amount of data to train such models will also need to be huge, which is not at the moment. The dataset we published in the article has less than 300 patients. Current AI models require billions of images for working at 512x512 resolution. Imagine what is needed for 100000x100000 resolution.</p>
+
+<p>But the problem does not finish there. A MIL classification problem is something already quite studied, that is not worthy of an article. The problem is far more complicated. In a MIL setting you ignore the individual labels (they are considered latent variables) and try to infer them using Ground Truth (GT) bag-level labels. Well, what if we don’t even have a Ground Truth? That’s right, labelling medical images requires doctors, but what if we could avoid that little annoyance? What if we could use non-expert annotators instead? Instead of training with expert labels, the problem we faced was to train with annotations that were made by students. Students are cheaper and are more prone to collaborate in research. If we could somehow learn when each of the students is making a mistake we could correctly obtain the GT by asking several students. That is called crowdsourcing.</p>
+
+<p class="text-center"><img class="" src="/assets/images/crowdsourcing/genie.png" alt="crowd" /></p>
+
+<p>To sum up, the problem we face is to classify huge medical images were we only have access to noisy labels during training.</p>
+
+<h1 id="the-solution">The solution</h1>
+
+<p class="text-center"><img class="" src="/assets/images/crowdsourcing/solution.jpg" alt="solution" /></p>
+
+<p>The first step to reduce the dimensionality of the problem is to train a Region of Interest (ROI) prediction algorithm. The WSIs have a lot of white pixels that can be discarded. To extract such ROIs the experts annotated some regions and then a network trained on that subset of WSI was used to predict the ROI of the rest of the dataset. After that the WSIs were splitted into 512x512 images at 10x magnification. As a reference, the maximum level of magnification is 40x, so we also reduced the dimensionality here by working with more pixelated patches. That is this part of the diagram:</p>
+
+<p class="text-center"><img class="" src="/assets/images/crowdsourcing/solution1.png" alt="sol1" /></p>
+
+<p>The next step to reduce even more the dimensionality was to train a convolutional neural network in an unsupervised manner to obtain feature vectors. This way we could reduce 512x512 images into vectors of dimension 256. Even more than that, we aggregated the feature vectors of each image inside a WSI. So we went from between 100 and 1000 images to just one single vector of 256 numbers. That unsupervised method is called <a href="https://arxiv.org/abs/2002.05709" target="_blank">SimCLR</a>. It consists of a very special loss called normalized temperature-scaled cross-entropy loss (NT-Xent). Mathematically it can be expressed like this:</p>
+
+<div>$$ 
+\begin{equation}
+    \ell_{i,j} = - \log \frac{\exp(\text{sim}(\bf{h}_i,\bf{h}_j) / \tau)}{\sum_{k=1}^{2S}\mathbb{1}_{k\neq i}\exp(\text{sim}(\bf{h}_i,\bf{h}_k) / \tau)} 
+\end{equation}
+$$</div>
+
+<p>The $\bf{h}$ are the feature vectors. Unlike other common losses, this loss is not computed independently for each item in the batch and then aggregated. This loss takes into account every element in the batch and is computed for each positive pair and then aggregated. A positive pair is a pair of images that should be considered similar, and a negative pair one that should be considered different. For instance, an image and its reflection or rotation are considered similar while two images of two different patients are considered dissimilar. This way by minimizing this loss one is maximizing the similarity of positive pairs (numerator) at the same time that it is minimizing the similarity between negative pairs (denominator). Where the similarity is measured using cosine similarity. The result is that the network is training to have a separable latent space. Such property is very useful for training classifiers on that latent space. The rest of the parameters in that formula are not quite relevant. The $\tau$ is the temperature but is always fixed at $0.5$ and the $S$ is the batch size which is limited by the RAM you have, so there is not much room for improvement there. Surprisingly, we found that a batch size of 256 gives better results than one of 512. This is surprising because in the original SimCLR article they stated that anything below 512 was useless. Well, it is not.</p>
+
+<p>We have covered the top right of the diagram:</p>
+
+<p class="text-center"><img class="" src="/assets/images/crowdsourcing/solution2.png" alt="sol2" /></p>
+
+<p>With that we overcome the limitations of the MIL setting and reduce the problem to a strongly-supervised one. The next step is to solve the crowdsourcing problem, which is the last part of the diagram:</p>
+
+<p class="text-center"><img class="" src="/assets/images/crowdsourcing/solution3.png" alt="sol3" /></p>
+
+<p>To solve it we can model the problem as a bayesian network. In a bayesian network you have observable variables and latent variables. All the variables influence each other in some way, either as a prior distribution or a dependency relation or in many other ways. The key here is the Bayes Theorem. It lets us go forward and backward. If by knowing the distribution of A we can know the distribution of B, then the reverse also holds. If we know B we can get A. This means that if the output depends on some latent variable we can infer some information about that unknown variable by observing the output. In our case, the bayesian network is visualized in this diagram:</p>
+
+<p class="text-center"><img class="" src="/assets/images/crowdsourcing/bayesnet-hd.jpg" alt="bayesnet" /></p>
+
+<p>Here $\bf{x}_i$ are the input images and $\bf{y}_b^a$ are the non-expert annotations. Those are the only two variables that are observable. And everything that is in between must be inferred in order to obtain a model that predicts labels from images. There are two parts to distinguish in this diagram. The crowdsourcing part and the Gaussian Process part. One models how each annotator behaves while the other adds extra latent variables to make the model more robust and scalable. The easiest to understand is the crowdsourcing part. There are true labels $\bf{z}_b$ for each bag $b$ and each annotator $a$ has a confusion matrix $\bf{R}^a$ that describes the probability that they make a mistake. We don’t know such probabilities neither the true labels, but we aim for discovering them based on the data. Such thing is possible whenever the majority of the annotators are better than random and not adversarial annotators. But even if there is only one adversarial annotator, that is, someone that says exactly the opposite of the truth, it is possible to identify it and correct their labels.</p>
+
+<p>The Gaussian Process part is adding an extra latent variable called $\bf{f}_b$ that is more or like a hidden layer in a neural network. It is supposed to capture the relations between new samples and all the training samples so that it can provide a prediction based on similarities computed with some kernel function. Since computing the covariance matrix with respect to all the training data has cubic cost, there is yet another latent variable called inducing points or $\bf{u}_m$ that is supposed to summarise all the content of the training data into just a reduced set of points. There is a lot of theory behind this way of modelling, if any of you is interested in all the maths you can refer to the original <a href="https://arxiv.org/abs/1911.01915" target="_blank">LIGO paper</a> that designed this model. Or if you want to know about gaussian processes you can refer to the original article of the <a href="https://arxiv.org/abs/1411.2005" target="_blank">scalable version of the GPs</a>.</p>
+
+<p>To summarise in a simple phrase the whole method, we are reducing dimensionality by first extracting a ROI, then applying a pretrained network to obtain latent variables, and after that we are applying a crowdsourcing method to classify those extracted features learning from noisy labels. Believe or not, this is not an original method, it is just “a mechanical combination of existing methods”. Or that is what a reviewer said.</p>
+
+<h1 id="curiosities">Curiosities</h1>
+
+<p>The problem and the solution are explained with more detail in the paper. I would like this blog post to contain information that is not published, to reveal other more enjoyable facts that are not told anywhere. During this project we found many results that were not only counterintuitive but sometimes outright against the theory. Since there is the possibility that those facts were due to some implementation detail and not due to the method itself, we didn’t publish them, or didn’t highlight them too much.</p>
+
+<p>The first interesting fact is that the initialization of the parameters of the GP affected the result in a very dramatic way. Going from 1 to 2 make the model improve quite drastically. That is surprising because the model must converge to the same value no matter how you initialise it. And it is even more surprising that such a little change can affect so dramatically the output. Contrary to neural networks, GPs have much less parameters. And changing the initialization of just two of them can change the result. This is something that does not happen on other problems or is very difficult to replicate, but it happened to us.</p>
+
+<p>The second interesting fact, and this one was the matter of many discussions, is that the crowdsourcing model is sometimes better that a model trained with the expert labels. That is, using non-expert labels can bring better results than using expert labels. At first this caused some commotion. The other authors thought that this implied the experts were not so expert after all. And we even thought about not publishing the article, because such a result could invalidate the test labels. However, the experts are indeed experts and this fact has nothing to do with that. The reason why a <em>model</em> trained on non-experts labels outperforms a <em>model</em> trained on expert labels is not because the <em>labels</em> are worse, but because the <em>model</em> is worse. In machine learning there is one thing called the bias-variance tradeoff where you can obtain better results in a regression problem by reducing the variance even if your model is systematically worse (high bias). In regression one can reduce variance by using ensembles. Without improving the quality of the members of the ensemble, the overall result improves if you perform the mean. In crowdsourcing something similar happens, but this time it is classification and not regression, and instead of bias and variance we have precision and recall. What we found is that the model trained on experts has a higher recall. And that has a lot of sense. Doctors have a tendency to diagnose an illness even if not present because the alternative is worse. It is better to do more tests than to say one is healthy wrongly. For that reason, training with expert labels tends to have that tendency too. The magical part of using crowdsourcing is that it increases precision out of thin air. By averaging the annotations of several people a similar effect as with an ensemble is achieved. This way, even though all the individual non-expert annotators have lower precision than the experts, when combining them they achieve higher precision. So, the conclusion is that doctors are very cautious and to obtain a more precise answer one should ask several doctors.</p>
+
+<p>The third fact is a consideration about the research process itself. When we started this project we were quite sure that the method was going to give better than random results easily. Wrong! This database was absurdly difficult to work with. We had to perform a very exhaustive hyperparameter search and even when doing so it was not enough the first time. Initially we were not going to use SimCLR. We tried to use the crowdsourcing method alone. But the method was designed for low dimensions and so we had to try a way to simplify things. And even after finding SimCLR it was not enough because it provided feature vectors for images, not for WSIs. In the end, we made some very arbitrary decisions like simply averaging the vectors instead of using some attention mechanism. And after all that was done, we still had to perform an exhaustive search over the hyperparameters of the model. When we began the project we thought we could iterate at least three times, and we barely manage to iterate once. That is why the model only tackles the binary case even though the database is multiclass. And that is why our model is not end to end. Those two ideas were supposed to be done after achieving a simple baseline. But achieving such simple baseline ended up consuming all the time.</p>
+
+<p>The last amazing fact is that the validation set does not correlate with the test set. Truly inspiring isn’t it? The metrics we obtained in the validation set were around 60% or so while the metrics from train and test were around 70 and 80%. And the best performing model in the validation was rarely the best performing model on the test set. That is why the metrics we report on the article are so low sometimes. Not because the model itself is bad in the test, but because the best set of hyperparameters in the validation set is not the best set in the test. Since you cannot use the test set for hyperparameter tuning, the result ended up being worse than expected. If I were to start the project again, I would choose the split to have similar images on all of the splits while not mixing the patients. The current split makes it impossible to infer useful information. It is even better to do the tuning on the training than on the validation set. This is a reason not to deploy any model trained on this database, since you cannot be sure it won’t drift on new patients.</p>
+
+<h1 id="the-reviewing-process">The reviewing process</h1>
+
+<p>We are used to hear many scientis complain about the peer review system and I now know why. All the reviewers wanted was for us to cite their articles. They criticised that we didn’t mention this or that article. And after looking at all the proposals we found that they all had the same author in common, what a coincidence! This is a recurring theme, in the other article I have the same happened. It is not something strange. Even the editor in chief advises you not to give up to the citation abuse in their mails.</p>
+
+<p>Yet not every request is about citing them, some are about “pinta y colorea”. Little changes about how the figures are made or the colours we use. For instance, if you look at the bayesian network above you will see it is blue. That was a request from the reviewers. Initially it was black and white like in the thumbnail of the post but that change was proposed “To enhance the originality and
+clarity of the method’s approach”.</p>
+
+<p>Worse than that is when the reviewers simply ask you to improve your english. The article has been supervised by more than five people who have been working on this for decades and have several hundreds of articles published and the reviewer still thinks the english is improvable. I sometimes think the reviewers didn’t even read the article and criticised based on the title and little more.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>Research has its ups and downs, but I like it. The happiness that fills your heart when your method is finally improving and giving good results is very different than any other emotion. It is different than selling a product to a client or developing a new feature in an app. It feels as if you are discovering a new world. Although when the time passes you look back and think “What a useless piece of … did I do there?”. That is progress though, improving means what you did is now obsolete. Many people is afraid of change. I am not one of them. I embrace it. Whenever I have the possibility of learning something new I try. Even if that means learning that all your efforts in the past year are now a commodity. That is compensated by the amazing new thing you just discovered. I hope I will always be discovering new and better technology and science for that is what improves the quality of life of everybody.</p>
+
+            </div>
+
+            <!-- Rating -->
+            
+
+            <!-- Post Date -->
+            <p>
+            <small>
+                <span class="post-date"><time class="post-date" datetime="2023-11-09">09 Nov 2023</time></span>           
+                
+                </small>
+            </p>
+
+            <!-- Post Categories -->
+            <div class="after-post-cats">
+                <ul class="tags mb-4">
+                    
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Deep-Learning">Deep Learning</a>
+                    </li>
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Supervised-Learning">Supervised Learning</a>
+                    </li>
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Unsupervised-Learning">Unsupervised Learning</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- End Categories -->
+
+            <!-- Post Tags -->
+            <div class="after-post-tags">
+                <ul class="tags">
+                    
+                    
+                </ul>
+            </div>
+            <!-- End Tags -->
+
+            <!-- Prev/Next -->
+            <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+            
+            <a class="prev d-block col-md-6" href="/gpt4-audiobook/"> &laquo; How to make a full audiobook with AI tools.</a>
+            
+            
+            <a class="next d-block col-md-6 text-lg-right" href="/hack_life/">The Hack Life &raquo; </a>
+            
+            <div class="clearfix"></div>
+            </div>
+            <!-- End Categories -->
+        
+        <!-- End Post -->
+
+    </div>
+</div>
+<!-- End Article
+================================================== -->
+
+<!-- Begin Comments
+================================================== -->
+
+<!--End Comments
+================================================== -->
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+</div>
+
+
+<!-- Bottom Alert Bar
+================================================== -->
+<div class="alertbar">
+	<div class="container text-center">
+		<span> Never miss a <b>story</b> from us, subscribe to this blog</span>
+        <form
+          class="wj-contact-form validate"
+          action="https://gmail.us4.list-manage.com/subscribe/post?u=6bc2f64e5d9109bd06bf859c5&amp;id=68bbfe755b&amp;f_id=005c05e9f0"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+        >
+            <div class="mc-field-group center-inputs">
+                <input type="email" placeholder="Email" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="button">
+            </div>
+        </form>
+	</div>
+</div>
+
+    
+</div>
+
+<!-- Categories Jumbotron
+================================================== -->
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+            <div class="d-md-flex align-items-center justify-content-center h-100">
+                <h2 class="d-md-block align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+            </div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+            
+            
+                
+                    <a class="mt-1 mb-1" href="/categories#Stories">Stories (5)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Philosophy">Philosophy (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Deep-Learning">Deep Learning (7)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Reinforcement-Learning">Reinforcement Learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Supervised-Learning">Supervised Learning (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Happy-Ideas">Happy Ideas (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#GAN">GAN (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Theory">Theory (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#unsupervised-learning">unsupervised learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Tutorial">Tutorial (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Servers">Servers (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Raspberry-Pi">Raspberry Pi (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Hidden-Markov-Model">Hidden Markov Model (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Django">Django (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Docker">Docker (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AWS">AWS (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AI">AI (2)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Unsupervised-Learning">Unsupervised Learning (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Python">Python (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Psychology">Psychology (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Economy">Economy (1)</a>
+                
+            
+            
+		</div>
+	</div>
+</div>
+
+<!-- Begin Footer
+================================================== 
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                Copyright © 2025 GranaData 
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" href="https://www.wowthemes.net/mediumish-free-jekyll-template/">Mediumish Jekyll Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>-->
+<!-- End Footer
+================================================== -->
+
+</div> <!-- /.site-content -->
+
+<!-- Scripts
+================================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<script src="/assets/js/mediumish.js"></script>
+
+
+<script src="/assets/js/lazyload.js"></script>
+
+
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script> 
+
+
+<script id="dsq-count-scr" src="//demowebsite.disqus.com/count.js"></script>
+
+
+</body>
+</html>

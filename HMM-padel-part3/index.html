@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="icon" href="/assets/images/favicon.ico">
+
+<title>Modelling a padel match with Hidden Markov Models (Part 3) | GranaData</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Modelling a padel match with Hidden Markov Models (Part 3) | GranaData</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Modelling a padel match with Hidden Markov Models (Part 3)" />
+<meta name="author" content="jose" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In part I and part II of this series I have talked about what is a Hidden Markov Model, why it is useful for modelling a padel match, and how to design it properly. Today the topic is about testing the model. Testing a machine learning model is the basis for deploying it. Here I will be explaining how to test in python and guide you through our HMM example." />
+<meta property="og:description" content="In part I and part II of this series I have talked about what is a Hidden Markov Model, why it is useful for modelling a padel match, and how to design it properly. Today the topic is about testing the model. Testing a machine learning model is the basis for deploying it. Here I will be explaining how to test in python and guide you through our HMM example." />
+<link rel="canonical" href="https://granadata.art/HMM-padel-part3/" />
+<meta property="og:url" content="https://granadata.art/HMM-padel-part3/" />
+<meta property="og:site_name" content="GranaData" />
+<meta property="og:image" content="https://granadata.art/assets/images/HMM/padel_court.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-10-16T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://granadata.art/assets/images/HMM/padel_court.png" />
+<meta property="twitter:title" content="Modelling a padel match with Hidden Markov Models (Part 3)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jose"},"dateModified":"2022-10-16T00:00:00+00:00","datePublished":"2022-10-16T00:00:00+00:00","description":"In part I and part II of this series I have talked about what is a Hidden Markov Model, why it is useful for modelling a padel match, and how to design it properly. Today the topic is about testing the model. Testing a machine learning model is the basis for deploying it. Here I will be explaining how to test in python and guide you through our HMM example.","headline":"Modelling a padel match with Hidden Markov Models (Part 3)","image":"https://granadata.art/assets/images/HMM/padel_court.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://granadata.art/HMM-padel-part3/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://granadata.art/assets/images/logo.png"},"name":"jose"},"url":"https://granadata.art/HMM-padel-part3/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+<link href="/assets/css/screen.css" rel="stylesheet">
+
+<link href="/assets/css/main.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<!-- Twitter cards -->
+<meta name="twitter:site"    content="@GranaDataJose">
+<meta name="twitter:creator" content="@GranaDataJose">
+<meta name="twitter:title"   content="Modelling a padel match with Hidden Markov Models (Part 3)">
+
+
+<meta name="twitter:description" content="Data science from Granada to the world.">
+
+
+
+<meta name="twitter:card"  content="summary_large_image">
+<meta name="twitter:image" content="https://granadata.art/assets/images/HMM/padel_court.png">
+
+<!-- end of Twitter cards -->
+
+</head>
+
+
+<!-- change your GA id in _config.yml -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46278016-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+
+<body class="layout-post">
+	<!-- defer loading of font and font awesome -->
+    <noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    
+	
+
+
+<!-- Begin Menu Navigation
+================================================== -->
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark shadow fixed-top mediumnavigation nav-down">
+
+    <div class="container pr-0">
+
+    <!-- Begin Logo -->
+    <a class="navbar-brand" href="/">
+    <img src="/assets/images/logo.png" alt="GranaData">
+    </a>
+    <!-- End Logo -->
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMediumish">
+
+        <!-- Begin Menu -->
+
+            <ul class="navbar-nav mr-auto">
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/index.html">Blog</a>
+                </li>
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/about">About</a>
+                </li>
+                
+            </ul>
+            <ul class="navbar-nav ml-auto">
+
+                <script src="/assets/js/lunr.js"></script>
+
+
+<style>
+    .lunrsearchresult .title {color: #d9230f;}
+    .lunrsearchresult .url {color: silver;}
+    .lunrsearchresult a {display: block; color: #777;}
+    .lunrsearchresult a:hover, .lunrsearchresult a:focus {text-decoration: none;}
+    .lunrsearchresult a:hover .title {text-decoration: underline;}
+</style>
+
+
+<form class="bd-search" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+    <input type="text" class="form-control text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+</form>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+
+            </ul>
+
+        <!-- End Menu -->
+
+    </div>
+
+    </div>
+</nav>
+<!-- End Navigation
+================================================== -->
+
+<div class="site-content">
+
+<div class="container">
+
+<!-- Site Title
+================================================== -->
+<div class="mainheading">
+    <h1 class="sitetitle">GranaData</h1>
+    <p class="lead">
+        Data science from Granada to the world.
+    </p>
+</div>
+
+<!-- Content
+================================================== -->
+<div class="main-content">
+    <!-- Begin Article
+================================================== -->
+<div class="container inside-container">
+    
+    <div class="row">
+
+        <!-- Post Share -->
+        
+        <!-- Post -->
+        
+        
+            <div class="mainheading">
+
+                <!-- Author Box -->
+                
+                <div class="row post-top-meta">
+                    <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-right mb-4 mb-md-0">
+                        
+                        <img class="author-thumb" src="/assets/images/JoseAvatar.png" alt="Jose">
+                        
+                    </div>
+                    <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left">
+                        <a target="_blank" class="link-dark" href="https://jerry-master.github.io/Home-Page/">Jose</a>
+                        <a target="_blank" href="https://twitter.com/GranaDataJose" class="btn follow">Follow</a>
+                        
+                        <a target="_blank" href="/read_time" class="btn readtime">6 min read</a>
+                        
+                        <span class="author-description">Data scientist from Alcalá la Real. Studied at BarcelonaTech, worked as a researcher at the UGR and UPC, was a machine learning engineer at El Ranchito and Nemeda and now work in Koh Young Research Spain. Always wanting to explain my knowledge to the world.</span>
+                    </div>
+                </div>
+                
+
+                <!-- Post Title -->
+                <h1 class="posttitle">Modelling a padel match with Hidden Markov Models (Part 3)</h1>
+
+            </div>
+
+            <!-- Adsense if enabled from _config.yml (change your pub id and slot) -->
+            
+            <!-- End Adsense -->
+
+            <!-- Post Featured Image -->
+            
+            <!-- End Featured Image -->
+
+            <!-- Post Content -->
+            <div class="article-post">
+                <!-- Toc if any -->
+                
+                <!-- End Toc -->
+                <p>In <a href="/HMM-padel" target="_blank">part I</a> and <a href="/HMM-padel-part2" target="_blank">part II</a> of this series I have talked about what is a Hidden Markov Model, why it is useful for modelling a padel match, and how to design it properly. Today the topic is about testing the model. Testing a machine learning model is the basis for deploying it. Here I will be explaining how to test in python and guide you through our HMM example.</p>
+
+<h2 id="pytest">PyTest</h2>
+
+<p>Testing in python can be done with several libraries. One of the most popular ones is <code class="highlight language-python" data-lang="python"><span class="n">pytest</span></code>. There are many good tutorials out there about how to use it, like <a href="https://towardsdatascience.com/getting-started-unit-testing-with-pytest-9cba6d366d61" target="_blank">this one</a>. And if you have a project on your hands and have specific needs, you can always go and have a look at <a href="https://docs.pytest.org/en/6.2.x/contents.html" target="_blank">their documentation</a>. For this post I will pass very briefly on the funcionalities that we need for testing the HMM.</p>
+
+<p>In pytest you have files that contain the word ‘test’ on it. Those files contain functions that also have the string ‘test’ in their names. And those functions must have code that yields <code class="highlight language-python" data-lang="python"><span class="bp">True</span></code> of <code class="highlight language-python" data-lang="python"><span class="bp">False</span></code> depending on whether they pass the test. To run the tests you just execute <code class="highlight language-python" data-lang="python"><span class="n">pytest</span></code> on the command line and the library does the rest of the job for you. This is the big picture, let’s define now what are going to be our tests.</p>
+
+<p>Our tests are going to have a sequence of observations as input and we are going to check for the result of the match. That is the final goal of the HMM. The difference is that here we are going to deal with simple scenarios where we know for sure the result. That way we can check that the HMM is at least well implemented. We cannot check if the design is going to work in a real-world scenario, but we can check that it works in ideal scenarios. If your model breaks in an environment where you control the input, then something is clearly wrong in the code. However, if it breaks in production it may be that the model hypothesis about the world are wrong. That’s why you need these tests, to detect bugs prior to analysing the correctness of the model itself.</p>
+
+<p>Once the tests are designed, it’s time to implement them. For that, <code class="highlight language-python" data-lang="python"><span class="n">pytest</span></code> comes with two main features that make the process easier.</p>
+
+<h3 id="parameterization">Parameterization</h3>
+
+<p>In <code class="highlight language-python" data-lang="python"><span class="n">pytest</span></code> you can parameterize the input. When testing a function, several input-output pairs are used to ensure that the function produces the desired result. Using a different file for each input-output pair would be an inconvenience. Instead, you can specify several input-output pairs for a given test. Consider the following test where we are interested in knowing if the HMM correctly detects an ace:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="k">def</span> <span class="nf">test_ace</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">indexers</span><span class="p">,</span> <span class="n">hmm</span><span class="p">,</span> <span class="n">hidden_states</span><span class="p">):</span>
+    <span class="n">indexer_hidden</span><span class="p">,</span> <span class="n">indexer_obs</span> <span class="o">=</span> <span class="n">indexers</span>
+    <span class="n">sequences</span> <span class="o">=</span> <span class="p">[[</span><span class="n">indexer_obs</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">]]</span>
+    <span class="n">decoded_seq</span> <span class="o">=</span> <span class="n">hmm</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+    <span class="n">decoded_seq</span> <span class="o">=</span> <span class="p">[</span><span class="n">hidden_states</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">decoded_seq</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="nf">assert</span><span class="p">(</span><span class="sh">'</span><span class="s">Point-server</span><span class="sh">'</span> <span class="ow">in</span> <span class="n">decoded_seq</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>The parameter sequence is a list of observations that corresponds to an ace. Without parameterization we would have to specify a different test function for each sequence that represents an ace. With parameterization we can reuse the function. In <code class="highlight language-python" data-lang="python"><span class="n">pytest</span></code> that features is implemented with decorators. For those of you who don’t know python enough, a decorator is basically a function of functions. Here it takes the test function as input and creates a parameterized test function as output. Syntactically it is coded like this:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre><span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="sh">"</span><span class="s">sequence</span><span class="sh">"</span><span class="p">,</span> <span class="p">[</span>
+    <span class="c1">### Ace examples
+</span>    <span class="p">])</span>
+<span class="k">def</span> <span class="nf">test_ace</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">indexers</span><span class="p">,</span> <span class="n">hmm</span><span class="p">,</span> <span class="n">hidden_states</span><span class="p">):</span>
+    <span class="n">indexer_hidden</span><span class="p">,</span> <span class="n">indexer_obs</span> <span class="o">=</span> <span class="n">indexers</span>
+    <span class="n">sequences</span> <span class="o">=</span> <span class="p">[[</span><span class="n">indexer_obs</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">]]</span>
+    <span class="n">decoded_seq</span> <span class="o">=</span> <span class="n">hmm</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+    <span class="n">decoded_seq</span> <span class="o">=</span> <span class="p">[</span><span class="n">hidden_states</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">decoded_seq</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="nf">assert</span><span class="p">(</span><span class="sh">'</span><span class="s">Point-server</span><span class="sh">'</span> <span class="ow">in</span> <span class="n">decoded_seq</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>You only have to add the decorator on top of the function. If you recall the problem at hands, which sequences could possibly represent an ace? Let’s see some examples:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td><td class="rouge-code"><pre><span class="c1">### ace in first service ###
+</span><span class="p">[</span><span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-receiver</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> 
+    <span class="sh">'</span><span class="s">bounce-ground-receiver</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="sh">'</span><span class="s">end</span><span class="sh">'</span><span class="p">],</span>
+    <span class="c1"># Bounce on wall
+</span><span class="p">[</span><span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-receiver</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">bounce-wall-outer</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">end</span><span class="sh">'</span><span class="p">],</span> 
+    <span class="c1"># Bounce on wall twice
+</span><span class="p">[</span><span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-receiver</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">bounce-wall-outer</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-wall-outer</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">end</span><span class="sh">'</span><span class="p">],</span>
+
+<span class="c1">### ace in second service ###
+</span>    <span class="c1"># Bounce on wall
+</span><span class="p">[</span><span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-server</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> 
+    <span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-receiver</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> 
+    <span class="sh">'</span><span class="s">bounce-wall-outer</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">end</span><span class="sh">'</span><span class="p">],</span>
+    <span class="c1"># Bounce on wall twice
+</span><span class="p">[</span><span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-server</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> 
+    <span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-receiver</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> 
+    <span class="sh">'</span><span class="s">bounce-wall-outer</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-wall-outer</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">end</span><span class="sh">'</span><span class="p">]</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Basically, whenever there are two consecutive bounces on the other side after the first player has hit the ball we have an ace. When an ace happens the server wins, therefore we have to check that the last hidden state correspond to the server winning. If that doesn’t happens, then our HMM isn’t working. Passing this test doesn’t prove that the HMM works, but by adding more and more tests we at least know that our model is robust to all those cases.</p>
+
+<h3 id="fixtures">Fixtures</h3>
+
+<p>Have you wondered how do you pass parameters to a test? In the previous section I talk about parameterizing with a decorator. But what about the rest of the parameters? Not every parameter is part of the input. There are parameters that are part of the function itself. For instance, the parameter <code class="highlight language-python" data-lang="python"><span class="n">hmm</span></code>. How does <code class="highlight language-python" data-lang="python"><span class="n">pytest</span></code> know where to look for that object?</p>
+
+<p>At the beginning I said that you just have to run <code class="highlight language-python" data-lang="python"><span class="n">pytest</span></code> in the command line. You don’t specify parameters to the internal test functions directly. Instead, you use fixtures. A fixture is another decorator provided by <code class="highlight language-python" data-lang="python"><span class="n">pytest</span></code>. In this case, you decorate a function that returns the parameter you want to use later on. Let’s look at an example by specifying the fixture for the <code class="highlight language-python" data-lang="python"><span class="n">hmm</span></code> object. Suppose that you have a function in your code (not your test, your real code) that initialized the <code class="highlight language-python" data-lang="python"><span class="n">hmm</span></code> and returns it. Then, you would convert that function to a fixture this way:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="nd">@pytest.fixture</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">hmm</span><span class="p">():</span>
+    <span class="k">return</span> <span class="nf">read_hmm</span><span class="p">()</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>That’s everything you have to do in order for every other function to know where to look for the <code class="highlight language-python" data-lang="python"><span class="n">hmm</span></code> object. The same would be needed for the <code class="highlight language-python" data-lang="python"><span class="n">indexers</span></code> and <code class="highlight language-python" data-lang="python"><span class="n">hidden_states</span></code> that in my case are just dictionaries to convert from strings of states to the internal identifiers that the HMM uses.</p>
+
+<h2 id="noisy-tests">Noisy tests</h2>
+
+<p>To end this post I’ll show you some concrete tests I designed for my HMM. They are a bit different than the rest of the tests. When evaluating the HMM I said that we give ideal scenarios as input to the tests. But it is possible to give noisy scenarios too, if you control the noise. There are no rules for writing tests, they just serve to check that your code does what you want it to do. And if I want my HMM to be robust to noise, I can test for it.</p>
+
+<p>When I talk about noise in this problem it would be missing some observation or having repeated observations for the same hidden state. We designed our model so that it would work even on those cases. So if I provide a series of noisy observations, it must predict correctly the result. For example, in the following code there is the test for two cases where the server fails on the second service. However, the first hit is repeated and some bounces are repeated too. This series of observations doesn’t correspond to an ideal one, but the model should correctly predict the result.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td><td class="rouge-code"><pre><span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="sh">"</span><span class="s">sequence</span><span class="sh">"</span><span class="p">,</span> <span class="p">[</span>
+    <span class="c1">### Fail in second service ###
+</span>    <span class="c1"># Bounce in and then on inner wall
+</span>    <span class="p">[</span><span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">13</span><span class="p">,</span> 
+     <span class="sh">'</span><span class="s">bounce-ground-server</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-server</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">9</span><span class="p">,</span> 
+     <span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-receiver</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> 
+     <span class="sh">'</span><span class="s">bounce-wall-inner</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">end</span><span class="sh">'</span><span class="p">],</span>
+     <span class="c1"># Bounce out
+</span>    <span class="p">[</span><span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">15</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-server</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span>
+     <span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">12</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-server</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">end</span><span class="sh">'</span><span class="p">]</span>
+<span class="p">])</span>
+<span class="k">def</span> <span class="nf">test_fail_noise</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">indexers</span><span class="p">,</span> <span class="n">hmm</span><span class="p">,</span> <span class="n">hidden_states</span><span class="p">):</span>
+    <span class="n">indexer_hidden</span><span class="p">,</span> <span class="n">indexer_obs</span> <span class="o">=</span> <span class="n">indexers</span>
+    <span class="n">sequences</span> <span class="o">=</span> <span class="p">[[</span><span class="n">indexer_obs</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">]]</span>
+    <span class="n">decoded_seq</span> <span class="o">=</span> <span class="n">hmm</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+    <span class="n">decoded_seq</span> <span class="o">=</span> <span class="p">[</span><span class="n">hidden_states</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">decoded_seq</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="nf">assert</span><span class="p">(</span><span class="sh">'</span><span class="s">Point-receiver</span><span class="sh">'</span> <span class="ow">in</span> <span class="n">decoded_seq</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>You can also have tests that don’t pass on purpose. I call this one ‘impossible_noise_test’:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td><td class="rouge-code"><pre><span class="sh">"""</span><span class="s"> Test designed to make the model fail </span><span class="sh">"""</span>
+<span class="nd">@pytest.mark.parametrize</span><span class="p">(</span><span class="sh">"</span><span class="s">sequence</span><span class="sh">"</span><span class="p">,</span> <span class="p">[</span>
+    <span class="p">[</span><span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-server</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="sh">'</span><span class="s">bounce-ground-server</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span><span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="c1"># Bounces in the ground badly detected as player-hit
+</span>    <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-server</span><span class="sh">'</span><span class="p">,</span> <span class="c1"># Badly detected bounce
+</span>    <span class="sh">'</span><span class="s">bounce-ground-receiver</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="c1"># Well detected serve
+</span>    <span class="sh">'</span><span class="s">bounce-ground-server</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-server</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-server</span><span class="sh">'</span><span class="p">,</span> <span class="c1"># Same bounce 
+</span>    <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="c1"># Well detected response
+</span>    <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">5</span><span class="p">]</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="c1"># Normal rally (now the ball is for receiver)
+</span>     <span class="sh">'</span><span class="s">bounce-ground-receiver</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">end</span><span class="sh">'</span><span class="p">]</span> <span class="c1"># It goes to net and out
+</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">test_impossible_noise</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">indexers</span><span class="p">,</span> <span class="n">hmm</span><span class="p">,</span> <span class="n">hidden_states</span><span class="p">):</span>
+    <span class="n">indexer_hidden</span><span class="p">,</span> <span class="n">indexer_obs</span> <span class="o">=</span> <span class="n">indexers</span>
+    <span class="n">sequences</span> <span class="o">=</span> <span class="p">[[</span><span class="n">indexer_obs</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">]]</span>
+    <span class="n">decoded_seq</span> <span class="o">=</span> <span class="n">hmm</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+    <span class="n">decoded_seq</span> <span class="o">=</span> <span class="p">[</span><span class="n">hidden_states</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">decoded_seq</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="nf">assert</span><span class="p">(</span><span class="sh">"</span><span class="s">Point-server</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">decoded_seq</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>This type of test allows you to know the limits of the model. There must be a limit, and if you don’t manage to create a test that fails, that is also and indicator that something is wrong. Maybe you are not creative enough for the cases, or you have some bug that makes all the test pass (that has happened to me). So it is also a good idea to have a test that fails, just in case.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>With this post the Hidden Markov Model for Padel Modelling series comes to an end. We have learned everything to deploy a HMM. From the theory behind the model, till testing the model extensively. Those are the steps to put any machine learning model into production. Learning the basics, designing the model and testing the model. The only thing left is to create a pipeline and integrate it into the final product, but that is a topic for another day. I hope you liked the process as much as I did. See you on my next series.</p>
+
+            </div>
+
+            <!-- Rating -->
+            
+
+            <!-- Post Date -->
+            <p>
+            <small>
+                <span class="post-date"><time class="post-date" datetime="2022-10-16">16 Oct 2022</time></span>           
+                
+                </small>
+            </p>
+
+            <!-- Post Categories -->
+            <div class="after-post-cats">
+                <ul class="tags mb-4">
+                    
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Hidden-Markov-Model">Hidden Markov Model</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- End Categories -->
+
+            <!-- Post Tags -->
+            <div class="after-post-tags">
+                <ul class="tags">
+                    
+                    
+                </ul>
+            </div>
+            <!-- End Tags -->
+
+            <!-- Prev/Next -->
+            <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+            
+            <a class="prev d-block col-md-6" href="/HMM-padel-part2/"> &laquo; Modelling a padel match with Hidden Markov Models (Part 2)</a>
+            
+            
+            <a class="next d-block col-md-6 text-lg-right" href="/WebApp-Docker-Django/">Deploying AWS webapp tutorial &raquo; </a>
+            
+            <div class="clearfix"></div>
+            </div>
+            <!-- End Categories -->
+        
+        <!-- End Post -->
+
+    </div>
+</div>
+<!-- End Article
+================================================== -->
+
+<!-- Begin Comments
+================================================== -->
+
+<!--End Comments
+================================================== -->
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+</div>
+
+
+<!-- Bottom Alert Bar
+================================================== -->
+<div class="alertbar">
+	<div class="container text-center">
+		<span> Never miss a <b>story</b> from us, subscribe to this blog</span>
+        <form
+          class="wj-contact-form validate"
+          action="https://gmail.us4.list-manage.com/subscribe/post?u=6bc2f64e5d9109bd06bf859c5&amp;id=68bbfe755b&amp;f_id=005c05e9f0"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+        >
+            <div class="mc-field-group center-inputs">
+                <input type="email" placeholder="Email" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="button">
+            </div>
+        </form>
+	</div>
+</div>
+
+    
+</div>
+
+<!-- Categories Jumbotron
+================================================== -->
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+            <div class="d-md-flex align-items-center justify-content-center h-100">
+                <h2 class="d-md-block align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+            </div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+            
+            
+                
+                    <a class="mt-1 mb-1" href="/categories#Stories">Stories (5)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Philosophy">Philosophy (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Deep-Learning">Deep Learning (7)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Reinforcement-Learning">Reinforcement Learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Supervised-Learning">Supervised Learning (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Happy-Ideas">Happy Ideas (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#GAN">GAN (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Theory">Theory (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#unsupervised-learning">unsupervised learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Tutorial">Tutorial (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Servers">Servers (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Raspberry-Pi">Raspberry Pi (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Hidden-Markov-Model">Hidden Markov Model (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Django">Django (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Docker">Docker (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AWS">AWS (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AI">AI (2)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Unsupervised-Learning">Unsupervised Learning (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Python">Python (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Psychology">Psychology (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Economy">Economy (1)</a>
+                
+            
+            
+		</div>
+	</div>
+</div>
+
+<!-- Begin Footer
+================================================== 
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                Copyright © 2025 GranaData 
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" href="https://www.wowthemes.net/mediumish-free-jekyll-template/">Mediumish Jekyll Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>-->
+<!-- End Footer
+================================================== -->
+
+</div> <!-- /.site-content -->
+
+<!-- Scripts
+================================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<script src="/assets/js/mediumish.js"></script>
+
+
+<script src="/assets/js/lazyload.js"></script>
+
+
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script> 
+
+
+<script id="dsq-count-scr" src="//demowebsite.disqus.com/count.js"></script>
+
+
+</body>
+</html>

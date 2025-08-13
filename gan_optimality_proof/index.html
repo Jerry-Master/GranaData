@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="icon" href="/assets/images/favicon.ico">
+
+<title>GAN optimality proof | GranaData</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>GAN optimality proof | GranaData</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="GAN optimality proof" />
+<meta name="author" content="jose" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="The so-called Generative Adversarial Networks have been with us since 2014, producing amazing results lately. Today I am bringing the proof of why they work. That is, a proof that states GANs are optimal in the limit when no parametric model is taken into account. But first, what is a GAN and what “amazing results” am I talking about?" />
+<meta property="og:description" content="The so-called Generative Adversarial Networks have been with us since 2014, producing amazing results lately. Today I am bringing the proof of why they work. That is, a proof that states GANs are optimal in the limit when no parametric model is taken into account. But first, what is a GAN and what “amazing results” am I talking about?" />
+<link rel="canonical" href="https://granadata.art/gan_optimality_proof/" />
+<meta property="og:url" content="https://granadata.art/gan_optimality_proof/" />
+<meta property="og:site_name" content="GranaData" />
+<meta property="og:image" content="https://granadata.art/assets/images/GAN/gan-cat.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-08-10T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://granadata.art/assets/images/GAN/gan-cat.png" />
+<meta property="twitter:title" content="GAN optimality proof" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jose"},"dateModified":"2022-08-10T00:00:00+00:00","datePublished":"2022-08-10T00:00:00+00:00","description":"The so-called Generative Adversarial Networks have been with us since 2014, producing amazing results lately. Today I am bringing the proof of why they work. That is, a proof that states GANs are optimal in the limit when no parametric model is taken into account. But first, what is a GAN and what “amazing results” am I talking about?","headline":"GAN optimality proof","image":"https://granadata.art/assets/images/GAN/gan-cat.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://granadata.art/gan_optimality_proof/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://granadata.art/assets/images/logo.png"},"name":"jose"},"url":"https://granadata.art/gan_optimality_proof/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(','\\)'] ],
+      displayMath: [ ['$$', '$$'], ['\\[','\\]'] ],
+      processEscapes: true,
+      processEnvironments: true,
+    }
+});
+MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/h-hg/docsify-pseudocode/dist/docsify-pseudocode.min.js"></script>
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+<link href="/assets/css/screen.css" rel="stylesheet">
+
+<link href="/assets/css/main.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<!-- Twitter cards -->
+<meta name="twitter:site"    content="@GranaDataJose">
+<meta name="twitter:creator" content="@GranaDataJose">
+<meta name="twitter:title"   content="GAN optimality proof">
+
+
+<meta name="twitter:description" content="Data science from Granada to the world.">
+
+
+
+<meta name="twitter:card"  content="summary_large_image">
+<meta name="twitter:image" content="https://granadata.art/assets/images/GAN/gan-cat.png">
+
+<!-- end of Twitter cards -->
+
+</head>
+
+
+<!-- change your GA id in _config.yml -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46278016-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+
+<body class="layout-post">
+	<!-- defer loading of font and font awesome -->
+    <noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    
+	
+
+
+<!-- Begin Menu Navigation
+================================================== -->
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark shadow fixed-top mediumnavigation nav-down">
+
+    <div class="container pr-0">
+
+    <!-- Begin Logo -->
+    <a class="navbar-brand" href="/">
+    <img src="/assets/images/logo.png" alt="GranaData">
+    </a>
+    <!-- End Logo -->
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMediumish">
+
+        <!-- Begin Menu -->
+
+            <ul class="navbar-nav mr-auto">
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/index.html">Blog</a>
+                </li>
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/about">About</a>
+                </li>
+                
+            </ul>
+            <ul class="navbar-nav ml-auto">
+
+                <script src="/assets/js/lunr.js"></script>
+
+
+<style>
+    .lunrsearchresult .title {color: #d9230f;}
+    .lunrsearchresult .url {color: silver;}
+    .lunrsearchresult a {display: block; color: #777;}
+    .lunrsearchresult a:hover, .lunrsearchresult a:focus {text-decoration: none;}
+    .lunrsearchresult a:hover .title {text-decoration: underline;}
+</style>
+
+
+<form class="bd-search" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+    <input type="text" class="form-control text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+</form>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+
+            </ul>
+
+        <!-- End Menu -->
+
+    </div>
+
+    </div>
+</nav>
+<!-- End Navigation
+================================================== -->
+
+<div class="site-content">
+
+<div class="container">
+
+<!-- Site Title
+================================================== -->
+<div class="mainheading">
+    <h1 class="sitetitle">GranaData</h1>
+    <p class="lead">
+        Data science from Granada to the world.
+    </p>
+</div>
+
+<!-- Content
+================================================== -->
+<div class="main-content">
+    <!-- Begin Article
+================================================== -->
+<div class="container inside-container">
+    
+    <div class="row">
+
+        <!-- Post Share -->
+        
+        <!-- Post -->
+        
+        
+            <div class="mainheading">
+
+                <!-- Author Box -->
+                
+                <div class="row post-top-meta">
+                    <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-right mb-4 mb-md-0">
+                        
+                        <img class="author-thumb" src="/assets/images/JoseAvatar.png" alt="Jose">
+                        
+                    </div>
+                    <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left">
+                        <a target="_blank" class="link-dark" href="https://jerry-master.github.io/Home-Page/">Jose</a>
+                        <a target="_blank" href="https://twitter.com/GranaDataJose" class="btn follow">Follow</a>
+                        
+                        <a target="_blank" href="/read_time" class="btn readtime">15 min read</a>
+                        
+                        <span class="author-description">Data scientist from Alcalá la Real. Studied at BarcelonaTech, worked as a researcher at the UGR and UPC, was a machine learning engineer at El Ranchito and Nemeda and now work in Koh Young Research Spain. Always wanting to explain my knowledge to the world.</span>
+                    </div>
+                </div>
+                
+
+                <!-- Post Title -->
+                <h1 class="posttitle">GAN optimality proof</h1>
+
+            </div>
+
+            <!-- Adsense if enabled from _config.yml (change your pub id and slot) -->
+            
+            <!-- End Adsense -->
+
+            <!-- Post Featured Image -->
+            
+            <!-- End Featured Image -->
+
+            <!-- Post Content -->
+            <div class="article-post">
+                <!-- Toc if any -->
+                
+                <!-- End Toc -->
+                <p>The so-called Generative Adversarial Networks have been with us since 2014, producing amazing results lately. Today I am bringing the proof of why they work. That is, a proof that states GANs are optimal in the limit when no parametric model is taken into account. But first, what is a GAN and what “amazing results” am I talking about?</p>
+
+<p class="text-center"><img class="" src="/assets/images/GAN/pix2pix.png" alt="simple" /></p>
+
+<p>The above example is about pix2pix which is a conditional adversarial network which gives style to your draft. You draw some sketch, tell some style and the network does the rest of the work. But there are other types of GANs, like style GAN which is very good at generating images of some given type, like the ones below, which are all artificial.</p>
+
+<p class="text-center"><img class="" src="/assets/images/GAN/stylegan.png" alt="simple" /></p>
+
+<p>GANs are also related to DALLE-2, the famous text-to-image model. Both are a special case of energy-based models, which is a more general framework. If you want to know more about it you can look at the <a href="https://www.youtube.com/watch?v=tVwV14YkbYs">Yann Lecunn lectures about it</a>.</p>
+
+<p>Let’s dive into the details of the original GAN formulation. Typically, GANs are presented with the following diagram.</p>
+
+<p class="text-center"><img class="" src="/assets/images/GAN/gan-diagram.png" alt="simple" /></p>
+
+<p>But I prefer to understand models in the mathematical realm. There a GAN is a min-max problem. Concretely it is <em>this</em> min-max problem:</p>
+
+<div>$$\min_G \max_D V(G,D)$$</div>
+
+<p>Where $D$ is the discriminator, it receives an image an outputs the probability of it being fake. $G$ is the generator, it receives some input vector $\textbf{z}$ and outputs a fake image, denoted by $\textbf{x}$. $V$ is a value function, which is defined as follows (each term will be explained in detail later):</p>
+
+<div>$$\mathbb{E}_{\textbf{x} \sim p_{data}}[\log(D(\textbf{x}))] + \mathbb{E}_{\textbf{z} \sim p_{\textbf{z}}}[\log(1-D(G(\textbf{z})))]$$</div>
+
+<p>How can we interpret those two terms? The first one is large when the discriminator is correctly identifying real images as real. The second one is large when the discriminator is correctly identifying the generator images as fake. Maximising this quantity yields a perfect discriminator. However, we want more than that, we want to fool the discriminator. That means creating a good generator. Fooling the discriminator means minimising the value function. Thus, we have the min-max problem as stated above. Intuitively the equilibrium of this problem will be reached when we have a perfect generator and the discriminator always outputs $\frac{1}{2}$ because the generated images are the same as the real ones. This is exactly what the optimality theorem from the original Ian Goodfellow’s paper proves.</p>
+
+<p>To understand the theorem, it is needed to give some formalism to the intuitive idea of perfect generator. What is a perfect generator? For us humans, it means that the images seem real. But mathematically, what does “real” means? It means that the probability distribution of the generated images and the probability distribution of the data are the same. Mathematically the images are random variables, whose observations are represented by a vector. If the real and fake vectors come from the same distribution, then, they can be considered to be the same. As an example, consider the probability distribution function (pdf) of images of Granada. From that pdf it is more probable to draw an image of the Alhambra than an image of the Eiffel tower. Also, random noise has zero probability on that pdf. So now, a good generator pdf should mimick that behaviour, giving high probability to images of Granada and low probability to everything else.</p>
+
+<p>In mathematical terms, the data pdf is denoted by $p_{data}(\textbf{x})$ and the generator pdf is $p_{g}(\textbf{x})$. So producing “real” images means that $p_{data}(\textbf{x}) = p_{g}(\textbf{x})$, $\forall \textbf{x}$. Now we can state the optimality theorem:</p>
+
+<div class="theorem"> The global minimum of $C(G) = \max_{D}V(G,D)$ is reached if and only if $p_{data}\equiv p_g$. Also, that minimum value is $-\log(4)$.</div>
+
+<p>Before proving it, let’s analyse the consequences of it and what it is telling us. The main takeaway is that the solution to the min-max problem gives a perfect generator, which means that we can learn to reproduce any probability distribution. For simpler distributions this doesn’t seem much, one can simply compute the histogram of a variable and use it as the estimated distribution. However, for images that is not possible. How can you compute the histogram of a set of images? There are no repeated values, we just have a bunch of different images with some similarities. So one can think of a GAN as a way of estimating the histogram of a set of images. But it is more than that, it also provides a way of drawing points (images) from that distribution.</p>
+
+<p>Another takeaway from the theorem is the optimal value of the value function. It may seem useless at first but it is a good indicator of whether or not the training is converging or not. Because in practice that optimal generator does not appears to us by divine revelation, an iterative method is typically used to find it. If you see that during training the model converges to a value different than $-\log(4) \approx -1.38$ then you can be certain that you have not solved the min-max problem.</p>
+
+<p>So far so good but, the generator as presented above is just a deterministic function, where does the variability comes from? It is there on the formulas, you just need to give a closer look. When defining the value function the second term was computed from the distribution $p_{\textbf{z}}$, what is that? It is a prior distribution for the input of the generator, which means that the generator is a function transforming one distribution into another. Mathematically this means $\textbf{z} \sim p_{\textbf{z}} \Rightarrow G(\textbf{z}) \sim p_g$, a key fact that will be used in the proof. The inference process is now quite easy, just draw a point from $p_{\textbf{z}}$ and apply the generator to get a new image. In practice you can just put any value you want for $\textbf{z}$ since the prior is a noise prior, not anything in particular.</p>
+
+<p>Finally, let’s prove the theorem. The first step is to find the optimal discriminator given the generator. After that, that value is substituted into the formulas and everything is rearranged into something with an obvious lower bound. I will skip many computational details, you can just check them by hand or if they don’t seem trivial to you, email me and I will write an appendix with more details. Let’s go, first part:</p>
+
+<div id="prop" class="prop"> If $G$ is fixed, the optimal $D$ is 
+<div>$$ D^*(\textbf{x}) = \frac{p_{data}(\textbf{x})}{p_{data}(\textbf{x}) + p_{g}(\textbf{x})} $$</div>
+</div>
+
+<div class="proof"> We have $V(G,D)=\mathbb{E}_{\textbf{x} \sim p_{data}}[\log(D(\textbf{x}))] + \mathbb{E}_{\textbf{z} \sim p_{\textbf{z}}}[\log(1-D(G(\textbf{z})))]$, in order to combine both integrals we need them to depend on the same variable $\textbf{x}$. To do so we are going to exploit the fact that $\textbf{z} \sim p_{\textbf{z}} \Rightarrow G(\textbf{z}) \sim p_g$. This fact, in conjunction with the <a href="https://en.wikipedia.org/wiki/Radon%E2%80%93Nikodym_theorem">Radon-Nikodym Theorem</a> lets us conclude that $\mathbb{E}_{\textbf{z} \sim p_{\textbf{z}}}[\log(1-D(G(\textbf{z})))] = \mathbb{E}_{\textbf{x} \sim p_{g}}[\log(1-D(\textbf{x}))]$. Where $\textbf{x} = G(\textbf{z})$. Now, if we express the expectations in integral form we get the following
+<div>$$ \int_{\textbf{x}} p_{data}(\textbf{x})\log(D(\textbf{x})) + p_g(\textbf{x})\log(1-D(\textbf{x})) d\textbf{x} $$</div>
+
+The integrand is now bounded by a function that does not depend on $D$ and so that bound is the optimum. That bound is found by differentiating with respect to $D$ and equalling to zero. The integrand there is basically $a \log(D) + b\log(1-D)$, which has the maximum at $\frac{a}{a+b}$ if $a$, $b$ are constant with respect to $D$. I still have <a id="my-doubts" href="https://datascience.stackexchange.com/questions/113390/minor-error-in-ian-goodfellows-gan-optimality-proof">my doubts</a> with respect to that assumption, but assuming it we get that the maximum is reached when $D=\frac{p_{data}}{p_{data}+p_g}$ which ends the proof.
+</div>
+
+<p>We now have found the optimal discrimator so we can now compute the value function for that optimal discriminator. If we call $C(G)=\max_{D}(V(D,G))$ the value of the value function for the optimal discriminator, we just want to find the minimum of $C(G)$ for any given generator. The “rearrangement” I mentioned above is the following</p>
+
+<div>$$ 
+\begin{align*}
+\max_D V(G,D) &amp;=\mathbb{E}_{\textbf{x} \sim p_{data}}[\log(D^*(\textbf{x}))] + \mathbb{E}_{\textbf{x} \sim p_{g}}[1-\log(D^*(\textbf{x}))] \\
+&amp;= \mathbb{E}_{\textbf{x} \sim p_{data}}[\log(\frac{p_{data}(\textbf{x})}{p_{data}(\textbf{x}) + p_{g}(\textbf{x})})] + \mathbb{E}_{\textbf{x} \sim p_{g}}[\log(\frac{p_{g}(\textbf{x})}{p_{data}(\textbf{x}) + p_{g}(\textbf{x})}] \\
+&amp;= -\log(4) + KL(p_{data}||\frac{p_{data}+p_g}{2}) + KL(p_g||\frac{p_{data}+p_g}{2})\\
+&amp;= -\log(4) + 2 \cdot JSD(p_{data}||p_g)
+\end{align*}
+$$</div>
+
+<p>The acronyms means <a href="https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence">Kullback-Leibler divergence</a> and <a href="https://en.wikipedia.org/wiki/Jensen%E2%80%93Shannon_divergence">Jensen-Shannon divergence</a>. For a more in-depth explanation of this rearrangement you can look at this <a href="https://srome.github.io/An-Annotated-Proof-of-Generative-Adversarial-Networks-with-Implementation-Notes/">great post</a>.</p>
+
+<p>We are almost finished, there is a property of the JSD that states it is a nonnegative value, being zero if and only if both distributions are equal. That property translates into $C(G) \ge -\log(4)$ with equality if and only if $p_{data} = p_g$ exactly as desired. Magic, isn’t it?</p>
+
+<p>Unfortunately, this theorem only states that the optimal generator exists but it doesn’t give a way of finding it. In my <a href="/gan-convergence-proof" target="_blank">next post</a> on the GANs series I will show the proof of convergence for the algorithm also proposed by Ian Goodfellow which proves that such generators can be found, at least in theory.</p>
+
+            </div>
+
+            <!-- Rating -->
+            
+
+            <!-- Post Date -->
+            <p>
+            <small>
+                <span class="post-date"><time class="post-date" datetime="2022-08-10">10 Aug 2022</time></span>           
+                
+                </small>
+            </p>
+
+            <!-- Post Categories -->
+            <div class="after-post-cats">
+                <ul class="tags mb-4">
+                    
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Deep-Learning">Deep Learning</a>
+                    </li>
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#GAN">GAN</a>
+                    </li>
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Theory">Theory</a>
+                    </li>
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#unsupervised-learning">unsupervised learning</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- End Categories -->
+
+            <!-- Post Tags -->
+            <div class="after-post-tags">
+                <ul class="tags">
+                    
+                    
+                </ul>
+            </div>
+            <!-- End Tags -->
+
+            <!-- Prev/Next -->
+            <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+            
+            <a class="prev d-block col-md-6" href="/NAS-parte2/"> &laquo; Neural Architecture Search (Part 2)</a>
+            
+            
+            <a class="next d-block col-md-6 text-lg-right" href="/NAS-parte3/">Neural Architecture Search (Part 3) &raquo; </a>
+            
+            <div class="clearfix"></div>
+            </div>
+            <!-- End Categories -->
+        
+        <!-- End Post -->
+
+    </div>
+</div>
+<!-- End Article
+================================================== -->
+
+<!-- Begin Comments
+================================================== -->
+
+<!--End Comments
+================================================== -->
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+</div>
+
+
+<!-- Bottom Alert Bar
+================================================== -->
+<div class="alertbar">
+	<div class="container text-center">
+		<span> Never miss a <b>story</b> from us, subscribe to this blog</span>
+        <form
+          class="wj-contact-form validate"
+          action="https://gmail.us4.list-manage.com/subscribe/post?u=6bc2f64e5d9109bd06bf859c5&amp;id=68bbfe755b&amp;f_id=005c05e9f0"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+        >
+            <div class="mc-field-group center-inputs">
+                <input type="email" placeholder="Email" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="button">
+            </div>
+        </form>
+	</div>
+</div>
+
+    
+</div>
+
+<!-- Categories Jumbotron
+================================================== -->
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+            <div class="d-md-flex align-items-center justify-content-center h-100">
+                <h2 class="d-md-block align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+            </div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+            
+            
+                
+                    <a class="mt-1 mb-1" href="/categories#Stories">Stories (5)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Philosophy">Philosophy (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Deep-Learning">Deep Learning (7)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Reinforcement-Learning">Reinforcement Learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Supervised-Learning">Supervised Learning (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Happy-Ideas">Happy Ideas (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#GAN">GAN (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Theory">Theory (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#unsupervised-learning">unsupervised learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Tutorial">Tutorial (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Servers">Servers (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Raspberry-Pi">Raspberry Pi (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Hidden-Markov-Model">Hidden Markov Model (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Django">Django (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Docker">Docker (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AWS">AWS (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AI">AI (2)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Unsupervised-Learning">Unsupervised Learning (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Python">Python (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Psychology">Psychology (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Economy">Economy (1)</a>
+                
+            
+            
+		</div>
+	</div>
+</div>
+
+<!-- Begin Footer
+================================================== 
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                Copyright © 2025 GranaData 
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" href="https://www.wowthemes.net/mediumish-free-jekyll-template/">Mediumish Jekyll Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>-->
+<!-- End Footer
+================================================== -->
+
+</div> <!-- /.site-content -->
+
+<!-- Scripts
+================================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<script src="/assets/js/mediumish.js"></script>
+
+
+<script src="/assets/js/lazyload.js"></script>
+
+
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script> 
+
+
+<script id="dsq-count-scr" src="//demowebsite.disqus.com/count.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="icon" href="/assets/images/favicon.ico">
+
+<title>Modelling a padel match with Hidden Markov Models | GranaData</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Modelling a padel match with Hidden Markov Models | GranaData</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Modelling a padel match with Hidden Markov Models" />
+<meta name="author" content="jose" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Imagine you are at a padel match. You watch the ball go from one side to the other, hit the wall, hit the ground, the net, and after some time someone wins the point. In your head you are following the state of the match until the end to know the winner. Imagine now that you were distracted by a fly and lost concentration on the players. You don’t know what has happened when you were distracted but you managed to watch the last part of the point and so you still know who is the winner. How can we replicate this situation with a model? Which is the correct model to manage situations where you can lose track in the middle but by looking the last part you know the result? The property of only needing to know the last part to know the result is called the Markov property. So a suitable model for this task is a Hidden Markov Model." />
+<meta property="og:description" content="Imagine you are at a padel match. You watch the ball go from one side to the other, hit the wall, hit the ground, the net, and after some time someone wins the point. In your head you are following the state of the match until the end to know the winner. Imagine now that you were distracted by a fly and lost concentration on the players. You don’t know what has happened when you were distracted but you managed to watch the last part of the point and so you still know who is the winner. How can we replicate this situation with a model? Which is the correct model to manage situations where you can lose track in the middle but by looking the last part you know the result? The property of only needing to know the last part to know the result is called the Markov property. So a suitable model for this task is a Hidden Markov Model." />
+<link rel="canonical" href="https://granadata.art/HMM-padel/" />
+<meta property="og:url" content="https://granadata.art/HMM-padel/" />
+<meta property="og:site_name" content="GranaData" />
+<meta property="og:image" content="https://granadata.art/assets/images/HMM/padel_court.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-09-06T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://granadata.art/assets/images/HMM/padel_court.png" />
+<meta property="twitter:title" content="Modelling a padel match with Hidden Markov Models" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jose"},"dateModified":"2022-09-06T00:00:00+00:00","datePublished":"2022-09-06T00:00:00+00:00","description":"Imagine you are at a padel match. You watch the ball go from one side to the other, hit the wall, hit the ground, the net, and after some time someone wins the point. In your head you are following the state of the match until the end to know the winner. Imagine now that you were distracted by a fly and lost concentration on the players. You don’t know what has happened when you were distracted but you managed to watch the last part of the point and so you still know who is the winner. How can we replicate this situation with a model? Which is the correct model to manage situations where you can lose track in the middle but by looking the last part you know the result? The property of only needing to know the last part to know the result is called the Markov property. So a suitable model for this task is a Hidden Markov Model.","headline":"Modelling a padel match with Hidden Markov Models","image":"https://granadata.art/assets/images/HMM/padel_court.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://granadata.art/HMM-padel/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://granadata.art/assets/images/logo.png"},"name":"jose"},"url":"https://granadata.art/HMM-padel/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(','\\)'] ],
+      displayMath: [ ['$$', '$$'], ['\\[','\\]'] ],
+      processEscapes: true,
+      processEnvironments: true,
+    }
+});
+MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/h-hg/docsify-pseudocode/dist/docsify-pseudocode.min.js"></script>
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+<link href="/assets/css/screen.css" rel="stylesheet">
+
+<link href="/assets/css/main.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<!-- Twitter cards -->
+<meta name="twitter:site"    content="@GranaDataJose">
+<meta name="twitter:creator" content="@GranaDataJose">
+<meta name="twitter:title"   content="Modelling a padel match with Hidden Markov Models">
+
+
+<meta name="twitter:description" content="Data science from Granada to the world.">
+
+
+
+<meta name="twitter:card"  content="summary_large_image">
+<meta name="twitter:image" content="https://granadata.art/assets/images/HMM/padel_court.png">
+
+<!-- end of Twitter cards -->
+
+</head>
+
+
+<!-- change your GA id in _config.yml -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46278016-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+
+<body class="layout-post">
+	<!-- defer loading of font and font awesome -->
+    <noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    
+	
+
+
+<!-- Begin Menu Navigation
+================================================== -->
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark shadow fixed-top mediumnavigation nav-down">
+
+    <div class="container pr-0">
+
+    <!-- Begin Logo -->
+    <a class="navbar-brand" href="/">
+    <img src="/assets/images/logo.png" alt="GranaData">
+    </a>
+    <!-- End Logo -->
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMediumish">
+
+        <!-- Begin Menu -->
+
+            <ul class="navbar-nav mr-auto">
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/index.html">Blog</a>
+                </li>
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/about">About</a>
+                </li>
+                
+            </ul>
+            <ul class="navbar-nav ml-auto">
+
+                <script src="/assets/js/lunr.js"></script>
+
+
+<style>
+    .lunrsearchresult .title {color: #d9230f;}
+    .lunrsearchresult .url {color: silver;}
+    .lunrsearchresult a {display: block; color: #777;}
+    .lunrsearchresult a:hover, .lunrsearchresult a:focus {text-decoration: none;}
+    .lunrsearchresult a:hover .title {text-decoration: underline;}
+</style>
+
+
+<form class="bd-search" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+    <input type="text" class="form-control text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+</form>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+
+            </ul>
+
+        <!-- End Menu -->
+
+    </div>
+
+    </div>
+</nav>
+<!-- End Navigation
+================================================== -->
+
+<div class="site-content">
+
+<div class="container">
+
+<!-- Site Title
+================================================== -->
+<div class="mainheading">
+    <h1 class="sitetitle">GranaData</h1>
+    <p class="lead">
+        Data science from Granada to the world.
+    </p>
+</div>
+
+<!-- Content
+================================================== -->
+<div class="main-content">
+    <!-- Begin Article
+================================================== -->
+<div class="container inside-container">
+    
+    <div class="row">
+
+        <!-- Post Share -->
+        
+        <!-- Post -->
+        
+        
+            <div class="mainheading">
+
+                <!-- Author Box -->
+                
+                <div class="row post-top-meta">
+                    <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-right mb-4 mb-md-0">
+                        
+                        <img class="author-thumb" src="/assets/images/JoseAvatar.png" alt="Jose">
+                        
+                    </div>
+                    <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left">
+                        <a target="_blank" class="link-dark" href="https://jerry-master.github.io/Home-Page/">Jose</a>
+                        <a target="_blank" href="https://twitter.com/GranaDataJose" class="btn follow">Follow</a>
+                        
+                        <a target="_blank" href="/read_time" class="btn readtime">5 min read</a>
+                        
+                        <span class="author-description">Data scientist from Alcalá la Real. Studied at BarcelonaTech, worked as a researcher at the UGR and UPC, was a machine learning engineer at El Ranchito and Nemeda and now work in Koh Young Research Spain. Always wanting to explain my knowledge to the world.</span>
+                    </div>
+                </div>
+                
+
+                <!-- Post Title -->
+                <h1 class="posttitle">Modelling a padel match with Hidden Markov Models</h1>
+
+            </div>
+
+            <!-- Adsense if enabled from _config.yml (change your pub id and slot) -->
+            
+            <!-- End Adsense -->
+
+            <!-- Post Featured Image -->
+            
+            <!-- End Featured Image -->
+
+            <!-- Post Content -->
+            <div class="article-post">
+                <!-- Toc if any -->
+                
+                <!-- End Toc -->
+                <p>Imagine you are at a padel match. You watch the ball go from one side to the other, hit the wall, hit the ground, the net, and after some time someone wins the point. In your head you are following the state of the match until the end to know the winner. Imagine now that you were distracted by a fly and lost concentration on the players. You don’t know what has happened when you were distracted but you managed to watch the last part of the point and so you still know who is the winner. How can we replicate this situation with a model? Which is the correct model to manage situations where you can lose track in the middle but by looking the last part you know the result? The property of only needing to know the last part to know the result is called the Markov property. So a suitable model for this task is a Hidden Markov Model.</p>
+
+<p>In this series I will describe how to properly design a Hidden Markov Model (HMM from now on) to keep track of the state of a padel match. I will also provide functional python code that you could play with. And as extra material I will talk about unit testing and how to use unit tests to incrementally build a model like this one. Let’s begin.</p>
+
+<p>First of all a rapid introduction on HMM and how to code them. A Hidden Markov Model has two main elements: hidden states and observations. The hidden states are what represent the model, in the padel case a hidden state can be first service, or ace or second service. The observations are what you can observe directly, continuing with the analogy an observation can be when the ball hits the ground. What the HMM does is to infer the hidden states based only on a sequence of observations. If you watch that the first player hits the ball and then the ball hits the ground twice on the other side, you can infer that the sequence of states is first service and then ace. A more abstract scheme is shown below.</p>
+
+<p class="text-center"><img class="" src="/assets/images/HMM/obs_seq.png" alt="simple" /></p>
+
+<p>Every arrow represents a transition either between hidden states or between a hidden state or an observation. Each transition is nothing more than a probability. For example, the probability of going from second service to first service is zero because the first service always goes first. The transitions between hidden states and observations are called emissions. One emission could be that the probability of observing the ball hit the ground after first service is $0.5$. The transition and emission probabilities are represented as matrices. Below you can see the transitions of an example from a toy HMM.</p>
+
+<p class="text-center"><img class="" src="/assets/images/HMM/transition.png" alt="simple" /></p>
+
+<p>Once you have a HMM there are three things you can do with it. Given a sequence of observations you can decode the most probable sequence of hidden states with an algorithm call <a href="https://www.youtube.com/watch?v=6JVqutwtzmo" target="_blank">Viterbi’s</a>. You can estimate the internal probabilities of the HMM using several sequences of observations with the <a href="https://medium.com/analytics-vidhya/baum-welch-algorithm-for-training-a-hidden-markov-model-part-2-of-the-hmm-series-d0e393b4fb86" target="_blank">Baum-Welch algorithm</a>. Or you can sample a new sequence of observations. We are only interested in the first one, decoding. The transition and emission probabilities will be designed to model the rules of a padel match.</p>
+
+<p>Now that we have seen the theory, let’s see how we can decode sequences in Python. As you may have guessed there are libraries that implement all the previously mentioned algorithms. My favorite one so far is <a href="https://github.com/NicolasHug/hmmkay" target="_blank"><code class="highlight language-python" data-lang="python"><span class="n">hmmmkay</span></code></a>. It is quite easy to use and is fast enough for my use cases. You can create a HMM with a few lines of code. See below.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="rouge-code"><pre><span class="kn">import</span> <span class="n">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="n">hmmkay</span> <span class="kn">import</span> <span class="n">HMM</span>
+
+<span class="n">folder_path</span> <span class="o">=</span> <span class="sh">'</span><span class="s">graphs/</span><span class="sh">'</span>
+<span class="n">transition_probas</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nf">read_csv</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">+</span> <span class="sh">'</span><span class="s">A.csv</span><span class="sh">'</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">emission_probas</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nf">read_csv</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">+</span> <span class="sh">'</span><span class="s">B.csv</span><span class="sh">'</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">hidden_states</span> <span class="o">=</span> <span class="n">emission_probas</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">init_probas</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nf">zeros</span><span class="p">(</span><span class="n">hidden_states</span><span class="p">)</span>
+<span class="n">init_probas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">hmm</span> <span class="o">=</span> <span class="nc">HMM</span><span class="p">(</span><span class="n">init_probas</span><span class="p">,</span> <span class="n">transition_probas</span><span class="p">,</span> <span class="n">emission_probas</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>The important method is <code class="highlight language-python" data-lang="python"><span class="nc">HMM</span><span class="p">(</span><span class="n">init_probas</span><span class="p">,</span> <span class="n">transition_probas</span><span class="p">,</span> <span class="n">emission_probas</span><span class="p">)</span></code>. Given the transition and emission matrices and given also some initial probabilities for the hidden states it returns an object that can decode any sequence. The details of how to create the matrices will be described in later posts of the series. I can advance you a bit about the process. You first begin by drawing a graph in paper with the transitions you like, you then parse that graph in paper into a graph in digital format (.gml). And finally, you use the adjacency matrices of the graph as the probability matrices. But for now, let’s assume we already have those files. How can we decode a sequence? Like this.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="n">decoded_seq</span> <span class="o">=</span> <span class="n">hmm</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>The only concern to bear in mind is that the input and the output are numbers starting from zero. You need to parse those values to have something significant. I normally use the column names of the matrices as dictionaries to parse the sequences.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="n">indexer_hidden</span> <span class="o">=</span> <span class="nf">dict</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">transition_probas</span><span class="p">.</span><span class="n">columns</span><span class="p">):</span>
+    <span class="n">indexer_hidden</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+<span class="n">indexer_obs</span> <span class="o">=</span> <span class="nf">dict</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nf">enumerate</span><span class="p">(</span><span class="n">emission_probas</span><span class="p">.</span><span class="n">columns</span><span class="p">):</span>
+    <span class="n">indexer_obs</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Putting everything together, to decode a sequence the program would look something like this code.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="rouge-code"><pre><span class="c1">### ace in first service ###
+</span><span class="n">sequence</span> <span class="o">=</span> <span class="p">[</span><span class="sh">'</span><span class="s">player-hit</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">bounce-ground-receiver</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> 
+     <span class="sh">'</span><span class="s">bounce-ground-receiver</span><span class="sh">'</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="sh">'</span><span class="s">flying</span><span class="sh">'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="sh">'</span><span class="s">end</span><span class="sh">'</span><span class="p">]</span>
+<span class="n">sequences</span> <span class="o">=</span> <span class="p">[[</span><span class="n">indexer_obs</span><span class="p">[</span><span class="n">obs</span><span class="p">]</span> <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">]]</span>
+<span class="n">decoded_seq</span> <span class="o">=</span> <span class="n">hmm</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="n">sequences</span><span class="p">)</span>
+<span class="n">decoded_seq</span> <span class="o">=</span> <span class="p">[</span><span class="n">hidden_states</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">decoded_seq</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">decoded_seq</span><span class="p">)</span>
+<span class="c1"># Result: ['1st-serve', 'flying-1st-serve-0', 'flying-1st-serve-1', 'flying-1st-serve-2', 'flying-1st-serve-3', 
+# 'flying-1st-serve-4', 'flying-1st-serve-5', 'flying-1st-serve-5', 'flying-1st-serve-5', 'flying-1st-serve-5', 
+# 'flying-1st-serve-5', 'in1', 'flying-in1-0', 'flying-in1-1', 'flying-in1-2', 'flying-in1-3', 'flying-in1-4', 
+# 'flying-in1-5', 'flying-in1-5', 'flying-in1-5', 'flying-in1-5', 'flying-in1-5', 'ground', 'flying-ground-0', 
+# 'flying-ground-1', 'flying-ground-2', 'flying-ground-3', 'flying-ground-4', 'flying-ground-5', 
+# 'flying-ground-5', 'flying-ground-5', 'flying-ground-5', 'flying-ground-5', 'Point-server']
+</span></pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Don’t worry if you don’t understand all this fuzzy names, they are the names that I chose for the hidden states and observations. On my <a href="/HMM-padel-part2" target="_blank">next post</a> I will explain in detail what everything means. For now I just want you to notice that the HMM is correctly identifying the winner in this point. The sequence of observations correspond to an ace in the first service. The player hits the balls and it bounces twice in the other side. Any person watching the match will automatically identify that as an ace. Here, it gives more information than that. It recognizes the instant in which the ace is achieved. The hidden state <code class="highlight language-python" data-lang="python"><span class="n">in1</span></code> means the ball has correctly entered into the other side and the state <code class="highlight language-python" data-lang="python"><span class="n">ground</span></code> means that it has bounced again in the ground. After a while of having the ball flying, the model outputs the state <code class="highlight language-python" data-lang="python"><span class="n">Point</span><span class="o">-</span><span class="n">server</span></code> correctly giving the victory to the server.</p>
+
+<p>On my <a href="/HMM-padel-part2" target="_blank">next post</a> I will talk about the process of designing the transition and emission matrices. I will also talk about what is reasonable to be defined as observation and which hidden states are needed. And on a later post I will cover a lesson on noisy decoding. One important feature of Hidden Markov Models is that they can decode the sequence of observations even if it is wrong at some point. Like I said at the beginning you could ignore the match for some time and then you would still be able to recognize the winner. HMMs can go even further. Imagine that you are not looking the match and you are just hearing it from the radio. If the commentator makes some mistake you may hear something impossible like a player hitting twice the ball without the match finishing. HMM can decode the sequence correctly even in those situations. That is because HMMs work with probabilities. If a player hits twice the ball and the game continues, the HMM will identify that second hit as a mistake and ignore it. Of course, if the sequence is completely wrong, the result will be wrong too. But HMM are quite robust to noise in the input if you design them carefully. See you on my <a href="/HMM-padel-part2" target="_blank">next post</a> to learn how to design Hidden Markov Models.</p>
+
+            </div>
+
+            <!-- Rating -->
+            
+
+            <!-- Post Date -->
+            <p>
+            <small>
+                <span class="post-date"><time class="post-date" datetime="2022-09-06">06 Sep 2022</time></span>           
+                
+                </small>
+            </p>
+
+            <!-- Post Categories -->
+            <div class="after-post-cats">
+                <ul class="tags mb-4">
+                    
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Hidden-Markov-Model">Hidden Markov Model</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- End Categories -->
+
+            <!-- Post Tags -->
+            <div class="after-post-tags">
+                <ul class="tags">
+                    
+                    
+                </ul>
+            </div>
+            <!-- End Tags -->
+
+            <!-- Prev/Next -->
+            <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+            
+            <a class="prev d-block col-md-6" href="/gan-convergence-proof/"> &laquo; GAN convergence proof</a>
+            
+            
+            <a class="next d-block col-md-6 text-lg-right" href="/HMM-padel-part2/">Modelling a padel match with Hidden Markov Models (Part 2) &raquo; </a>
+            
+            <div class="clearfix"></div>
+            </div>
+            <!-- End Categories -->
+        
+        <!-- End Post -->
+
+    </div>
+</div>
+<!-- End Article
+================================================== -->
+
+<!-- Begin Comments
+================================================== -->
+
+<!--End Comments
+================================================== -->
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+</div>
+
+
+<!-- Bottom Alert Bar
+================================================== -->
+<div class="alertbar">
+	<div class="container text-center">
+		<span> Never miss a <b>story</b> from us, subscribe to this blog</span>
+        <form
+          class="wj-contact-form validate"
+          action="https://gmail.us4.list-manage.com/subscribe/post?u=6bc2f64e5d9109bd06bf859c5&amp;id=68bbfe755b&amp;f_id=005c05e9f0"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+        >
+            <div class="mc-field-group center-inputs">
+                <input type="email" placeholder="Email" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="button">
+            </div>
+        </form>
+	</div>
+</div>
+
+    
+</div>
+
+<!-- Categories Jumbotron
+================================================== -->
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+            <div class="d-md-flex align-items-center justify-content-center h-100">
+                <h2 class="d-md-block align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+            </div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+            
+            
+                
+                    <a class="mt-1 mb-1" href="/categories#Stories">Stories (5)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Philosophy">Philosophy (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Deep-Learning">Deep Learning (7)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Reinforcement-Learning">Reinforcement Learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Supervised-Learning">Supervised Learning (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Happy-Ideas">Happy Ideas (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#GAN">GAN (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Theory">Theory (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#unsupervised-learning">unsupervised learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Tutorial">Tutorial (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Servers">Servers (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Raspberry-Pi">Raspberry Pi (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Hidden-Markov-Model">Hidden Markov Model (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Django">Django (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Docker">Docker (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AWS">AWS (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AI">AI (2)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Unsupervised-Learning">Unsupervised Learning (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Python">Python (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Psychology">Psychology (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Economy">Economy (1)</a>
+                
+            
+            
+		</div>
+	</div>
+</div>
+
+<!-- Begin Footer
+================================================== 
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                Copyright © 2025 GranaData 
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" href="https://www.wowthemes.net/mediumish-free-jekyll-template/">Mediumish Jekyll Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>-->
+<!-- End Footer
+================================================== -->
+
+</div> <!-- /.site-content -->
+
+<!-- Scripts
+================================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<script src="/assets/js/mediumish.js"></script>
+
+
+<script src="/assets/js/lazyload.js"></script>
+
+
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script> 
+
+
+<script id="dsq-count-scr" src="//demowebsite.disqus.com/count.js"></script>
+
+
+</body>
+</html>

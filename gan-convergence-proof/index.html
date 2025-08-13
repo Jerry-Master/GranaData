@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="icon" href="/assets/images/favicon.ico">
+
+<title>GAN convergence proof | GranaData</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>GAN convergence proof | GranaData</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="GAN convergence proof" />
+<meta name="author" content="jose" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In my previous post about GANs I explained the mathematical proof of why GANs work. The theorem stated that the real data distribution was mimicked by the generator at the optimum of the cost function, although it didn’t say how to find such optimum. In this post I will specify how to find such optimum and prove that the algorithm provided works. Keep in mind that this algorithm is the original proposed by Ian Goodfellow, several improvements have been made since then. At the end I will describe some of the faults of this algorithm and various changes that have been tried since it was published." />
+<meta property="og:description" content="In my previous post about GANs I explained the mathematical proof of why GANs work. The theorem stated that the real data distribution was mimicked by the generator at the optimum of the cost function, although it didn’t say how to find such optimum. In this post I will specify how to find such optimum and prove that the algorithm provided works. Keep in mind that this algorithm is the original proposed by Ian Goodfellow, several improvements have been made since then. At the end I will describe some of the faults of this algorithm and various changes that have been tried since it was published." />
+<link rel="canonical" href="https://granadata.art/gan-convergence-proof/" />
+<meta property="og:url" content="https://granadata.art/gan-convergence-proof/" />
+<meta property="og:site_name" content="GranaData" />
+<meta property="og:image" content="https://granadata.art/assets/images/GAN/gan-cat2.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-09-05T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://granadata.art/assets/images/GAN/gan-cat2.png" />
+<meta property="twitter:title" content="GAN convergence proof" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jose"},"dateModified":"2022-09-05T00:00:00+00:00","datePublished":"2022-09-05T00:00:00+00:00","description":"In my previous post about GANs I explained the mathematical proof of why GANs work. The theorem stated that the real data distribution was mimicked by the generator at the optimum of the cost function, although it didn’t say how to find such optimum. In this post I will specify how to find such optimum and prove that the algorithm provided works. Keep in mind that this algorithm is the original proposed by Ian Goodfellow, several improvements have been made since then. At the end I will describe some of the faults of this algorithm and various changes that have been tried since it was published.","headline":"GAN convergence proof","image":"https://granadata.art/assets/images/GAN/gan-cat2.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://granadata.art/gan-convergence-proof/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://granadata.art/assets/images/logo.png"},"name":"jose"},"url":"https://granadata.art/gan-convergence-proof/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(','\\)'] ],
+      displayMath: [ ['$$', '$$'], ['\\[','\\]'] ],
+      processEscapes: true,
+      processEnvironments: true,
+    }
+});
+MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/h-hg/docsify-pseudocode/dist/docsify-pseudocode.min.js"></script>
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+<link href="/assets/css/screen.css" rel="stylesheet">
+
+<link href="/assets/css/main.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<!-- Twitter cards -->
+<meta name="twitter:site"    content="@GranaDataJose">
+<meta name="twitter:creator" content="@GranaDataJose">
+<meta name="twitter:title"   content="GAN convergence proof">
+
+
+<meta name="twitter:description" content="Data science from Granada to the world.">
+
+
+
+<meta name="twitter:card"  content="summary_large_image">
+<meta name="twitter:image" content="https://granadata.art/assets/images/GAN/gan-cat2.png">
+
+<!-- end of Twitter cards -->
+
+</head>
+
+
+<!-- change your GA id in _config.yml -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46278016-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+
+<body class="layout-post">
+	<!-- defer loading of font and font awesome -->
+    <noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    
+    <script>
+        window.$docsify = {
+    pseudocode: {
+        indentSize: '1.2em',
+        commentDelimiter: '//',
+        lineNumber: false,
+        lineNumberPunc: ':',
+        noEnd: false,
+        titlePrefix: 'Algorithm'
+    }
+    }
+    </script>
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/h-hg/docsify-pseudocode/dist/docsify-pseudocode.min.js"></script>
+    
+	
+
+
+<!-- Begin Menu Navigation
+================================================== -->
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark shadow fixed-top mediumnavigation nav-down">
+
+    <div class="container pr-0">
+
+    <!-- Begin Logo -->
+    <a class="navbar-brand" href="/">
+    <img src="/assets/images/logo.png" alt="GranaData">
+    </a>
+    <!-- End Logo -->
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMediumish">
+
+        <!-- Begin Menu -->
+
+            <ul class="navbar-nav mr-auto">
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/index.html">Blog</a>
+                </li>
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/about">About</a>
+                </li>
+                
+            </ul>
+            <ul class="navbar-nav ml-auto">
+
+                <script src="/assets/js/lunr.js"></script>
+
+
+<style>
+    .lunrsearchresult .title {color: #d9230f;}
+    .lunrsearchresult .url {color: silver;}
+    .lunrsearchresult a {display: block; color: #777;}
+    .lunrsearchresult a:hover, .lunrsearchresult a:focus {text-decoration: none;}
+    .lunrsearchresult a:hover .title {text-decoration: underline;}
+</style>
+
+
+<form class="bd-search" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+    <input type="text" class="form-control text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+</form>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+
+            </ul>
+
+        <!-- End Menu -->
+
+    </div>
+
+    </div>
+</nav>
+<!-- End Navigation
+================================================== -->
+
+<div class="site-content">
+
+<div class="container">
+
+<!-- Site Title
+================================================== -->
+<div class="mainheading">
+    <h1 class="sitetitle">GranaData</h1>
+    <p class="lead">
+        Data science from Granada to the world.
+    </p>
+</div>
+
+<!-- Content
+================================================== -->
+<div class="main-content">
+    <!-- Begin Article
+================================================== -->
+<div class="container inside-container">
+    
+    <div class="row">
+
+        <!-- Post Share -->
+        
+        <!-- Post -->
+        
+        
+            <div class="mainheading">
+
+                <!-- Author Box -->
+                
+                <div class="row post-top-meta">
+                    <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-right mb-4 mb-md-0">
+                        
+                        <img class="author-thumb" src="/assets/images/JoseAvatar.png" alt="Jose">
+                        
+                    </div>
+                    <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left">
+                        <a target="_blank" class="link-dark" href="https://jerry-master.github.io/Home-Page/">Jose</a>
+                        <a target="_blank" href="https://twitter.com/GranaDataJose" class="btn follow">Follow</a>
+                        
+                        <a target="_blank" href="/read_time" class="btn readtime">16 min read</a>
+                        
+                        <span class="author-description">Data scientist from Alcalá la Real. Studied at BarcelonaTech, worked as a researcher at the UGR and UPC, was a machine learning engineer at El Ranchito and Nemeda and now work in Koh Young Research Spain. Always wanting to explain my knowledge to the world.</span>
+                    </div>
+                </div>
+                
+
+                <!-- Post Title -->
+                <h1 class="posttitle">GAN convergence proof</h1>
+
+            </div>
+
+            <!-- Adsense if enabled from _config.yml (change your pub id and slot) -->
+            
+            <!-- End Adsense -->
+
+            <!-- Post Featured Image -->
+            
+            <!-- End Featured Image -->
+
+            <!-- Post Content -->
+            <div class="article-post">
+                <!-- Toc if any -->
+                
+                <!-- End Toc -->
+                <p>In my <a href="/gan_optimality_proof" target="_blank">previous post</a> about GANs I explained the mathematical proof of why GANs work. The theorem stated that the real data distribution was mimicked by the generator at the optimum of the cost function, although it didn’t say how to find such optimum. In this post I will specify how to find such optimum and prove that the algorithm provided works. Keep in mind that this algorithm is the original proposed by Ian Goodfellow, several improvements have been made since then. At the end I will describe some of the faults of this algorithm and various changes that have been tried since it was published.</p>
+
+<p>The algorithm can be described in pseudocode as follows:</p>
+
+<pre id="gan" class="pseudocode" style="display:hidden;">
+    % This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
+    \begin{algorithm}
+    \caption{GAN convergence algorithm}
+    \begin{algorithmic}
+    \FOR{number of training iterations}
+        \FOR{\$k\$ steps}
+            \STATE Sample minibatch of \$m\$ noise samples \( \{ \)\$z\$\( ^{(1)},\dots,\)\$z\$\(^{(m)}\} \) from noise prior \$p\_z(z)\$.
+            \STATE Sample minibatch of \$m\$ examples \( \{ \)\$x\$\( ^{(1)},\dots,\)\$x\$\(^{(m)}\} \) from data generating distribution \$p\_\{data\}(z)\$.
+            \STATE Update the discriminator by ascending its stochastic gradient:
+            $\nabla_{\theta_d}\frac{1}{m} \sum_{i=1}^{m}[log(D (x^{(i)})) + log(1-D(G(z^{(i)})))$
+            \normalsize
+        \ENDFOR
+        \STATE Sample minibatch of \$m\$ noise samples \( \{ \)\$z\$\( ^{(1)},\dots,\)\$z\$\(^{(m)}\} \) from noise prior \$p\_z(z)\$.
+        \STATE Update the generator by descending its stochastic gradient: $\nabla_{\theta_g}\frac{1}{m} \sum_{i=1}^{m}log(1-D(G(z^{(i)})))$
+    \ENDFOR
+    \end{algorithmic}
+    \end{algorithm}
+</pre>
+
+<p>Let’s disect the algorithm piece by piece. Recall which function we were trying to optimize:</p>
+
+<div>$$V(G,D) = \mathbb{E}_{\textbf{x} \sim p_{data}}[\log(D(\textbf{x}))] + \mathbb{E}_{\textbf{z} \sim p_{\textbf{z}}}[\log(1-D(G(\textbf{z})))]$$</div>
+
+<p>We wanted the maximum with respect to the discriminator and then the minimum with respect to the generator:</p>
+
+<div>$$\min_G \max_D V(G,D)$$</div>
+
+<p>If you look at the pseudocode we are doing just that. We first apply gradient ascent on the discriminator and then gradient descent on the generator. You may have noticed that the formulas in the pseudocode are different from what I showed you in the previous post. That is because we are approximating the expectation using a Monte Carlo method. To compute the expected value of a variable you need to compute an integral which in this case, and many others, is intractable. For that reason the expectation is approximated by the mean:</p>
+
+<div>$$\mathbb{E}_{\textbf{x} \sim p}[f(\textbf{x})] \approx \frac{1}{m}\sum_{i=1}^{m} f(\textbf{x}^{(i)})$$</div>
+
+<p>where the $\textbf{x}^{(i)}$ are sampled from the distribution $p$. If you go to the pseudocode you will see that we sample the $\textbf{z}$ from the prior noise and the $\textbf{x}$ from the real data. You may have also noticed that there is one term missing when applying gradient descent for the generator. The reason for that is the first summand in the formula does not depend on the generator, therefore the gradient of that term is zero.</p>
+
+<p>As you can see the algorithm itself is quite intuitive. For maximization apply gradient ascent and for minimization you apply gradient descent. That’s it. But being simple and intuitive is not enough for an algorithm to be correct, there needs to be a proof of their correctness. In this case there needs to be a proof of convergence and optimality. And like every theorem, that proof is going to come with some hypothesis.</p>
+
+<p>The first hypothesis is that $D$ and $G$ have enough capacity. This means that whatever model you use for them can reach the optimum. That seems a pretty reasonable hypothesis, but in practice you never know how much complexity is enough complexity.</p>
+
+<p>The second hypothesis is that $D$ can reach the optimum at each step given $G$. This is basically saying that the parameter $k$ used is sufficiently large, and that the learning rate is sufficiently small so that other theorems of gradient descent convergence hold. That optimum is going to be called $D^*_G$. This hypothesis is less important than the next one, and in practice reaching the optimal discriminator at any step is a problem that I will describe later on in this post.</p>
+
+<p>The last hypothesis is that at each step the criterion $C(G)=\min_D(V(G,D))$ improves. Which is basically saying that gradient descent is working on the generator. Formally, the theorem can be expressed like follows</p>
+
+<div class="theorem"> 
+If $G$ and $D$ have enough capacity, and at each step of Algorithm 1, the discriminator is allowed to reach its optimum given $G$, and $p_g$ is updated so as to improve the criterion
+<div>$$\mathbb{E}_{\textbf{x} \sim p_{data}}[\log(D^*_G(\textbf{x}))] + \mathbb{E}_{\textbf{x} \sim p_g}[\log(1-D^*_G(\textbf{x}))]$$</div>
+then $p_g$ converges to $p_{data}$.
+</div>
+
+<p>The proof consists of two main steps: proving the cost function is convex with respect to the generator and proving the gradient descent at the optimal $D$ given $G$ converges to the same as the gradient descent for the global optimal $D$. This way we don’t need to know the real optimal discriminator, just the one that is optimum for each generator. The proof for convexity is more technical and I will explain it later. Let’s go with showing we only need a suboptimal discriminator.</p>
+
+<p>As everything in math, we start with definitions and notation that will made the rest of the proof easier to follow. The first change is for the value function, let’s call $U(p_g,D)=V(G,D)$ to the value function, changing the dependency to the generated distribution instead of the model. This is to highlight that we are working with ideal models in the function space not in the parametric space. Let’s call $U(p_g) = \sup_DU(p_g,D)$ the value function for the optimal discriminator. Since we are working in the function space the supremum is used instead of the maximum. Now the problem is to find $\inf_{p_g}U(p_g)$.</p>
+
+<p>Assuming $U(p_g,D)$ is convex for every $D$ there is <a href="https://math.stackexchange.com/questions/3363996/convexity-of-supremum-of-convex-functions" target="_blank">a theorem</a> saying that $U(p_g)$ is also convex. Now, the key of the proof is showing that any <a href="https://en.wikipedia.org/wiki/Subgradient_method" target="_blank">subgradient</a> of $U(p_g,D^*_G)$ is also a subgradient of $U(p_g)$ when $D^*_G=\text{argsup}_D U(p_g,D)$. This way gradient descent on $U(p_g,D^*_G)$ converges to the same value as gradient descent on $U(p_g)$, since that function is convex and the global optimum exists, that optimum is found. Now, the details.</p>
+
+<p>Mathematically, the argument of the subgradients can be expressed as follows:</p>
+
+<div>$$\partial U(p_g, \text{argsup}_D U(p_g,D)) \subseteq \partial \sup_D U(p_g,D)$$</div>
+
+<p>Being $\partial f$ the <a href="https://en.wikipedia.org/wiki/Subderivative#The_subgradient" target="_blank">set of subgradients</a> of $f$. The proof of that is a matter of using correctly the definitions. We have $U(p_g,D^*_G)=U(p_g)$. If $g\in \partial U(p_g,D^*_G)$, then by definition we have $U(p_g’,D^*_G) \ge U(p_g,D^*_G) + g^T (p_g’-p_g)$ for every other distribution $p_g’$, being the last term the scalar product of functions. By definition of supremum we have $U(p_g’) \ge U(p_g’,D^*_G)$. Joining everything we obtain</p>
+<div>$$U(p_g') \ge U(p_g',D^*_G) \ge U(p_g,D^*_G) + g^T (p_g'-p_g) = U(p_g) + g^T (p_g'-p_g)$$</div>
+<p>And therefore $U(p_g’)\ge U(p_g) + g^T (p_g’-p_g)$ which shows that $g\in \partial U(p_g)$. In Algorithm 1 we don’t use subgradients, and that is because if we assume the cost function is differentiable, then the only subgradient is the gradient. And we always use cost functions that are differentiable. For that reason, this part of the proof can also be expressed like this</p>
+
+<div>$$\nabla V(G,D^*_G) = \nabla C(G)$$</div>
+
+<p>which gives a way of optimizing $C(G)=\sup_D V(G,D)$ without needing to know the function itself. Quite a nice property of convex functions. Let’s now prove that the function is in fact convex. What is the definition of convex in this context? It simply means that</p>
+<div>$$U(tp_g'+(1-t)p_g,D) \ge tU(p_g',D)+(1-t)U(p_g,D)$$</div>
+
+<p>which, after removing at both sides the terms that doesn’t depend on $p_g$, translates to</p>
+
+<div>$$\mathbb{E}_{\textbf{x} \sim tp_g'+(1-t)p_g}[\log(1-D(\textbf{x}))] \ge t\mathbb{E}_{\textbf{x}\sim p_g'}[\log(1-D(\textbf{x}))] + (1-t)\mathbb{E}_{\textbf{x}\sim p_g}[\log(1-D(\textbf{x}))]$$</div>
+
+<p>To prove that, we are going to prove an even stronger statement, which is</p>
+
+<div>$$\mathbb{E}_{\textbf{x} \sim tp_g'+(1-t)p_g} \equiv t\mathbb{E}_{\textbf{x}\sim p_g'} + (1-t)\mathbb{E}_{\textbf{x}\sim p_g}$$</div>
+
+<p>And this is fairly easy to prove, we just need to recall the linearity of integrals</p>
+
+<div>$$\mathbb{E}_{\textbf{x} \sim tp_g'+(1-t)p_g} [f] =\int (tp_g'+(1-t)p_g)f = t\int p_g' f + (1-t) \int p_g f  = t\mathbb{E}_{\textbf{x}\sim p_g'}[f] + (1-t)\mathbb{E}_{\textbf{x}\sim p_g}[f]$$</div>
+
+<p>which finally proves the convexity of $U(p_g,D)$ with respect to $p_g$. Let’s start now with the faults of this proof and why it doesn’t hold on practice. The main reason it doesn’t hold in practice is the convexity of the cost function. Whenever we change the set of all distributions $p_g$ by the set of parametrized generators $G$ the corresponding cost function becomes non-convex. This is so because we are reducing the space from an infinite convex space, to a finite space. Now $tG’+(1-t)G$ may not be any valid generator, and so the set of reproducible distributions could be non-convex. In addition, it is well-known that using deep neural networks creates non-convex costs functions. That limits the possibility of finding the global optimum by only using gradient descent.</p>
+
+<p>There is another problem with this proof. It requires that we find a perfect discriminator at each step, and after it we apply gradient descent on the generator. The reason why that doesn’t work is mainly numerical. A perfect discriminator is going to produce gradients close to zero. When propagating the gradient it results on the generator not training at all. In practice, many articles limit the ability of learning of the discriminator so that the gradient is non-zero. One technique for doing so is using a smaller learning rate for the discriminator. This way the discriminator is learning at a slower pace than the generator.</p>
+
+<p>However, there are no results either proving or disproving that a neural network is not well-suited for this task. Many researchers have achieved decent results when training GANs. I wouldn’t even be writing this posts at all if GANs were a loss of time, which they aren’t. In practice they can work very well, but bare in mind that they are difficult to train. There is no theorem guaranteeing that Algorithm 1 works always. And you may probably need to use a modification of Algorithm 1 to make it work. But all in all, you can consider real GANs as approximations of an ideal GAN that always converge. It’s better than nothing.</p>
+
+<script>
+    pseudocode.renderElement(document.getElementById("gan"));
+</script>
+
+<script>
+    pseudocode.renderClass("pseudocode");
+</script>
+
+
+            </div>
+
+            <!-- Rating -->
+            
+
+            <!-- Post Date -->
+            <p>
+            <small>
+                <span class="post-date"><time class="post-date" datetime="2022-09-05">05 Sep 2022</time></span>           
+                
+                </small>
+            </p>
+
+            <!-- Post Categories -->
+            <div class="after-post-cats">
+                <ul class="tags mb-4">
+                    
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Deep-Learning">Deep Learning</a>
+                    </li>
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#GAN">GAN</a>
+                    </li>
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Theory">Theory</a>
+                    </li>
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#unsupervised-learning">unsupervised learning</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- End Categories -->
+
+            <!-- Post Tags -->
+            <div class="after-post-tags">
+                <ul class="tags">
+                    
+                    
+                </ul>
+            </div>
+            <!-- End Tags -->
+
+            <!-- Prev/Next -->
+            <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+            
+            <a class="prev d-block col-md-6" href="/headless-raspberry-setup/"> &laquo; Headless installation of Ubuntu on Rasbperry</a>
+            
+            
+            <a class="next d-block col-md-6 text-lg-right" href="/HMM-padel/">Modelling a padel match with Hidden Markov Models &raquo; </a>
+            
+            <div class="clearfix"></div>
+            </div>
+            <!-- End Categories -->
+        
+        <!-- End Post -->
+
+    </div>
+</div>
+<!-- End Article
+================================================== -->
+
+<!-- Begin Comments
+================================================== -->
+
+<!--End Comments
+================================================== -->
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+</div>
+
+
+<!-- Bottom Alert Bar
+================================================== -->
+<div class="alertbar">
+	<div class="container text-center">
+		<span> Never miss a <b>story</b> from us, subscribe to this blog</span>
+        <form
+          class="wj-contact-form validate"
+          action="https://gmail.us4.list-manage.com/subscribe/post?u=6bc2f64e5d9109bd06bf859c5&amp;id=68bbfe755b&amp;f_id=005c05e9f0"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+        >
+            <div class="mc-field-group center-inputs">
+                <input type="email" placeholder="Email" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="button">
+            </div>
+        </form>
+	</div>
+</div>
+
+    
+</div>
+
+<!-- Categories Jumbotron
+================================================== -->
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+            <div class="d-md-flex align-items-center justify-content-center h-100">
+                <h2 class="d-md-block align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+            </div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+            
+            
+                
+                    <a class="mt-1 mb-1" href="/categories#Stories">Stories (5)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Philosophy">Philosophy (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Deep-Learning">Deep Learning (7)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Reinforcement-Learning">Reinforcement Learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Supervised-Learning">Supervised Learning (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Happy-Ideas">Happy Ideas (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#GAN">GAN (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Theory">Theory (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#unsupervised-learning">unsupervised learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Tutorial">Tutorial (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Servers">Servers (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Raspberry-Pi">Raspberry Pi (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Hidden-Markov-Model">Hidden Markov Model (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Django">Django (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Docker">Docker (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AWS">AWS (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AI">AI (2)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Unsupervised-Learning">Unsupervised Learning (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Python">Python (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Psychology">Psychology (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Economy">Economy (1)</a>
+                
+            
+            
+		</div>
+	</div>
+</div>
+
+<!-- Begin Footer
+================================================== 
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                Copyright © 2025 GranaData 
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" href="https://www.wowthemes.net/mediumish-free-jekyll-template/">Mediumish Jekyll Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>-->
+<!-- End Footer
+================================================== -->
+
+</div> <!-- /.site-content -->
+
+<!-- Scripts
+================================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<script src="/assets/js/mediumish.js"></script>
+
+
+<script src="/assets/js/lazyload.js"></script>
+
+
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script> 
+
+
+<script id="dsq-count-scr" src="//demowebsite.disqus.com/count.js"></script>
+
+
+</body>
+</html>

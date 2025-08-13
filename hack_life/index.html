@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="icon" href="/assets/images/favicon.ico">
+
+<title>The Hack Life | GranaData</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>The Hack Life | GranaData</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="The Hack Life" />
+<meta name="author" content="jose" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Believe or not today I got up at 4am to take a train Madrid -&gt; Barcelona to work for more than 24 hours straight for free. Why? Melancholy. Melancholy is such a strong emotion and it’s not given enough credit. We love to dwell in past memories and try to revive the happy ones. Today, I got the opportunity to feel a fading emotion: Youth. There are certain lifestyles and choices that get lost when we get older, more mature. Coding at 2am is one of them. It’s 2am again, and instead of coding this time I will be writing about my hacking adventures." />
+<meta property="og:description" content="Believe or not today I got up at 4am to take a train Madrid -&gt; Barcelona to work for more than 24 hours straight for free. Why? Melancholy. Melancholy is such a strong emotion and it’s not given enough credit. We love to dwell in past memories and try to revive the happy ones. Today, I got the opportunity to feel a fading emotion: Youth. There are certain lifestyles and choices that get lost when we get older, more mature. Coding at 2am is one of them. It’s 2am again, and instead of coding this time I will be writing about my hacking adventures." />
+<link rel="canonical" href="https://granadata.art/hack_life/" />
+<meta property="og:url" content="https://granadata.art/hack_life/" />
+<meta property="og:site_name" content="GranaData" />
+<meta property="og:image" content="https://granadata.art/assets/images/hacklife/matrix.jpg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-11-12T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://granadata.art/assets/images/hacklife/matrix.jpg" />
+<meta property="twitter:title" content="The Hack Life" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jose"},"dateModified":"2023-11-12T00:00:00+00:00","datePublished":"2023-11-12T00:00:00+00:00","description":"Believe or not today I got up at 4am to take a train Madrid -&gt; Barcelona to work for more than 24 hours straight for free. Why? Melancholy. Melancholy is such a strong emotion and it’s not given enough credit. We love to dwell in past memories and try to revive the happy ones. Today, I got the opportunity to feel a fading emotion: Youth. There are certain lifestyles and choices that get lost when we get older, more mature. Coding at 2am is one of them. It’s 2am again, and instead of coding this time I will be writing about my hacking adventures.","headline":"The Hack Life","image":"https://granadata.art/assets/images/hacklife/matrix.jpg","mainEntityOfPage":{"@type":"WebPage","@id":"https://granadata.art/hack_life/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://granadata.art/assets/images/logo.png"},"name":"jose"},"url":"https://granadata.art/hack_life/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+<link href="/assets/css/screen.css" rel="stylesheet">
+
+<link href="/assets/css/main.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<!-- Twitter cards -->
+<meta name="twitter:site"    content="@GranaDataJose">
+<meta name="twitter:creator" content="@GranaDataJose">
+<meta name="twitter:title"   content="The Hack Life">
+
+
+<meta name="twitter:description" content="Data science from Granada to the world.">
+
+
+
+<meta name="twitter:card"  content="summary_large_image">
+<meta name="twitter:image" content="https://granadata.art/assets/images/hacklife/matrix.jpg">
+
+<!-- end of Twitter cards -->
+
+</head>
+
+
+<!-- change your GA id in _config.yml -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46278016-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+
+<body class="layout-post">
+	<!-- defer loading of font and font awesome -->
+    <noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    
+	
+
+
+<!-- Begin Menu Navigation
+================================================== -->
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark shadow fixed-top mediumnavigation nav-down">
+
+    <div class="container pr-0">
+
+    <!-- Begin Logo -->
+    <a class="navbar-brand" href="/">
+    <img src="/assets/images/logo.png" alt="GranaData">
+    </a>
+    <!-- End Logo -->
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMediumish">
+
+        <!-- Begin Menu -->
+
+            <ul class="navbar-nav mr-auto">
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/index.html">Blog</a>
+                </li>
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/about">About</a>
+                </li>
+                
+            </ul>
+            <ul class="navbar-nav ml-auto">
+
+                <script src="/assets/js/lunr.js"></script>
+
+
+<style>
+    .lunrsearchresult .title {color: #d9230f;}
+    .lunrsearchresult .url {color: silver;}
+    .lunrsearchresult a {display: block; color: #777;}
+    .lunrsearchresult a:hover, .lunrsearchresult a:focus {text-decoration: none;}
+    .lunrsearchresult a:hover .title {text-decoration: underline;}
+</style>
+
+
+<form class="bd-search" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+    <input type="text" class="form-control text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+</form>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+
+            </ul>
+
+        <!-- End Menu -->
+
+    </div>
+
+    </div>
+</nav>
+<!-- End Navigation
+================================================== -->
+
+<div class="site-content">
+
+<div class="container">
+
+<!-- Site Title
+================================================== -->
+<div class="mainheading">
+    <h1 class="sitetitle">GranaData</h1>
+    <p class="lead">
+        Data science from Granada to the world.
+    </p>
+</div>
+
+<!-- Content
+================================================== -->
+<div class="main-content">
+    <!-- Begin Article
+================================================== -->
+<div class="container inside-container">
+    
+    <div class="row">
+
+        <!-- Post Share -->
+        
+        <!-- Post -->
+        
+        
+            <div class="mainheading">
+
+                <!-- Author Box -->
+                
+                <div class="row post-top-meta">
+                    <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-right mb-4 mb-md-0">
+                        
+                        <img class="author-thumb" src="/assets/images/JoseAvatar.png" alt="Jose">
+                        
+                    </div>
+                    <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left">
+                        <a target="_blank" class="link-dark" href="https://jerry-master.github.io/Home-Page/">Jose</a>
+                        <a target="_blank" href="https://twitter.com/GranaDataJose" class="btn follow">Follow</a>
+                        
+                        <a target="_blank" href="/read_time" class="btn readtime">5 min read</a>
+                        
+                        <span class="author-description">Data scientist from Alcalá la Real. Studied at BarcelonaTech, worked as a researcher at the UGR and UPC, was a machine learning engineer at El Ranchito and Nemeda and now work in Koh Young Research Spain. Always wanting to explain my knowledge to the world.</span>
+                    </div>
+                </div>
+                
+
+                <!-- Post Title -->
+                <h1 class="posttitle">The Hack Life</h1>
+
+            </div>
+
+            <!-- Adsense if enabled from _config.yml (change your pub id and slot) -->
+            
+            <!-- End Adsense -->
+
+            <!-- Post Featured Image -->
+            
+            <!-- End Featured Image -->
+
+            <!-- Post Content -->
+            <div class="article-post">
+                <!-- Toc if any -->
+                
+                <!-- End Toc -->
+                <p>Believe or not today I got up at 4am to take a train Madrid -&gt; Barcelona to work for more than 24 hours straight for free. Why? Melancholy. Melancholy is such a strong emotion and it’s not given enough credit. We love to dwell in past memories and try to revive the happy ones. Today, I got the opportunity to feel a fading emotion: Youth. There are certain lifestyles and choices that get lost when we get older, more mature. Coding at 2am is one of them. It’s 2am again, and instead of coding this time I will be writing about my hacking adventures.</p>
+
+<p>Okay, that was a quite poetic and obscure introduction. Quite contrary to the very specific intros that we are used to see in this blog. What is the hack life I mention in the title? Let me introduce you to the concept of a hackaton. Hundreds of students in the same place coding a solution to a challenge in a weekend. That is the official definition. <em>Unofficially</em>, a hackaton is a place to meet awesome friends, life-long friends, a place to learn from more experienced people about technical topics and receive advice about life. There are funny activities and deep lore. Like the ducks in the HackUPC. It was in my first hackaton that I met my crew. At that time we didn’t know each other but created a team and participated together. Now we are besties. How do we go from there to writing a post at 2am in a faculty where I no longer study? Stay with me, it is a long story.</p>
+
+<p class="text-center"><img class="" src="/assets/images/hacklife/biene.svg" alt="biene" /></p>
+
+<p>In total I have assisted to 6 hackatons / datathons. The HackUPC 2019, 2021, 2023, MamutHack, CFIS Datathon and Hacknights. After that, I wanted to be in the other side of the event, to be an organizer. I helped organize the second datathon FME on 2022 and today was the third datathon FME, which I am also helping organize. This is probably the last time I will be at either side of a datathon / hackaton. Only time will tell, but it definitely feels like so. I am in a position where I know personally many of the people that participate, being this either their first time or second time. I also know other organizers and I even know personally many sponsors, both in companies and universities. A datathon is the people that composes it. When time passes, and people goes, the datathon dies. Figuratively. For me. For others it is a discovery. (As a side note, when I was midway writing this paragraph the whole electricity of the faculty went off, more on that later). Where was I? Ah, yes, the cycle of the hackaton. You participate, you organize, you sponsor and you continue with your life. It is like that summer romance that you will never forget but you will also never continue with. That’s life, continuous change. No matter how hard you try to repeat some memorable memory, it will never be the same. You are not the same, can’t experience it the same way. You only have one chance to enjoy it.</p>
+
+<p>Back to the hackaton stuff. Living a hackaton, and specially a HackUPC comes with lots of anecdotes. You may end up shooting nerfs to random scandinavian people. Or find a ruber duck below a random chair. The first time I participated I was sucked deep into the challenges. Full focus in coding and giving the best solution. Spoiler: It was not. As a first year student you have no experience nor knowdledge. And this type of challenges would normally require months of full-time work to fully develop. You are only supposed to build a quick MVP. But the first (and second) time, it is about learning. The real challenge is to learn to code and code at the same time. Do you want a webapp? Great! Learn Javascript, HTML and CSS all at once from scratch and then apply the knowdledge. Do you want to build a vision classifier? Fantastic! Look for a github repo with a pretrained classifier, learn how to tweak the solution to your needs and do it. It is a way of learning by building. By hacking. If something does not give the perfect solution, instead of doing a whole course to fix everything you just learn or create any trick that does the job. The power in it comes from doing it during 36 hours straight. It is a very condensed way of studying. I will probably never be as focused as I was in those first hackatons.</p>
+
+<p class="text-center"><img class="" src="/assets/images/hacklife/focus.png" alt="focus" /></p>
+
+<p>Once you get older you start valueing other aspects of the events. More personal. Less technical. And that is when I knew I preferred to deliver food and give advice rather than to code. When you are a volunteer, everybody asks you. You get to know many more people. And you get to see wonderful ideas. When I was participating it was all about me, about my solution and my algorithm. Which is fine. However, when you start hearing many team’s ideas you learn a lot. In this datathon I was surprised several times with the Mango challenge. Mango brought a problem where you were given a set of good-looking outfits and where asked to analyse it and recommend 10 new outfits. Said like that is looks quite interesting. But if you know a bit about machine learning you know this problem is ill-posed. You only have positive labels. It is the most imbalanced dataset possible. My first thought was to simply create ugly outfits and label them as negative. But this approach is highly subjective which will make the model subjective. Teams came up with way better methods. One suggested to build a classifier with pairs of garments. Every outfit is composed of several garments. You can construct positive pairs by looking at existing combinations and consider every combination that is not in the dataset as negative. This is a natural way to recover the balance in the dataset. It is not perfect, but is a very interesting idea. Other team tried to build a markov model and construct the outfit iteratively. To learn the probabilities they just assumed independence between attributes and computed ratios. Simple, yet possible useful. Maybe these approaches get you nowhere, but the ideas are amazing. The creativity is not something you can learn. Everybody is creative in its own way. Being a mentor provides you with the opportunity to discover new ideas from others.</p>
+
+<p class="text-center"><img class="" src="/assets/images/hacklife/creative.png" alt="creative" /></p>
+
+<p>In the second datathon FME, the first I helped organize I discovered this new world. And I met lots of mentorees (I can’t find an appropiate enough word for this type of relationship). Meeting with them again, seeing how they have evolved it’s what fills me. That and coming to see my crew again. All the work that needs to be done, moving tables, giving food, solving doubts. It is all paid in a different way. As an unforgettable experience. This is the reason when this datathon was announced I immediately bought tickets to come here from Madrid. And what a datathon. There is yet one day to come and it is already my most memorable datathon. Last year some students built a tower of plastic glasses as big as a person and enclosed a person in it. Well, this datathon also had some architecture classes. This time with pizza boxes.</p>
+
+<p class="text-center"><img class="" src="/assets/images/hacklife/arc.jpeg" alt="arc" /></p>
+
+<p>It was a bit chaotic and full of rustle up. There are 100 more students and we tried the same logistic strategy which didn’t work as well. We learned a lot in the process and manage to get everyone fed which is a major statement. I also guided many people with ideas on how to proceed with the challenges. From my perspective, I am only giving ideas. I know perfectly that implementing such ideas is the real deal. And sometimes they look at me and say: “Yeah, putting the data in wide format, then one-hot encoding it and apply a PCA sounds fine, but how the hell do I do that?”. Others are more advanced technically, but less knowdledgeable in project management. Surely you can apply a very complex network, but have you tried a linear model as your baseline? There are many ways to arrive at a solution. Some are way harder than others. Advancing in the right direction can save you time and headaches. Sadly, you only learn that with experience. No matter what I tell them they will make the same mistakes as I made. And that is the beauty of life. At least I can warn them about the difficulty of the process.</p>
+
+<p>Remember the light incident I told you about before? The organizers also have our challenges. Buying 7kg of yogurt at the last moment because we miscalculated how much was needed was one of them. And another challenge was dealing with plug shortages. Being so much people, all with computers, requires electricity and plugs. The building was not prepared for so much load. First, we needed to buy more adaptors to cover the demand. And in the middle of the night, at the most unexpected moment, the net got overloaded. Part of the job.</p>
+
+<p class="text-center"><img class="" src="/assets/images/hacklife/enc-hombros.jpg" alt="encogerse de hombros" /></p>
+
+<p>So that’s the hack life. A very short life. It became a part of me when I started university and it is leaving me now that I am leaving university. When I get older I will look back and remember with melancholy those years. With the nostalgia of a time that cannot be recovered, but that was spent in the best way possible.</p>
+
+            </div>
+
+            <!-- Rating -->
+            
+
+            <!-- Post Date -->
+            <p>
+            <small>
+                <span class="post-date"><time class="post-date" datetime="2023-11-12">12 Nov 2023</time></span>           
+                
+                </small>
+            </p>
+
+            <!-- Post Categories -->
+            <div class="after-post-cats">
+                <ul class="tags mb-4">
+                    
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Philosophy">Philosophy</a>
+                    </li>
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Stories">Stories</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- End Categories -->
+
+            <!-- Post Tags -->
+            <div class="after-post-tags">
+                <ul class="tags">
+                    
+                    
+                </ul>
+            </div>
+            <!-- End Tags -->
+
+            <!-- Prev/Next -->
+            <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+            
+            <a class="prev d-block col-md-6" href="/crowdsourcing/"> &laquo; Crowdsourcing methods for cancer detection</a>
+            
+            
+            <a class="next d-block col-md-6 text-lg-right" href="/Python/">How to build a python library &raquo; </a>
+            
+            <div class="clearfix"></div>
+            </div>
+            <!-- End Categories -->
+        
+        <!-- End Post -->
+
+    </div>
+</div>
+<!-- End Article
+================================================== -->
+
+<!-- Begin Comments
+================================================== -->
+
+<!--End Comments
+================================================== -->
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+</div>
+
+
+<!-- Bottom Alert Bar
+================================================== -->
+<div class="alertbar">
+	<div class="container text-center">
+		<span> Never miss a <b>story</b> from us, subscribe to this blog</span>
+        <form
+          class="wj-contact-form validate"
+          action="https://gmail.us4.list-manage.com/subscribe/post?u=6bc2f64e5d9109bd06bf859c5&amp;id=68bbfe755b&amp;f_id=005c05e9f0"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+        >
+            <div class="mc-field-group center-inputs">
+                <input type="email" placeholder="Email" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="button">
+            </div>
+        </form>
+	</div>
+</div>
+
+    
+</div>
+
+<!-- Categories Jumbotron
+================================================== -->
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+            <div class="d-md-flex align-items-center justify-content-center h-100">
+                <h2 class="d-md-block align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+            </div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+            
+            
+                
+                    <a class="mt-1 mb-1" href="/categories#Stories">Stories (5)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Philosophy">Philosophy (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Deep-Learning">Deep Learning (7)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Reinforcement-Learning">Reinforcement Learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Supervised-Learning">Supervised Learning (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Happy-Ideas">Happy Ideas (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#GAN">GAN (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Theory">Theory (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#unsupervised-learning">unsupervised learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Tutorial">Tutorial (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Servers">Servers (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Raspberry-Pi">Raspberry Pi (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Hidden-Markov-Model">Hidden Markov Model (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Django">Django (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Docker">Docker (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AWS">AWS (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AI">AI (2)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Unsupervised-Learning">Unsupervised Learning (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Python">Python (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Psychology">Psychology (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Economy">Economy (1)</a>
+                
+            
+            
+		</div>
+	</div>
+</div>
+
+<!-- Begin Footer
+================================================== 
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                Copyright © 2025 GranaData 
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" href="https://www.wowthemes.net/mediumish-free-jekyll-template/">Mediumish Jekyll Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>-->
+<!-- End Footer
+================================================== -->
+
+</div> <!-- /.site-content -->
+
+<!-- Scripts
+================================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<script src="/assets/js/mediumish.js"></script>
+
+
+<script src="/assets/js/lazyload.js"></script>
+
+
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script> 
+
+
+<script id="dsq-count-scr" src="//demowebsite.disqus.com/count.js"></script>
+
+
+</body>
+</html>

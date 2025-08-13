@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="icon" href="/assets/images/favicon.ico">
+
+<title>Modelling a padel match with Hidden Markov Models (Part 2) | GranaData</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Modelling a padel match with Hidden Markov Models (Part 2) | GranaData</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Modelling a padel match with Hidden Markov Models (Part 2)" />
+<meta name="author" content="jose" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In my last post I explained the usefulness of Hidden Markov Models for predicting the outcome of a padel match with only a few observations. There I also showed how easy it was to implement everything in Python, but I left the most important part: the HMM itself. Today we are going to learn how to design a HMM to predict the result of a point. This is going to be an iterative process. The final model, as you will see, is a monstruosity. But step by step we are goint to build it succesfully. “Rome wasn’t made in a day”." />
+<meta property="og:description" content="In my last post I explained the usefulness of Hidden Markov Models for predicting the outcome of a padel match with only a few observations. There I also showed how easy it was to implement everything in Python, but I left the most important part: the HMM itself. Today we are going to learn how to design a HMM to predict the result of a point. This is going to be an iterative process. The final model, as you will see, is a monstruosity. But step by step we are goint to build it succesfully. “Rome wasn’t made in a day”." />
+<link rel="canonical" href="https://granadata.art/HMM-padel-part2/" />
+<meta property="og:url" content="https://granadata.art/HMM-padel-part2/" />
+<meta property="og:site_name" content="GranaData" />
+<meta property="og:image" content="https://granadata.art/assets/images/HMM/padel_court.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-09-16T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://granadata.art/assets/images/HMM/padel_court.png" />
+<meta property="twitter:title" content="Modelling a padel match with Hidden Markov Models (Part 2)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jose"},"dateModified":"2022-09-16T00:00:00+00:00","datePublished":"2022-09-16T00:00:00+00:00","description":"In my last post I explained the usefulness of Hidden Markov Models for predicting the outcome of a padel match with only a few observations. There I also showed how easy it was to implement everything in Python, but I left the most important part: the HMM itself. Today we are going to learn how to design a HMM to predict the result of a point. This is going to be an iterative process. The final model, as you will see, is a monstruosity. But step by step we are goint to build it succesfully. “Rome wasn’t made in a day”.","headline":"Modelling a padel match with Hidden Markov Models (Part 2)","image":"https://granadata.art/assets/images/HMM/padel_court.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://granadata.art/HMM-padel-part2/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://granadata.art/assets/images/logo.png"},"name":"jose"},"url":"https://granadata.art/HMM-padel-part2/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(','\\)'] ],
+      displayMath: [ ['$$', '$$'], ['\\[','\\]'] ],
+      processEscapes: true,
+      processEnvironments: true,
+    }
+});
+MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/h-hg/docsify-pseudocode/dist/docsify-pseudocode.min.js"></script>
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+<link href="/assets/css/screen.css" rel="stylesheet">
+
+<link href="/assets/css/main.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<!-- Twitter cards -->
+<meta name="twitter:site"    content="@GranaDataJose">
+<meta name="twitter:creator" content="@GranaDataJose">
+<meta name="twitter:title"   content="Modelling a padel match with Hidden Markov Models (Part 2)">
+
+
+<meta name="twitter:description" content="Data science from Granada to the world.">
+
+
+
+<meta name="twitter:card"  content="summary_large_image">
+<meta name="twitter:image" content="https://granadata.art/assets/images/HMM/padel_court.png">
+
+<!-- end of Twitter cards -->
+
+</head>
+
+
+<!-- change your GA id in _config.yml -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46278016-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+
+<body class="layout-post">
+	<!-- defer loading of font and font awesome -->
+    <noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    
+	
+
+
+<!-- Begin Menu Navigation
+================================================== -->
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark shadow fixed-top mediumnavigation nav-down">
+
+    <div class="container pr-0">
+
+    <!-- Begin Logo -->
+    <a class="navbar-brand" href="/">
+    <img src="/assets/images/logo.png" alt="GranaData">
+    </a>
+    <!-- End Logo -->
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMediumish">
+
+        <!-- Begin Menu -->
+
+            <ul class="navbar-nav mr-auto">
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/index.html">Blog</a>
+                </li>
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/about">About</a>
+                </li>
+                
+            </ul>
+            <ul class="navbar-nav ml-auto">
+
+                <script src="/assets/js/lunr.js"></script>
+
+
+<style>
+    .lunrsearchresult .title {color: #d9230f;}
+    .lunrsearchresult .url {color: silver;}
+    .lunrsearchresult a {display: block; color: #777;}
+    .lunrsearchresult a:hover, .lunrsearchresult a:focus {text-decoration: none;}
+    .lunrsearchresult a:hover .title {text-decoration: underline;}
+</style>
+
+
+<form class="bd-search" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+    <input type="text" class="form-control text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+</form>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+
+            </ul>
+
+        <!-- End Menu -->
+
+    </div>
+
+    </div>
+</nav>
+<!-- End Navigation
+================================================== -->
+
+<div class="site-content">
+
+<div class="container">
+
+<!-- Site Title
+================================================== -->
+<div class="mainheading">
+    <h1 class="sitetitle">GranaData</h1>
+    <p class="lead">
+        Data science from Granada to the world.
+    </p>
+</div>
+
+<!-- Content
+================================================== -->
+<div class="main-content">
+    <!-- Begin Article
+================================================== -->
+<div class="container inside-container">
+    
+    <div class="row">
+
+        <!-- Post Share -->
+        
+        <!-- Post -->
+        
+        
+            <div class="mainheading">
+
+                <!-- Author Box -->
+                
+                <div class="row post-top-meta">
+                    <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-right mb-4 mb-md-0">
+                        
+                        <img class="author-thumb" src="/assets/images/JoseAvatar.png" alt="Jose">
+                        
+                    </div>
+                    <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left">
+                        <a target="_blank" class="link-dark" href="https://jerry-master.github.io/Home-Page/">Jose</a>
+                        <a target="_blank" href="https://twitter.com/GranaDataJose" class="btn follow">Follow</a>
+                        
+                        <a target="_blank" href="/read_time" class="btn readtime">15 min read</a>
+                        
+                        <span class="author-description">Data scientist from Alcalá la Real. Studied at BarcelonaTech, worked as a researcher at the UGR and UPC, was a machine learning engineer at El Ranchito and Nemeda and now work in Koh Young Research Spain. Always wanting to explain my knowledge to the world.</span>
+                    </div>
+                </div>
+                
+
+                <!-- Post Title -->
+                <h1 class="posttitle">Modelling a padel match with Hidden Markov Models (Part 2)</h1>
+
+            </div>
+
+            <!-- Adsense if enabled from _config.yml (change your pub id and slot) -->
+            
+            <!-- End Adsense -->
+
+            <!-- Post Featured Image -->
+            
+            <!-- End Featured Image -->
+
+            <!-- Post Content -->
+            <div class="article-post">
+                <!-- Toc if any -->
+                
+                <!-- End Toc -->
+                <p>In my <a href="/HMM-padel" target="_blank">last post</a> I explained the usefulness of Hidden Markov Models for predicting the outcome of a padel match with only a few observations. There I also showed how easy it was to implement everything in Python, but I left the most important part: the HMM itself. Today we are going to learn how to design a HMM to predict the result of a point. This is going to be an iterative process. The final model, as you will see, is a monstruosity. But step by step we are goint to build it succesfully. “Rome wasn’t made in a day”.</p>
+
+<h2 id="inspiration-and-design">Inspiration and design</h2>
+
+<p>Before diving into the details, let me explain how I tackled this problem. I think the creative process is worth mentioning. If you just want the details, you can skip this section. Before starting to code or thinking on my own for the solution of a problem I always research for similar problems that are already solved so that I can get some inspiration. In this case, it turned out that somebody had already designed a HMM for tenis. In <a href="https://ieeexplore.ieee.org/document/1423025" target="_blank">this article</a>, they present a HMM for following the state of a tennis match. The observations in this article were poorly defined, but the hidden states wer very clear. I could get an idea of what I had to do by just looking at this image.</p>
+
+<p class="text-center"><img src="/assets/images/HMM/hmm-tenis.png" alt="tenisHMM" /></p>
+
+<p>This graph is just depicting visually the rules of tenis. In our case we just have to show the rules of padel with a similar graph. If you look carefully you will see that the white boxes represent hidden states with an obvious observation. For padel there will be more of them because apart from bouncing on the ground, the ball can bounce on the walls, which makes the graph more complex but the idea is the same. Another helpful diagram on the same article represented the same graph but organised in several subgraphs.</p>
+
+<p class="text-center"><img src="/assets/images/HMM/hmm-tenis2.png" alt="tenisHMM2" /></p>
+
+<p>What’s interesting here is that those four subgraphs will be the same for padel. The high-level view of the process (top) is exactly the same. That’s part of the job which is already done. We just have to change the internal representation between those four subgraphs and maintain the interconnections.</p>
+
+<p>What about designing graphs? What is the software I used for that? You may say. Well, it is actually a pen and a lot of papers. No matter how well developed graph visualizations software are, drawing a simple graph by hand will always be faster than coding it. Of course, when the project keeps growing and the graphs becomes massive you will need those software tools which I will mention later. But at the beginning, just take a pen and start drawing. In the other sections I will present diagrams made with a computer because they are visually more pleasant and you will understand them better. Nevertheless, here is one of the graphs I painted by hand, in case you are curious.</p>
+
+<p class="text-center"><img src="/assets/images/HMM/hand.jpg" alt="hand-diagram" /></p>
+
+<h2 id="the-hidden-states-graph">The hidden states’ graph</h2>
+
+<p>For a HMM we need the transition and emission matrices. The transition matrix is going to be the adjacency matrix of the transitions graph. That graph is simply a representation of the rules of the game. I am going to distinguish two main parts in that rules. The rules for the serve and the rules for the normal game. The reason for creating two distinct graphs is because the effect of the ball going out or touching the net is different at the beginning.</p>
+
+<h3 id="serve">Serve</h3>
+
+<p>What happens when a player is on their serve? It can go in, it can go out or it can touch the net. And if it touches the net, it can then go in or out. Let’s ignore when it goes in without touching the net for the moment. How would you represent the 1st serve? Like this?</p>
+
+<p class="text-center"><img src="/assets/images/HMM/first.png" alt="1st-serve" /></p>
+
+<p>Did you think about the init state? Remember, this model is a realistic one. In practice you don’t know when is the point starting. Therefore, you need a special state for waiting until you have enough evidence that the match has begun. If you look closely, you will see that there is a self-loop on the init state. That is how we represent a waiting state in a HMM, by a self-loop. Now, let’s pass to the 2nd-serve. How would you design it?</p>
+
+<p class="text-center"><img src="/assets/images/HMM/second.png" alt="2nd-serve" /></p>
+
+<p>Exactly the same as the first service. The simpler, the better. We are ignoring when the ball goes in and the game continues. We are just focusing on when the ball goes out or to the net. The rest of the details will be added later on. For now let’s just focus on what we have. We have a graph with several nodes, each representing a state. What do we need? Consistent labels across the whole graph. One of the limitations of the HMM is that you have to fulfill the Markov property. Which means that the state representing going out after the 1st-serve is different than the state of going out after the 2nd-serve. So they need different names. In my case, I just added a suffix number when that happened. That way, going out in the first service is ‘out1’ and after the second is ‘out2’. Another state that repeats a lot across the graph is the ‘in’ state. For that one adding a suffix number is not enough, so I added a more descriptive suffix. For instance, going in after touching the net in the first serve is ‘in-net1’. This is a decision that could have been made of many ways, but I decided to make it like this.</p>
+
+<p>Okay, let’s now talk about what happens when the ball actually goes in and the game continues. To keep it simple, let’s focus on what happens before any player hits the ball. And let’s call this the ace model. As the name states it, one of the things than can happen is an ace. What characterizes an ace? The fact that the ball touches the ground again before any player hitting it. Try to draw the scheme for the ace model. Keep in mind that before touching again the ground it can hit the walls. And also bare in mind that there are two types of walls. What are the connections among those states? Which combinations are valid and which not? Here is my solution for that problem, omitting the connections to the states Point-server and Point-receiver representing the end of the game.</p>
+
+<p class="text-center"><img src="/assets/images/HMM/ace.png" alt="ace" /></p>
+
+<p>Did you thought of the ‘time-out’ state? Again, this is a real model so it has to deal with real problems. And one of them is that you miss the observation that characterizes the end of the game. If that happens you can only know the game has finished by time. That’s why you need a state to represent the end of the game by time. Later on when defining the emissions it will be made more clear why this state is needed. Most of the extra states are created so that when an observation is wrong, there is still a path in the graph to the end. Otherwise, the model will give an error and doesn’t return anything. Observe also that there are two ‘in’ states. Can you imagine why? The state ‘in1’ is when the ball goes in on the first serve, and ‘in2’ on the second. Since we have to maintain the Markov property, those two states are different although they have the same emissions and are identical to us.</p>
+
+<p>Before going to the next block, which is when a player hits the ball and the game actually starts, let me explain how I made this pictures and how you can code graphs on Python. With the library <code class="highlight language-python" data-lang="python"><span class="n">networkx</span></code> you can do many thing on graphs, it has implemented almost every algorithm that exists related to graphs. In this project we only use it to define the graphs. The syntax is pretty straighforward, you define a <code class="highlight language-python" data-lang="python"><span class="n">DiGraph</span></code> which stands for directed graph, and add nodes and edges with the functions <code class="highlight language-python" data-lang="python"><span class="n">add_nodes_from</span></code> and <code class="highlight language-python" data-lang="python"><span class="n">add_edges_from</span></code>. After that, you can save the model in <code class="highlight language-python" data-lang="python"><span class="n">gml</span></code> format and open it with <a href="https://gephi.org/" target="_blank">Gephi</a>. That’s it. Here is the code for the three models presented above.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+</pre></td><td class="rouge-code"><pre><span class="kn">import</span> <span class="n">networkx</span> <span class="k">as</span> <span class="n">nx</span>
+
+<span class="n">folder_path</span> <span class="o">=</span> <span class="sh">'</span><span class="s">graphs/</span><span class="sh">'</span>
+
+<span class="sh">"""</span><span class="s"> First serve model </span><span class="sh">"""</span>
+<span class="n">first</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="nc">DiGraph</span><span class="p">()</span>
+<span class="n">first</span><span class="p">.</span><span class="nf">add_nodes_from</span><span class="p">([</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">init</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">1st-serve</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">net1</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">out1</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">in-net1</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+<span class="p">])</span>
+<span class="n">first</span><span class="p">.</span><span class="nf">add_edges_from</span><span class="p">([</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">init</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">1st-serve</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">init</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">init</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">1st-serve</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">net1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">1st-serve</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">out1</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">net1</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">in-net1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">net1</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">out1</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">in-net1</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">1st-serve</span><span class="sh">"</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="n">nx</span><span class="p">.</span><span class="nf">write_gml</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">folder_path</span> <span class="o">+</span> <span class="sh">'</span><span class="s">first.gml</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="sh">"""</span><span class="s"> Second serve model </span><span class="sh">"""</span>
+<span class="n">second</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="nc">DiGraph</span><span class="p">()</span>
+<span class="n">second</span><span class="p">.</span><span class="nf">add_nodes_from</span><span class="p">([</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">2nd-serve</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">net2</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">out2</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">in-net2</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+<span class="p">])</span>
+<span class="n">second</span><span class="p">.</span><span class="nf">add_edges_from</span><span class="p">([</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">2nd-serve</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">net2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">2nd-serve</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">out2</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">net2</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">in-net2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">net2</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">out2</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">in-net2</span><span class="sh">"</span><span class="p">,</span><span class="sh">"</span><span class="s">2nd-serve</span><span class="sh">"</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="n">nx</span><span class="p">.</span><span class="nf">write_gml</span><span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">folder_path</span> <span class="o">+</span> <span class="sh">'</span><span class="s">second.gml</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="sh">"""</span><span class="s"> Ace model </span><span class="sh">"""</span>
+<span class="n">ace</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="nc">DiGraph</span><span class="p">()</span>
+<span class="n">ace</span><span class="p">.</span><span class="nf">add_nodes_from</span><span class="p">([</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">in1</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">in2</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">time-out</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">ground</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer1</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer2</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-inner1</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-inner2</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+<span class="p">])</span>
+<span class="n">ace</span><span class="p">.</span><span class="nf">add_edges_from</span><span class="p">([</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">in1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">time-out</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">in1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ground</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">in1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">wall-outer1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">in1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">wall-inner1</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">in2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">time-out</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">in2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ground</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">in2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">wall-outer1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">in2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">wall-inner2</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">time-out</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ground</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">wall-outer2</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">time-out</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ground</span><span class="sh">"</span><span class="p">),</span>
+<span class="p">])</span>
+<span class="n">nx</span><span class="p">.</span><span class="nf">write_gml</span><span class="p">(</span><span class="n">ace</span><span class="p">,</span> <span class="n">folder_path</span> <span class="o">+</span> <span class="sh">"</span><span class="s">ace.gml</span><span class="sh">"</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><a href="https://gephi.org/" target="_blank">Gephi</a> has some handy features that make posible visualize big graphs. Concretely, you can use the Force Atlas distribution to reorder the nodes by simulating forces proportional to the number of edges they have. It has many parameters you can try, but I normally just click on execute and wait a few seconds for convergence.</p>
+
+<p class="text-center"><img src="/assets/images/HMM/atlas.png" alt="Force Atlas" /></p>
+
+<p>Then, on the previsualization tab, you can create the diagrams I showed you. It has many options, like curved edges. I don’t use that feature for this post because for complex graphs it can be messy. But for some graphs I think is prettier with curvy edges. Other things to adapt are the font size and the size of the arrows. With a bit of practice you can create nice figures quite fast.</p>
+
+<p class="text-center"><img src="/assets/images/HMM/previs.png" alt="Previsualization" /></p>
+
+<h3 id="rally">Rally</h3>
+
+<p>The rally model is a bit more complex than the ones presented above. There are two ways to design it based on which observations you have. If you only have an observation for bouncing on the ground, anywhere, then the rally model only has one ‘HIT’ state and the rest is similar to the ace model. However, in practice you can have more information than that. Suppose you have an image of a game and you know the location of the ball together with the fact that it is a bounce in the ground. You could, potentially, distinguish if the ball is on the server side or on the receiver side. You just need to segment the court and see if the ball is on the upper side or not. This is not trivial, but is possible to achieve. For that reason, we are going to have two ‘HIT’ states: one for the server side and one for the receiver. The rest is just identical to the ace model, with one exception. Instead of ending the game or returning to the beginning, the states point to the other ‘HIT’ states. Similar to what would happen in a match. Your head is going from one side to the other. Here the hidden state is moving from one model to the other. Finally, the diagram.</p>
+
+<p class="text-center"><img src="/assets/images/HMM/rally.png" alt="Rally" /></p>
+
+<p>If you understood the ace model, you just need to focus on the arrows that cross from left to right and vice versa. The rest is just the standard mechanics of a padel game. One more thing to notice is that there are many arrows missing. Concretely, the arrow between the models and the arrows that point to the absorbing states, that is, those which end the game. In the next section, I will try to describe the connections between the models and will show you the (almost) full picture of the HMM transition graph. Also, below is the code for this model.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+</pre></td><td class="rouge-code"><pre><span class="sh">"""</span><span class="s"> Rally model </span><span class="sh">"""</span>
+<span class="n">rally</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="nc">DiGraph</span><span class="p">()</span>
+<span class="n">rally</span><span class="p">.</span><span class="nf">add_nodes_from</span><span class="p">([</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">net-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">in-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">out-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">time-out-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">ground-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-inner-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer1-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer2-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    
+    <span class="p">(</span><span class="sh">"</span><span class="s">HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">net-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">in-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">out-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">time-out-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">ground-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-inner-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer1-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer2-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+<span class="p">])</span>
+<span class="n">rally</span><span class="p">.</span><span class="nf">add_edges_from</span><span class="p">([</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">out-HIT1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">in-HIT1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">net-HIT1</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">in-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">HIT2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-inner-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">HIT2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer1-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">HIT2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer2-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">HIT2</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">net-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">in-HIT1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">net-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">out-HIT1</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">in-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">time-out-HIT1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">in-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ground-HIT1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">in-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">wall-inner-HIT1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">in-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">wall-outer1-HIT1</span><span class="sh">"</span><span class="p">),</span> 
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-inner-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">time-out-HIT1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-inner-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ground-HIT1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-inner-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">wall-outer2-HIT1</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer1-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">time-out-HIT1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer1-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ground-HIT1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer1-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">wall-outer2-HIT1</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer2-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">time-out-HIT1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer2-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ground-HIT1</span><span class="sh">"</span><span class="p">),</span>
+
+    <span class="p">(</span><span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">HIT2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span><span class="p">),</span>
+    
+    <span class="p">(</span><span class="sh">"</span><span class="s">HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">out-HIT2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">in-HIT2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">net-HIT2</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">in-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-inner-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer1-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer2-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">net-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">in-HIT2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">net-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">out-HIT2</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">in-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">time-out-HIT2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">in-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ground-HIT2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">in-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">wall-inner-HIT2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">in-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">wall-outer1-HIT2</span><span class="sh">"</span><span class="p">),</span> 
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-inner-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">time-out-HIT2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-inner-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ground-HIT2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-inner-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">wall-outer2-HIT2</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer1-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">time-out-HIT2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer1-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ground-HIT2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer1-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">wall-outer2-HIT2</span><span class="sh">"</span><span class="p">),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer2-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">time-out-HIT2</span><span class="sh">"</span><span class="p">),</span> <span class="p">(</span><span class="sh">"</span><span class="s">wall-outer2-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ground-HIT2</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="p">])</span>
+<span class="n">nx</span><span class="p">.</span><span class="nf">write_gml</span><span class="p">(</span><span class="n">rally</span><span class="p">,</span> <span class="n">folder_path</span> <span class="o">+</span> <span class="sh">"</span><span class="s">rally.gml</span><span class="sh">"</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="interconnections">Interconnections</h3>
+
+<p>Let’s go model by model, edge by edge, starting by the 1st-serve. It has two connections, one to the ‘in1’ state of the ace model and one to the 2nd-serve. The latter is from the ‘out1’ state, if the ball goes out, you have a second service, that’s the rules. The 2nd-serve model is similar, one connection to the ‘in2’ state and one to the absorbing state ‘Point-receiver’. If you fail your second serve, you lose the point. Simple, concise and clear. Let’s continue with the ace model. The ‘ground’ and ‘time-out’ states point to ‘Point-server’. This is the representation of an ace. If the ball hits the ground twice, it’s an ace and the point goes to the server side. The rest of the connections are to the ‘HIT1’ state, which means that the receiver has hit the ball and the game continues. And that’s it. The only remaining connections are between the rally model and the absorbing states, just like in the ace model. If the ball bounces twice, or if it goes out of the court after bouncing in, the last player wins. If it goes out, the last player loses. For those of you that know how to play padel, this should be no surprise. There are many cases to deal with because the ball can hit the walls and the net. But more or less it is summarized like that. Here’s the full picture.</p>
+
+<p class="text-center"><img src="/assets/images/HMM/union.png" alt="Union" /></p>
+
+<p>The code for this part is different. This time we have to join the four different models. To do so we are going to use the function <code class="highlight language-python" data-lang="python"><span class="n">union_all</span></code> that creates a new graph with all the nodes and edges from before but without any connections between the subgraphs. To add those connections we use the <code class="highlight language-python" data-lang="python"><span class="n">add_edge</span></code> function and for the absorbing states the <code class="highlight language-python" data-lang="python"><span class="n">add_nodes_from</span></code>. This is the result.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+</pre></td><td class="rouge-code"><pre><span class="sh">"""</span><span class="s"> Graph union plus connection edges </span><span class="sh">"""</span>
+<span class="n">union</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="nf">union_all</span><span class="p">((</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">ace</span><span class="p">,</span> <span class="n">rally</span><span class="p">))</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">out1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">2nd-serve</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">1st-serve</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">in1</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">2nd-serve</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">in2</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">wall-inner1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">2nd-serve</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="sh">"""</span><span class="s"> Absorbing states </span><span class="sh">"""</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_nodes_from</span><span class="p">([</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">Point-receiver</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">Point-server</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">})</span>
+<span class="p">])</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">wall-inner2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Point-receiver</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">out2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Point-receiver</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">time-out</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Point-server</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">ground</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Point-server</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">out-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Point-server</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">time-out-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Point-receiver</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">ground-HIT1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Point-receiver</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">out-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Point-receiver</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">time-out-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Point-server</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">ground-HIT2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Point-server</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="sh">"""</span><span class="s"> Connection between ace and rally </span><span class="sh">"""</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">in1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">in2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">wall-outer1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">wall-outer2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">nx</span><span class="p">.</span><span class="nf">write_gml</span><span class="p">(</span><span class="n">union</span><span class="p">,</span> <span class="n">folder_path</span> <span class="o">+</span> <span class="sh">"</span><span class="s">union.gml</span><span class="sh">"</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="delays">Delays</h3>
+
+<p>Previously I said this was almost the full picture. The reason for that is that the model here does not take into account that the ball is flying in between bounces. In an ideal model this would be irrelevant, with just the bounces we can predict the outcome of the game. But in practice that is not true. Do you remember the reason for using a ‘time-out’ state? Here is similar. Imagine you detect the same bounce twice by error. If you only look at bounces you will assume that the game has finished. However, if you detect twice the same bounce, in time they will be very close. In contrast with what will happen if those two bounces are both real. Therefore, if you somehow take into account the time between observations you can solve those kind of errors. The way to do that is by adding ‘flying’ states. In between any two states you include a ‘flying’ state and in the emissions you consider ‘flying’ as a plausible observation. This way you have a way of measuring time. The more ‘flying’ observations you have, the more time that has passed between states. The key here is that the ‘flying’ state has a self-loop. Similar to the ‘init’ state. You don’t know how much time is going to occur between states. For that reason you add a self-loop to stay in that state until there is evidence enough that you are not flying anymore.</p>
+
+<p>For this part there is no diagram. As you may have guessed, adding one state for every edge is going to make the model huge and very complicated to deal with. At this step, I mostly work with the code. Adding all the edges by hand is a nightmare. For that reason, I let python do that for me. Before showing you the code, there is one more hypothesis to deal with. I said that the reason for the ‘flying’ state is to correct duplicate observations. But to do that it is needed to add more than one ‘flying’ state per edge. Why? Because the first ‘flying’ states are going to be corrective states without self-loop. It is only the last one that is a waiting state. Those corrective states can emit the same observations as the first state. While the waiting state can only emit the ‘flying’ observation. The reason for this is mostly empirical. Using only one ‘flying’ state yielded unsatisfactory results. In my experiments I ended up using five ‘flying’ states: four correctives, and one waiting. Finally, the code for that.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="rouge-code"><pre><span class="sh">"""</span><span class="s"> Add flying states </span><span class="sh">"""</span>
+<span class="n">current_edges</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">union</span><span class="p">.</span><span class="n">edges</span><span class="p">)</span>
+<span class="n">fly_err_len</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="nf">for </span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">current_edges</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">u</span> <span class="o">==</span> <span class="sh">"</span><span class="s">init</span><span class="sh">"</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="n">union</span><span class="p">.</span><span class="nf">add_nodes_from</span><span class="p">([(</span><span class="sh">"</span><span class="s">flying-</span><span class="sh">"</span><span class="o">+</span><span class="n">u</span><span class="o">+</span><span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="o">+</span><span class="nf">str</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">True</span><span class="p">})</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">fly_err_len</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
+    <span class="n">union</span><span class="p">.</span><span class="nf">remove_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">flying-</span><span class="sh">"</span><span class="o">+</span><span class="n">u</span><span class="o">+</span><span class="sh">"</span><span class="s">-0</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">flying-</span><span class="sh">"</span><span class="o">+</span><span class="n">u</span><span class="o">+</span><span class="sh">"</span><span class="s">-</span><span class="sh">"</span><span class="o">+</span><span class="nf">str</span><span class="p">(</span><span class="n">fly_err_len</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">fly_err_len</span><span class="p">):</span>
+        <span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">flying-</span><span class="sh">"</span><span class="o">+</span><span class="n">u</span><span class="o">+</span><span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="o">+</span><span class="nf">str</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="sh">"</span><span class="s">flying-</span><span class="sh">"</span><span class="o">+</span><span class="n">u</span><span class="o">+</span><span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="o">+</span><span class="nf">str</span><span class="p">(</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">flying-</span><span class="sh">"</span><span class="o">+</span><span class="n">u</span><span class="o">+</span><span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="o">+</span><span class="nf">str</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="sh">"</span><span class="s">flying-</span><span class="sh">"</span><span class="o">+</span><span class="n">u</span><span class="o">+</span><span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="o">+</span><span class="nf">str</span><span class="p">(</span><span class="n">fly_err_len</span><span class="p">))</span>
+    <span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">flying-</span><span class="sh">"</span><span class="o">+</span><span class="n">u</span><span class="o">+</span><span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="o">+</span><span class="nf">str</span><span class="p">(</span><span class="n">fly_err_len</span><span class="p">),</span> <span class="sh">"</span><span class="s">flying-</span><span class="sh">"</span><span class="o">+</span><span class="n">u</span><span class="o">+</span><span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="o">+</span><span class="nf">str</span><span class="p">(</span><span class="n">fly_err_len</span><span class="p">))</span>
+    <span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">flying-</span><span class="sh">"</span><span class="o">+</span><span class="n">u</span><span class="o">+</span><span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="o">+</span><span class="nf">str</span><span class="p">(</span><span class="n">fly_err_len</span><span class="p">),</span> <span class="n">v</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>And the last part of the code is to convert the ‘Point-server’ and ‘Point-receiver’ states into waiting states. The reason for this is numerical. When creating the transition and emission matrices the values need to be normalized. If you don’t add this connections you have rows with all zeros that give errors and it is easier to solve them like this. Those edges are added after creating the ‘flying’ states because those edges don’t need any ‘flying’ states attached to them, they are simply a trick for the computation.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="sh">"""</span><span class="s"> Self-loops for absorbing states </span><span class="sh">"""</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">Point-receiver</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Point-receiver</span><span class="sh">"</span><span class="p">)</span>
+<span class="n">union</span><span class="p">.</span><span class="nf">add_edge</span><span class="p">(</span><span class="sh">"</span><span class="s">Point-server</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Point-server</span><span class="sh">"</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="the-observations-graph">The observations’ graph</h2>
+
+<p>First, let’s define the observations.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td><td class="rouge-code"><pre><span class="sh">"""</span><span class="s"> Possible observations </span><span class="sh">"""</span>
+<span class="n">obs</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="nc">DiGraph</span><span class="p">()</span>
+<span class="n">obs</span><span class="p">.</span><span class="nf">add_nodes_from</span><span class="p">([</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">player-hit</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">False</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">bounce-ground-receiver</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">False</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">bounce-ground-server</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">False</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">bounce-net</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">False</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">bounce-wall-inner</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">False</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">bounce-wall-outer</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">False</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">flying</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">False</span><span class="p">}),</span>
+    <span class="p">(</span><span class="sh">"</span><span class="s">end</span><span class="sh">"</span><span class="p">,</span> <span class="p">{</span><span class="sh">"</span><span class="s">hidden</span><span class="sh">"</span><span class="p">:</span> <span class="bp">False</span><span class="p">})</span>
+<span class="p">])</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>This is all we can observe, at least automatically with a camera. We can observe the ball bouncing anywhere: in the walls, in the net, or in the ground. And we can observe any player hitting the ball. Notice that we don’t have to distinguish which player hits the ball, that job is done by distinguishing where is the ball bouncing. The reason for that is that it is quite difficult in practice to detect when a player hits the ball and which player it is due to projection. With just one observation representing all the player is enough to solve the problem. Keep in mind that this is for real cases, and the model has to reflect the limitations of the detections. There is one special observation called ‘end’. The HMM presented here can only deal with isolated points. The ‘end’ observation is only emitted by the absorbing states. It is a way of forcing the HMM to find a solution. When dealing with more than one point it is needed to detect when the point has finished.</p>
+
+<p>As with the ‘flying’ states, I didn’t add all the emissions by hand. There are a lot of nodes in the transition graph. And the emission graph is a bipartite graph with transitions on one side and emissions on the other. That is a lot of edges. But in the end, is no more than a regex problem. The states have descriptive names. Any state with ‘ground’ in their name is going to emit either ‘bounce-ground-receiver’ or ‘bounce-ground-server’. And the ‘flying’ states emit the ‘flying’ observation. There is no fancy ideas here, just nasty work. I leave here the code for you. There are better ways to code this for sure, but this works and it’s mine, so I like it.</p>
+
+<p>There are two more things to mention. The flying probability and the missing probability. As I said before there are corrective states. Those corrective states can emit the same observation as the state they are attached to it, but with a smaller probability. Otherwise, if the probability isn’t lower, we are not taking into account the fact that the more separated two observations are, the more likely they are to be correct. Thus, the corrective ‘flying’ states have some probability of emit ‘flying’ and some probability of emiting other things. The missing probability is similar but is for the other states. If instead of a duplicate you miss an observation, the graph still needs to find a path to the end. For that reason every state has some little probability of emitting ‘flying’. And there are many other little changes that were added in the process of creating this matrix. The justification behind most of the strange things you will see in the code is empirical. You start with a simple model and find a case where it doesn’t work, change the model and repeat. After several iterations you arrive at this.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+</pre></td><td class="rouge-code"><pre><span class="sh">"""</span><span class="s"> Create bipartite graph representing emissions </span><span class="sh">"""</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">union</span><span class="p">.</span><span class="nf">copy</span><span class="p">()</span>
+<span class="n">G</span><span class="p">.</span><span class="nf">clear_edges</span><span class="p">()</span>
+<span class="n">U</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="nf">union</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">obs</span><span class="p">)</span>
+<span class="n">flying_prob</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="n">err_miss_prob</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">eps</span> <span class="o">=</span> <span class="mf">1e-12</span>
+<span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">G</span><span class="p">.</span><span class="nf">nodes</span><span class="p">():</span>
+    <span class="k">if</span> <span class="sh">"</span><span class="s">Point</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span> 
+        <span class="c1">#U.add_weighted_edges_from([(u, "flying", 1)])
+</span>        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">end</span><span class="sh">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])</span>
+        <span class="k">continue</span>
+    <span class="k">if</span> <span class="sh">"</span><span class="s">flying</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span> <span class="ow">and</span> <span class="sh">"</span><span class="s">init</span><span class="sh">"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">flying</span><span class="sh">"</span><span class="p">,</span> <span class="n">flying_prob</span><span class="p">)])</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-server</span><span class="sh">"</span><span class="p">,</span> <span class="n">eps</span><span class="p">)])</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-receiver</span><span class="sh">"</span><span class="p">,</span> <span class="n">eps</span><span class="p">)])</span>
+        <span class="k">if</span> <span class="n">fly_err_len</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">fly_err_len</span> <span class="o">==</span> <span class="nf">int</span><span class="p">(</span><span class="n">u</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="sh">'</span><span class="s">-</span><span class="sh">'</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="k">continue</span>
+    <span class="k">elif</span> <span class="n">u</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="sh">"</span><span class="s">net1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">net2</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">wall-inner1</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">wall-inner2</span><span class="sh">"</span><span class="p">]:</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">flying</span><span class="sh">"</span><span class="p">,</span> <span class="n">err_miss_prob</span><span class="p">)])</span>
+
+    <span class="k">if</span> <span class="sh">"</span><span class="s">init</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-receiver</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)</span><span class="o">/</span><span class="mi">5</span><span class="p">)])</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-server</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)</span><span class="o">/</span><span class="mi">5</span><span class="p">)])</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-wall-inner</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)</span><span class="o">/</span><span class="mi">5</span><span class="p">)])</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-wall-outer</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)</span><span class="o">/</span><span class="mi">5</span><span class="p">)])</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-net</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)</span><span class="o">/</span><span class="mi">5</span><span class="p">)])</span> 
+        <span class="c1"># U.add_weighted_edges_from([(u, "player-hit", eps)]) 
+</span>        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">flying</span><span class="sh">"</span><span class="p">,</span> <span class="n">flying_prob</span><span class="p">)])</span> 
+    <span class="k">elif</span> <span class="sh">"</span><span class="s">serve</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span> <span class="ow">or</span> <span class="n">u</span> <span class="o">==</span> <span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span> <span class="ow">or</span> <span class="n">u</span> <span class="o">==</span> <span class="sh">"</span><span class="s">HIT2</span><span class="sh">"</span> <span class="ow">or</span> <span class="sh">"</span><span class="s">flying-HIT1-</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span> <span class="ow">or</span> <span class="sh">"</span><span class="s">flying-HIT2-</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">player-hit</span><span class="sh">"</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)])</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-receiver</span><span class="sh">"</span><span class="p">,</span> <span class="n">eps</span><span class="p">)])</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-server</span><span class="sh">"</span><span class="p">,</span> <span class="n">eps</span><span class="p">)])</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-wall-inner</span><span class="sh">"</span><span class="p">,</span> <span class="n">eps</span><span class="p">)])</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-wall-outer</span><span class="sh">"</span><span class="p">,</span> <span class="n">eps</span><span class="p">)])</span>
+    <span class="k">elif</span> <span class="sh">"</span><span class="s">time</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">flying</span><span class="sh">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])</span>
+    <span class="k">elif</span> <span class="sh">"</span><span class="s">wall</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span> <span class="c1"># this must be before in and out
+</span>        <span class="k">if</span> <span class="sh">"</span><span class="s">inner</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+            <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-wall-inner</span><span class="sh">"</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)])</span>
+        <span class="k">elif</span> <span class="sh">"</span><span class="s">outer</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+            <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-wall-outer</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span>
+            <span class="k">if</span> <span class="sh">"</span><span class="s">HIT1</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+                <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-server</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span>
+            <span class="k">elif</span> <span class="sh">"</span><span class="s">HIT2</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+                <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-receiver</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)])</span>
+        <span class="k">else</span><span class="p">:</span> <span class="nf">assert</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">player-hit</span><span class="sh">"</span><span class="p">,</span> <span class="n">eps</span><span class="p">)])</span>
+    <span class="nf">elif </span><span class="p">(</span><span class="sh">"</span><span class="s">in</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span> <span class="ow">or</span> <span class="sh">"</span><span class="s">ground</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">)</span> <span class="ow">and</span> <span class="sh">"</span><span class="s">flying-net</span><span class="sh">"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">u</span> <span class="ow">and</span> <span class="sh">"</span><span class="s">flying-out</span><span class="sh">"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+        <span class="k">if</span> <span class="sh">"</span><span class="s">in1</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span> <span class="ow">or</span> <span class="sh">"</span><span class="s">in2</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span> <span class="ow">or</span> <span class="sh">"</span><span class="s">in-HIT2</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span> <span class="ow">or</span> <span class="sh">"</span><span class="s">ground-HIT2</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span>\
+            <span class="ow">or</span> <span class="sh">"</span><span class="s">in-net1</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span> <span class="ow">or</span> <span class="sh">"</span><span class="s">in-net2</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+            <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-receiver</span><span class="sh">"</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)])</span>
+            <span class="k">if</span> <span class="sh">"</span><span class="s">ground-HIT2</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+                <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-server</span><span class="sh">"</span><span class="p">,</span> <span class="n">eps</span><span class="p">)])</span>
+        <span class="k">elif</span> <span class="sh">"</span><span class="s">in-HIT1</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span> <span class="ow">or</span> <span class="sh">"</span><span class="s">ground-HIT1</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+            <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-server</span><span class="sh">"</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)])</span>
+            <span class="k">if</span> <span class="sh">"</span><span class="s">ground-HIT1</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+                <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-receiver</span><span class="sh">"</span><span class="p">,</span> <span class="n">eps</span><span class="p">)])</span>
+        <span class="k">elif</span> <span class="sh">"</span><span class="s">ground</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+            <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-receiver</span><span class="sh">"</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)])</span>
+            <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-server</span><span class="sh">"</span><span class="p">,</span> <span class="n">eps</span><span class="p">)])</span>
+        <span class="k">else</span><span class="p">:</span> <span class="nf">assert</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">player-hit</span><span class="sh">"</span><span class="p">,</span> <span class="n">eps</span><span class="p">)])</span>
+    <span class="k">elif</span> <span class="sh">"</span><span class="s">out</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+        <span class="k">if</span> <span class="sh">"</span><span class="s">out-HIT1</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+            <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-receiver</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)])</span>
+        <span class="k">elif</span> <span class="sh">"</span><span class="s">out-HIT2</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span> <span class="ow">or</span> <span class="sh">"</span><span class="s">out1</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span> <span class="ow">or</span> <span class="sh">"</span><span class="s">out2</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+            <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-ground-server</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)])</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-wall-inner</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)])</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-wall-outer</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)])</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-net</span><span class="sh">"</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span><span class="p">)])</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">player-hit</span><span class="sh">"</span><span class="p">,</span> <span class="n">eps</span><span class="p">)])</span>
+    <span class="k">elif</span> <span class="sh">"</span><span class="s">net</span><span class="sh">"</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+        <span class="n">U</span><span class="p">.</span><span class="nf">add_weighted_edges_from</span><span class="p">([(</span><span class="n">u</span><span class="p">,</span> <span class="sh">"</span><span class="s">bounce-net</span><span class="sh">"</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">flying_prob</span><span class="p">)])</span>
+        <span class="c1">#U.add_weighted_edges_from([(u, "player-hit", eps)])
+</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="the-matrices">The matrices</h2>
+
+<p>Okay, we have the graphs, but what about the matrices? We need those for the <code class="highlight language-python" data-lang="python"><span class="n">hmmkay</span></code> library. How do we generate them? NetworkX provides a function for generating adjacency matrices (<code class="highlight language-python" data-lang="python"><span class="n">adjacency_matrix</span></code>). However, we cannot use those matrices as they are, we need to normalize them so that the rows sum up to one. Remember, they represent probabilities. After normalization, we can save the result using <code class="highlight language-python" data-lang="python"><span class="n">pandas</span></code>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre></td><td class="rouge-code"><pre><span class="kn">import</span> <span class="n">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+
+<span class="sh">"""</span><span class="s"> Emission matrix </span><span class="sh">"""</span>
+<span class="n">V1</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">G</span><span class="p">.</span><span class="nf">nodes</span><span class="p">())</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="nf">adjacency_matrix</span><span class="p">(</span><span class="n">U</span><span class="p">).</span><span class="nf">toarray</span><span class="p">()[:</span><span class="n">V1</span><span class="p">,</span><span class="n">V1</span><span class="p">:]</span>
+<span class="n">err_change</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">B</span> <span class="o">+=</span> <span class="n">err_change</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">B</span> <span class="o">/</span> <span class="n">B</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">).</span><span class="nf">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">B_df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nc">DataFrame</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">obs</span><span class="p">.</span><span class="nf">nodes</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">G</span><span class="p">.</span><span class="nf">nodes</span><span class="p">())</span>
+<span class="n">B_df</span><span class="p">.</span><span class="nf">to_csv</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">+</span> <span class="sh">'</span><span class="s">B.csv</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="sh">"""</span><span class="s"> Transition matrix </span><span class="sh">"""</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="nf">adjacency_matrix</span><span class="p">(</span><span class="n">union</span><span class="p">).</span><span class="nf">toarray</span><span class="p">()</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">A</span> <span class="o">/</span> <span class="n">A</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">).</span><span class="nf">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">A_df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="nc">DataFrame</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">G</span><span class="p">.</span><span class="nf">nodes</span><span class="p">(),</span> <span class="n">index</span><span class="o">=</span><span class="n">G</span><span class="p">.</span><span class="nf">nodes</span><span class="p">())</span>
+<span class="n">A_df</span><span class="p">.</span><span class="nf">to_csv</span><span class="p">(</span><span class="n">folder_path</span> <span class="o">+</span> <span class="sh">'</span><span class="s">A.csv</span><span class="sh">'</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>The <code class="highlight language-python" data-lang="python"><span class="n">err_change</span></code> variable is for adding noise to the emissions so that every state can emit every observation with a little probability. In my experience it doesn’t work well, but I leave it there in case you want to experiment with it.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>In this post we have seen how to properly design a HMM for following the result of a padel match. We have learnt to use the NetworkX library to create the graphs and the Gephi program to visualize the process. In the <a href="/HMM-padel-part3" target="_blank">next post</a> of this series we will learn how to actually test whether the HMM works. Stay tuned.</p>
+
+
+            </div>
+
+            <!-- Rating -->
+            
+
+            <!-- Post Date -->
+            <p>
+            <small>
+                <span class="post-date"><time class="post-date" datetime="2022-09-16">16 Sep 2022</time></span>           
+                
+                </small>
+            </p>
+
+            <!-- Post Categories -->
+            <div class="after-post-cats">
+                <ul class="tags mb-4">
+                    
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Hidden-Markov-Model">Hidden Markov Model</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- End Categories -->
+
+            <!-- Post Tags -->
+            <div class="after-post-tags">
+                <ul class="tags">
+                    
+                    
+                </ul>
+            </div>
+            <!-- End Tags -->
+
+            <!-- Prev/Next -->
+            <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+            
+            <a class="prev d-block col-md-6" href="/HMM-padel/"> &laquo; Modelling a padel match with Hidden Markov Models</a>
+            
+            
+            <a class="next d-block col-md-6 text-lg-right" href="/HMM-padel-part3/">Modelling a padel match with Hidden Markov Models (Part 3) &raquo; </a>
+            
+            <div class="clearfix"></div>
+            </div>
+            <!-- End Categories -->
+        
+        <!-- End Post -->
+
+    </div>
+</div>
+<!-- End Article
+================================================== -->
+
+<!-- Begin Comments
+================================================== -->
+
+<!--End Comments
+================================================== -->
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+</div>
+
+
+<!-- Bottom Alert Bar
+================================================== -->
+<div class="alertbar">
+	<div class="container text-center">
+		<span> Never miss a <b>story</b> from us, subscribe to this blog</span>
+        <form
+          class="wj-contact-form validate"
+          action="https://gmail.us4.list-manage.com/subscribe/post?u=6bc2f64e5d9109bd06bf859c5&amp;id=68bbfe755b&amp;f_id=005c05e9f0"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+        >
+            <div class="mc-field-group center-inputs">
+                <input type="email" placeholder="Email" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="button">
+            </div>
+        </form>
+	</div>
+</div>
+
+    
+</div>
+
+<!-- Categories Jumbotron
+================================================== -->
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+            <div class="d-md-flex align-items-center justify-content-center h-100">
+                <h2 class="d-md-block align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+            </div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+            
+            
+                
+                    <a class="mt-1 mb-1" href="/categories#Stories">Stories (5)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Philosophy">Philosophy (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Deep-Learning">Deep Learning (7)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Reinforcement-Learning">Reinforcement Learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Supervised-Learning">Supervised Learning (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Happy-Ideas">Happy Ideas (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#GAN">GAN (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Theory">Theory (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#unsupervised-learning">unsupervised learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Tutorial">Tutorial (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Servers">Servers (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Raspberry-Pi">Raspberry Pi (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Hidden-Markov-Model">Hidden Markov Model (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Django">Django (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Docker">Docker (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AWS">AWS (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AI">AI (2)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Unsupervised-Learning">Unsupervised Learning (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Python">Python (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Psychology">Psychology (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Economy">Economy (1)</a>
+                
+            
+            
+		</div>
+	</div>
+</div>
+
+<!-- Begin Footer
+================================================== 
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                Copyright © 2025 GranaData 
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" href="https://www.wowthemes.net/mediumish-free-jekyll-template/">Mediumish Jekyll Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>-->
+<!-- End Footer
+================================================== -->
+
+</div> <!-- /.site-content -->
+
+<!-- Scripts
+================================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<script src="/assets/js/mediumish.js"></script>
+
+
+<script src="/assets/js/lazyload.js"></script>
+
+
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script> 
+
+
+<script id="dsq-count-scr" src="//demowebsite.disqus.com/count.js"></script>
+
+
+</body>
+</html>

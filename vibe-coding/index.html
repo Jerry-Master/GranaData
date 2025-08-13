@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="icon" href="/assets/images/favicon.ico">
+
+<title>Vibe-coding, an informed guide. | GranaData</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Vibe-coding, an informed guide. | GranaData</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Vibe-coding, an informed guide." />
+<meta name="author" content="jose" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="At the beginning of this year 2025, Andrej Karpathy coined the term: “vibe-coding”. And since then we have seen the AI discourse become even less serious over time. The typical FOMO discourse (Fear Of Missing Out) continues to say that if you are not using AI you are missing out, that AI will replace us all, that what previously took years now takes hours and so on. I am a big fan of AI and want it to succeed. My side is definitely with e/acc, but I also want to throw a bit of clarity to all this madness. AI is progress and cannot be stopped, but we must think critically and analyse exactly what is the point in which we found ourselves right now. Vibe-coding is being monetised which means the PRs (Public Relations) are everywhere trying to convince us to buy their products. Replit is one of those tools that sells itself as a way to build apps just with natural language. It is quite impressive and I have tested and created one webpage entirely with it. Nevertheless, Replit is also responsible for deleting another company’s codebase. As I said I want to bring some light to the discourse and this post is going to be an informed analysis on how to do vibe-coding properly, what are its risks and when is it worth it." />
+<meta property="og:description" content="At the beginning of this year 2025, Andrej Karpathy coined the term: “vibe-coding”. And since then we have seen the AI discourse become even less serious over time. The typical FOMO discourse (Fear Of Missing Out) continues to say that if you are not using AI you are missing out, that AI will replace us all, that what previously took years now takes hours and so on. I am a big fan of AI and want it to succeed. My side is definitely with e/acc, but I also want to throw a bit of clarity to all this madness. AI is progress and cannot be stopped, but we must think critically and analyse exactly what is the point in which we found ourselves right now. Vibe-coding is being monetised which means the PRs (Public Relations) are everywhere trying to convince us to buy their products. Replit is one of those tools that sells itself as a way to build apps just with natural language. It is quite impressive and I have tested and created one webpage entirely with it. Nevertheless, Replit is also responsible for deleting another company’s codebase. As I said I want to bring some light to the discourse and this post is going to be an informed analysis on how to do vibe-coding properly, what are its risks and when is it worth it." />
+<link rel="canonical" href="https://granadata.art/vibe-coding/" />
+<meta property="og:url" content="https://granadata.art/vibe-coding/" />
+<meta property="og:site_name" content="GranaData" />
+<meta property="og:image" content="https://granadata.art/assets/images/vibe-coding.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-07-27T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://granadata.art/assets/images/vibe-coding.png" />
+<meta property="twitter:title" content="Vibe-coding, an informed guide." />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jose"},"dateModified":"2025-07-27T00:00:00+00:00","datePublished":"2025-07-27T00:00:00+00:00","description":"At the beginning of this year 2025, Andrej Karpathy coined the term: “vibe-coding”. And since then we have seen the AI discourse become even less serious over time. The typical FOMO discourse (Fear Of Missing Out) continues to say that if you are not using AI you are missing out, that AI will replace us all, that what previously took years now takes hours and so on. I am a big fan of AI and want it to succeed. My side is definitely with e/acc, but I also want to throw a bit of clarity to all this madness. AI is progress and cannot be stopped, but we must think critically and analyse exactly what is the point in which we found ourselves right now. Vibe-coding is being monetised which means the PRs (Public Relations) are everywhere trying to convince us to buy their products. Replit is one of those tools that sells itself as a way to build apps just with natural language. It is quite impressive and I have tested and created one webpage entirely with it. Nevertheless, Replit is also responsible for deleting another company’s codebase. As I said I want to bring some light to the discourse and this post is going to be an informed analysis on how to do vibe-coding properly, what are its risks and when is it worth it.","headline":"Vibe-coding, an informed guide.","image":"https://granadata.art/assets/images/vibe-coding.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://granadata.art/vibe-coding/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://granadata.art/assets/images/logo.png"},"name":"jose"},"url":"https://granadata.art/vibe-coding/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+<link href="/assets/css/screen.css" rel="stylesheet">
+
+<link href="/assets/css/main.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<!-- Twitter cards -->
+<meta name="twitter:site"    content="@GranaDataJose">
+<meta name="twitter:creator" content="@GranaDataJose">
+<meta name="twitter:title"   content="Vibe-coding, an informed guide.">
+
+
+<meta name="twitter:description" content="Data science from Granada to the world.">
+
+
+
+<meta name="twitter:card"  content="summary_large_image">
+<meta name="twitter:image" content="https://granadata.art/assets/images/vibe-coding.png">
+
+<!-- end of Twitter cards -->
+
+</head>
+
+
+<!-- change your GA id in _config.yml -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46278016-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+
+<body class="layout-post">
+	<!-- defer loading of font and font awesome -->
+    <noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    
+	
+
+
+<!-- Begin Menu Navigation
+================================================== -->
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark shadow fixed-top mediumnavigation nav-down">
+
+    <div class="container pr-0">
+
+    <!-- Begin Logo -->
+    <a class="navbar-brand" href="/">
+    <img src="/assets/images/logo.png" alt="GranaData">
+    </a>
+    <!-- End Logo -->
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMediumish">
+
+        <!-- Begin Menu -->
+
+            <ul class="navbar-nav mr-auto">
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/index.html">Blog</a>
+                </li>
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/about">About</a>
+                </li>
+                
+            </ul>
+            <ul class="navbar-nav ml-auto">
+
+                <script src="/assets/js/lunr.js"></script>
+
+
+<style>
+    .lunrsearchresult .title {color: #d9230f;}
+    .lunrsearchresult .url {color: silver;}
+    .lunrsearchresult a {display: block; color: #777;}
+    .lunrsearchresult a:hover, .lunrsearchresult a:focus {text-decoration: none;}
+    .lunrsearchresult a:hover .title {text-decoration: underline;}
+</style>
+
+
+<form class="bd-search" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+    <input type="text" class="form-control text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+</form>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+
+            </ul>
+
+        <!-- End Menu -->
+
+    </div>
+
+    </div>
+</nav>
+<!-- End Navigation
+================================================== -->
+
+<div class="site-content">
+
+<div class="container">
+
+<!-- Site Title
+================================================== -->
+<div class="mainheading">
+    <h1 class="sitetitle">GranaData</h1>
+    <p class="lead">
+        Data science from Granada to the world.
+    </p>
+</div>
+
+<!-- Content
+================================================== -->
+<div class="main-content">
+    <!-- Begin Article
+================================================== -->
+<div class="container inside-container">
+    
+    <div class="row">
+
+        <!-- Post Share -->
+        
+        <!-- Post -->
+        
+        
+            <div class="mainheading">
+
+                <!-- Author Box -->
+                
+                <div class="row post-top-meta">
+                    <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-right mb-4 mb-md-0">
+                        
+                        <img class="author-thumb" src="/assets/images/JoseAvatar.png" alt="Jose">
+                        
+                    </div>
+                    <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left">
+                        <a target="_blank" class="link-dark" href="https://jerry-master.github.io/Home-Page/">Jose</a>
+                        <a target="_blank" href="https://twitter.com/GranaDataJose" class="btn follow">Follow</a>
+                        
+                        <a target="_blank" href="/read_time" class="btn readtime">8 min read</a>
+                        
+                        <span class="author-description">Data scientist from Alcalá la Real. Studied at BarcelonaTech, worked as a researcher at the UGR and UPC, was a machine learning engineer at El Ranchito and Nemeda and now work in Koh Young Research Spain. Always wanting to explain my knowledge to the world.</span>
+                    </div>
+                </div>
+                
+
+                <!-- Post Title -->
+                <h1 class="posttitle">Vibe-coding, an informed guide.</h1>
+
+            </div>
+
+            <!-- Adsense if enabled from _config.yml (change your pub id and slot) -->
+            
+            <!-- End Adsense -->
+
+            <!-- Post Featured Image -->
+            
+            <!-- End Featured Image -->
+
+            <!-- Post Content -->
+            <div class="article-post">
+                <!-- Toc if any -->
+                
+                <!-- End Toc -->
+                <p>At the beginning of this year 2025, Andrej Karpathy coined the term: <a href="https://x.com/karpathy/status/1886192184808149383" target="_blank">“vibe-coding”</a>. And since then we have seen the AI discourse become even less serious over time. The typical FOMO discourse (Fear Of Missing Out) continues to say that if you are not using AI you are missing out, that AI will replace us all, that what previously took years now takes hours and so on. I am a big fan of AI and want it to succeed. My side is definitely with <a href="https://effectiveaccelerationism.substack.com/p/repost-effective-accelerationism" target="_blank">e/acc</a>, but I also want to throw a bit of clarity to all this madness. AI is progress and cannot be stopped, but we must think critically and analyse exactly what is the point in which we found ourselves right now. Vibe-coding is being monetised which means the PRs (Public Relations) are everywhere trying to convince us to buy their products. <a href="https://replit.com/" target="_blank">Replit</a> is one of those tools that sells itself as a way to build apps just with natural language. It is quite impressive and I have tested and created <a href="https://preparaomegrx.es/" target="_blank">one webpage</a> entirely with it. Nevertheless, Replit is also responsible for <a href="https://www.businessinsider.com/replit-ceo-apologizes-ai-coding-tool-delete-company-database-2025-7" target="_blank">deleting another company’s codebase</a>. As I said I want to bring some light to the discourse and this post is going to be an informed analysis on how to do vibe-coding properly, what are its risks and when is it worth it.</p>
+
+<h2 id="what-the-data-shows">What the data shows</h2>
+
+<p>Let’s start with what we already know. AI is being here for a while and studies are starting to appear. The first study that got to the news was about <a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2023/12/AI-and-Productivity-Report-First-Edition.pdf" target="_blank">Copilot</a>. They compared the time it took developers to complete tasks with and without Copilot. They measured improvements in the range of 26% and 73%. This study was optimistic since it was coming from Microsoft and it was about one of its products which may raise some eyebrows. But even this optimistic value (73%) is not “what took months takes days”. That is one of the premises that should be banned from the current discourse. Another independent study from Stanford found that improvement to be <a href="https://www.nber.org/system/files/working_papers/w31161/w31161.pdf" target="_blank">14%</a>, with some productivity metrics going up to a 22.2% improvement, which is a more conservative value. That study started to show that the improvement depended highly on your level of expertise, which is something quite reasonable. Before somebody says that those articles are from 2023, those results have been replicated in <a href="https://fortegrp.com/insights/ai-coding-assistants" target="_blank">2024</a> (~50%) and <a href="https://www.pwc.com/gx/en/news-room/press-releases/2025/ai-linked-to-a-fourfold-increase-in-productivity-growth.html" target="_blank">2025</a> (~25%). This clearly means that there is some gain, but there is high variability. The next question is when does this gain happen so that we don’t use AI when it is pointless.</p>
+
+<p>One study advancing our knowledge in that matter was recently <a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/" target="_blank">published by METR</a>. This study showed a 19% decrease in productivity in one very specific case: experienced developers of complex projects that knew perfectly all the details of their projects. It also found that developers wrongly believed they were being more productive, something I think is caused by the current discourse. We have been told for a few years that AI is making us more productive so we feel like that even when that is not the case. In the Copilot study developers estimated their gains properly, they felt more productive and were more productive. But here is the opposite. The subjective perception is challenged by the objective measurements. In a curious case of Stigler’s Law, this was not the first study in that direction even though it was the first to reach the public discourse. The <a href="https://services.google.com/fh/files/misc/2024_final_dora_report.pdf" target="_blank">2024 DORA report</a> reached the conclusion that AI is good for “code quality, documentation, and review processes”. However, it was detrimental for “software delivery performance” (aka teams are slower). Those two reports are all I could find so far using Google and Perplexity that provide negative results, but they provide a clear enough picture into what are the correct and incorrect ways to use AI for software development.</p>
+
+<h2 id="what-can-we-do-now">What can we do now?</h2>
+
+<p>In a few years I will come to this post and the advice I give is going to be obsolete, but in the current state of affairs what I will describe below are probably good practices when using AI. The main issue with our current systems is the long context. The METR study pointed to complex systems as a place where AI is falling behind, why? AI can perfectly follow orders when you tell it to write a function and has good enough reasoning capabilities for most of the day to day problems, what is happening? The answer is <a href="https://research.trychroma.com/context-rot" target="_blank">long context rot</a>. Current systems are technically capable of managing millions of tokens which is something my professors at university thought impossible. That context is enough to read entire books and answer any question about any page of the book. Not even a human can do that. Therefore, again, what is happening? What is happening is that the performance is decaying as Lecun <a href="https://youtu.be/ETZfkkv6V7Y?si=bukWQA2SdbgAGgUR&amp;t=635" target="_blank">predicted</a>, he was initially wrong and correctly criticised but in the end, and for completely unrelated reasons, he seems to be right, once again. Complex systems require a massive amount of knowledge before introducing a new change. Otherwise another feature may stop working, just like in the <a href="https://www.reddit.com/r/ProgrammerHumor/comments/b61snk/that_famous_function/" target="_blank">meme</a> but for real. Long context have been a problem for a while. Before long context models we had <a href="https://datos.gob.es/en/blog/rag-retrieval-augmented-generation-key-unlocks-door-precision-language-models" target="_blank">RAG</a> systems that are still being developed today. With the arrival of the agentic models a new protocol was created: <a href="https://www.anthropic.com/news/model-context-protocol" target="_blank">MCP</a>, which enabled the usage of tools and gave the model access to different contexts. This technology is still in development and will solve the complexity issue in the future but for now, we are stuck with the complexity issue.</p>
+
+<p>Now that we know the main limitation of current systems, what could be a good workflow to improve productivity? We have a technology that is good in some places and bad in others. The correct approach is neither to discard nor to glorify it. The correct approach is to design a workflow to mitigate risks and increase productivity. This part is a bit technical, so if you just want to know when the usage of this technology is financially justified skip it and go to the next one. The workflow I propose is based on my current experience. I have tried many tools, almost all the LLMs that are in the market, I have worked in production systems, big codebases with no documentation, and also have my own personal projects. Apart from my experience, I also have the habit of discussing software development methodologies with my coworkers. The main concern of senior developers that I have met when using this technology is maintanibility and scalability. Another constraint is that a senior developer must know what every single line of code does, otherwise you just have a functional product that nobody can fix when it breaks. So, how can we reconcile the senior developer job with that of the machine?</p>
+
+<p>The workflow in itself is quite simple, but the demon is in the details. The workflow that has worked most for me is the following. The first time you arrive at a new codebase you know nothing. It does not matter how many years of experience you have, you start from zero. Therefore, before you are productive you need to get familiar with the codebase. Here, AI is your best ally. Instead of looking at the code and thinking hard what is happening you can ask the bot. The quintessential example is regex. Suppose you find this regex:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="sa">r</span><span class="sh">'</span><span class="s">&lt;a[^&gt;]*index\s*=\s*[</span><span class="sh">"</span><span class="s">\']?(\d+)[</span><span class="sh">"</span><span class="s">\']?[^&gt;]*&gt;(?=.*?&lt;p[^&gt;]*index\s*=\s*[</span><span class="sh">"</span><span class="s">\']?\1[</span><span class="sh">"</span><span class="s">\']?[^&gt;]*&gt;)(.*?)&lt;/a&gt;</span><span class="sh">'</span></code></pre></figure>
+
+<p>A simple question to ChatGPT tells you that it is looking for html a tags with a child p tag that has the same index. Some engineer may have needed to find duplicated html indices to fix some bug and did not have time to document the hacky solution. A few seconds of LLM inference and you can continue understanding the code.</p>
+
+<p>The next step after you have familiarized yourself with the codebase is to identify patterns. LLMs are matching patterns most of the time, it is their best quality. In day to day work there are many boring tasks that could be easily automatized. One example is generating boilerplate code. LLMs are faster than us at typing. When I learnt to type, to obtain the certificate you needed to type 300 characters per minute, or around 60 words per minute (wps). Some pages show the average is <a href="https://www.typingpal.com/en/typing-test#:~:text=What%20is%20the%20average%20typing,to%2070%20words%20per%20minute." target="_blank">40 wps</a> with developers probably in the 70-80 wps side. Evan Chen, which was famous for typing fast is around 150 wps. But that is peanuts compared to LLMs, ChatGPT API throughput is <a href="https://community.openai.com/t/the-output-speed-of-gpt-4o-in-chatgpt-web-and-app-is-extremely-slow/1123614" target="_blank">55 tokens per seconds</a>, which is 495 wps. And that is one of the slowest LLMs out there. Groq systems are way faster and some even talk about the velocity in <a href="https://www.reddit.com/r/LocalLLaMA/comments/15nig1k/comment/ksuqaru/?utm_source=share&amp;utm_medium=web3x&amp;utm_name=web3xcss&amp;utm_term=1&amp;utm_content=share_button" target="_blank">pages per second</a>. If you can tell the AI to code a repetitive task that is very long, you can save a lot of time simply because it is faster at typing than you. The difficult part is deciding what processes are suitable for this.</p>
+
+<p>Once the repetitive patterns are identified the next step is to design skeleton code. Instead of coding everything, you first code the skeleton. Create some main function that calls several other functions and then let the AI implement those other functions. For this task any Cursor-like tool is definitely the best tool, like windsurf. The key is to reduce the complexity. You know the code and you know the solution, split it into simpler tasks and when you reach the level of complexity that current LLMs can handle, you just let them do it.</p>
+
+<p>Let’s put an example. I recently had a project in which I had to work with OpenCV CUDA. Many of you may be familiar with OpenCV but I doubt that you know all the details of its CUDA version. For instance, <code class="language-html highlighter-rouge">cv::Mat</code> is normally continuous but <code class="language-html highlighter-rouge">cv::cuda::GpuMat</code> is almost never continuous. That piece of knowledge is hidden in a <a href="https://docs.opencv.org/4.x/d0/d60/classcv_1_1cuda_1_1GpuMat.html" target="_blank">note</a> in the API reference. LLMs kind of helped to find that, for instance. However, documentation ends there. How to access images pixel values? How to pass <code class="language-html highlighter-rouge">cv::cuda::GpuMat</code> to a kernel? That is even more hidden and LLMs are of no help finding that information because it does not exist. You need to go to the code to answer those questions. OpenCV code has a lot of templates and C++ template language is known for being notoriously difficult to interpret. But, after some back and forth with LLMs I finally understood that passing a <code class="language-html highlighter-rouge">cv::cuda::GpuMat</code> to a kernel and accessing it was as simple as putting <code class="language-html highlighter-rouge">cv::cuda::PtrStep<span class="nt">&lt;T&gt;</span></code> in the kernel signature and doing <code class="language-html highlighter-rouge">img(y, x)</code>. This is the first phase, using models to understand and familiarise with the code. Then, I designed a common structure for all the kernels, fixing grid dimensions, fixing the error checking macros and other parts that were going to be repetitive. For instance, after calling a kernel function I needed to add <code class="language-html highlighter-rouge">CUDA_CHECK(cudaDeviceSynchronize()); CUDA_CHECK(cudaGetLastError());</code> for error checking. That is the same everywhere. Repetitive and boring, so if I can make the AI write it for me it is going to save me time. After I designed the skeleton for all the kernels and all the kernel wrappers I finally started using AI to code. With a simple system prompt I put some limits to what the code could be and the best practices that the bot should follow. Whenever the function names were descriptive enough and the task was simple enough the code was working on the first try. Another critical aspect to make all of this work is to do <a href="https://en.wikipedia.org/wiki/Test-driven_development" target="_blank">test driven development</a>. That makes vibe-coding way more effective.</p>
+
+<p>After you familiarised yourself with the code, you identified patterns and created the roadmap for the AI, the final step is to review the code. There are parts of the review process that can be automatised also. The DORA report that was one of the critical ones still pointed that AI was positive in this step of the development process. In CUDA code you normally check these things: memory coalescing, thread divergence, bank conflicts in shared memory, occupancy and race conditions. This is anecdotical evidence, but AI once detected a very obscure race condition I had in some code I did myself without AI help. Race conditions are the kind of needle in hay problems AI is good for. Memory coalescing is also a very LLM-friendly task because you just need to check that indices are ordered correctly. That is the kind of mechanical work that AI is good for and humans are not. Automating that leaves room to decide what the kernel should do, which is where my creativity is needed. Apart from that, before merging the code to the main branch, LLMs can perform the first review of your code before other developers get there. It can detect possible deadlocks, memory leakages or simply parts of the code that do not follow the style guidelines. Of course, you need a real human making the final review, but putting an AI in the middle can reduce the workload in the human reviewer.</p>
+
+<h2 id="is-it-worth-it">Is it worth it?</h2>
+
+<p>Finally let’s put some numbers into the financial side of the equation. We have talked about the performance benefits which range from the optimistic 73% of Microsoft to the more realistic 14% of Stanford. Now let’s talk about the costs. To know how much AI is costing we need to have an estimate of how many tokens per month does a developer consume. There is no conclusive data on this, mainly because the usage is not extended enough. I found this <a href="https://getdx.com/blog/ai-coding-tools-implementation-cost/#what-teams-actually-pay" target="_blank">blogpost</a> that estimates the consumption to be 1 million tokens per month per developer. That seems like a lot but remember that codebases are big, and the context required to answer the question is what really consumes tokens, so it could be a reasonable estimate. And what is the cost per token of the latest models? As per 27th of July of 2025 the pricing in the OpenAI API is 8$ / 1M tokens for the output of the smartest model. That amounts to a total of 96$ per developer per year. I don’t know if the price has VAT included, but we can round to 150$ to account for that and have a pessimistic estimate. Is that worth it? Well, unless you pay your developers less than 2000$ a year, then yes. Even with the 14% estimate you are better off using AI. However, you need to be careful to not use AI in unneeded places, or you could end up worse.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Software development, when done well, is hard. Current systems have come a long way and will continue to improve. But in the current state of affairs their usage needs to be carefully monitored. There are places where it boosts productivity modestly and there are cases when it can be detrimental. Until AI is good enough to replace us all, we need to be responsible and make decisions based on the data and not on marketing claims.</p>
+
+            </div>
+
+            <!-- Rating -->
+            
+
+            <!-- Post Date -->
+            <p>
+            <small>
+                <span class="post-date"><time class="post-date" datetime="2025-07-27">27 Jul 2025</time></span>           
+                
+                </small>
+            </p>
+
+            <!-- Post Categories -->
+            <div class="after-post-cats">
+                <ul class="tags mb-4">
+                    
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#AI">AI</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- End Categories -->
+
+            <!-- Post Tags -->
+            <div class="after-post-tags">
+                <ul class="tags">
+                    
+                    
+                </ul>
+            </div>
+            <!-- End Tags -->
+
+            <!-- Prev/Next -->
+            <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+            
+            <a class="prev d-block col-md-6" href="/gan-optimality-revisited/"> &laquo; GAN optimality proof revisited</a>
+            
+            
+            <a class="next d-block col-md-6 text-lg-right" href="/2024/">2024 &raquo; </a>
+            
+            <div class="clearfix"></div>
+            </div>
+            <!-- End Categories -->
+        
+        <!-- End Post -->
+
+    </div>
+</div>
+<!-- End Article
+================================================== -->
+
+<!-- Begin Comments
+================================================== -->
+
+<!--End Comments
+================================================== -->
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+</div>
+
+
+<!-- Bottom Alert Bar
+================================================== -->
+<div class="alertbar">
+	<div class="container text-center">
+		<span> Never miss a <b>story</b> from us, subscribe to this blog</span>
+        <form
+          class="wj-contact-form validate"
+          action="https://gmail.us4.list-manage.com/subscribe/post?u=6bc2f64e5d9109bd06bf859c5&amp;id=68bbfe755b&amp;f_id=005c05e9f0"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+        >
+            <div class="mc-field-group center-inputs">
+                <input type="email" placeholder="Email" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="button">
+            </div>
+        </form>
+	</div>
+</div>
+
+    
+</div>
+
+<!-- Categories Jumbotron
+================================================== -->
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+            <div class="d-md-flex align-items-center justify-content-center h-100">
+                <h2 class="d-md-block align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+            </div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+            
+            
+                
+                    <a class="mt-1 mb-1" href="/categories#Stories">Stories (5)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Philosophy">Philosophy (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Deep-Learning">Deep Learning (7)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Reinforcement-Learning">Reinforcement Learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Supervised-Learning">Supervised Learning (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Happy-Ideas">Happy Ideas (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#GAN">GAN (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Theory">Theory (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#unsupervised-learning">unsupervised learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Tutorial">Tutorial (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Servers">Servers (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Raspberry-Pi">Raspberry Pi (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Hidden-Markov-Model">Hidden Markov Model (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Django">Django (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Docker">Docker (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AWS">AWS (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AI">AI (2)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Unsupervised-Learning">Unsupervised Learning (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Python">Python (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Psychology">Psychology (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Economy">Economy (1)</a>
+                
+            
+            
+		</div>
+	</div>
+</div>
+
+<!-- Begin Footer
+================================================== 
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                Copyright © 2025 GranaData 
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" href="https://www.wowthemes.net/mediumish-free-jekyll-template/">Mediumish Jekyll Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>-->
+<!-- End Footer
+================================================== -->
+
+</div> <!-- /.site-content -->
+
+<!-- Scripts
+================================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<script src="/assets/js/mediumish.js"></script>
+
+
+<script src="/assets/js/lazyload.js"></script>
+
+
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script> 
+
+
+<script id="dsq-count-scr" src="//demowebsite.disqus.com/count.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="icon" href="/assets/images/favicon.ico">
+
+<title>Neural Architecture Search (Part 2) | GranaData</title>
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Neural Architecture Search (Part 2) | GranaData</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Neural Architecture Search (Part 2)" />
+<meta name="author" content="jose" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In the previous article we discussed how we can use reinforcement learning to design simple architectures like some types of convolutional neural networks. Today I am bringing to you the explanation on how to design more complex architectures. Before diving into how to modify the controller, let’s introduce another way of thinking about recurrent nertworks. Typically, LSTM and GRU are explained through formulas or diagrams like the one I showed in the previous article. However, in the NAS paper they introduced another way of thinking about them. They used a graph representation in which states are nodes, and the edges represent the way of merging states. For instance, and edge can mean to apply a sigmoid function, another can be summing two hidden states, and so on. Below is a simple example visualized." />
+<meta property="og:description" content="In the previous article we discussed how we can use reinforcement learning to design simple architectures like some types of convolutional neural networks. Today I am bringing to you the explanation on how to design more complex architectures. Before diving into how to modify the controller, let’s introduce another way of thinking about recurrent nertworks. Typically, LSTM and GRU are explained through formulas or diagrams like the one I showed in the previous article. However, in the NAS paper they introduced another way of thinking about them. They used a graph representation in which states are nodes, and the edges represent the way of merging states. For instance, and edge can mean to apply a sigmoid function, another can be summing two hidden states, and so on. Below is a simple example visualized." />
+<link rel="canonical" href="https://granadata.art/NAS-parte2/" />
+<meta property="og:url" content="https://granadata.art/NAS-parte2/" />
+<meta property="og:site_name" content="GranaData" />
+<meta property="og:image" content="https://granadata.art/assets/images/NAS/nas2-image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-07-13T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://granadata.art/assets/images/NAS/nas2-image.png" />
+<meta property="twitter:title" content="Neural Architecture Search (Part 2)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"jose"},"dateModified":"2022-07-13T00:00:00+00:00","datePublished":"2022-07-13T00:00:00+00:00","description":"In the previous article we discussed how we can use reinforcement learning to design simple architectures like some types of convolutional neural networks. Today I am bringing to you the explanation on how to design more complex architectures. Before diving into how to modify the controller, let’s introduce another way of thinking about recurrent nertworks. Typically, LSTM and GRU are explained through formulas or diagrams like the one I showed in the previous article. However, in the NAS paper they introduced another way of thinking about them. They used a graph representation in which states are nodes, and the edges represent the way of merging states. For instance, and edge can mean to apply a sigmoid function, another can be summing two hidden states, and so on. Below is a simple example visualized.","headline":"Neural Architecture Search (Part 2)","image":"https://granadata.art/assets/images/NAS/nas2-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://granadata.art/NAS-parte2/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://granadata.art/assets/images/logo.png"},"name":"jose"},"url":"https://granadata.art/NAS-parte2/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.css">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+      equationNumbers: {
+        autoNumber: "AMS"
+      }
+    },
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(','\\)'] ],
+      displayMath: [ ['$$', '$$'], ['\\[','\\]'] ],
+      processEscapes: true,
+      processEnvironments: true,
+    }
+});
+MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+	  alert("Math Processing Error: "+message[1]);
+	});
+</script>
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/pseudocode@latest/build/pseudocode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/h-hg/docsify-pseudocode/dist/docsify-pseudocode.min.js"></script>
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+<link href="/assets/css/screen.css" rel="stylesheet">
+
+<link href="/assets/css/main.css" rel="stylesheet">
+
+<script src="/assets/js/jquery.min.js"></script>
+
+<!-- Twitter cards -->
+<meta name="twitter:site"    content="@GranaDataJose">
+<meta name="twitter:creator" content="@GranaDataJose">
+<meta name="twitter:title"   content="Neural Architecture Search (Part 2)">
+
+
+<meta name="twitter:description" content="Data science from Granada to the world.">
+
+
+
+<meta name="twitter:card"  content="summary_large_image">
+<meta name="twitter:image" content="https://granadata.art/assets/images/NAS/nas2-image.png">
+
+<!-- end of Twitter cards -->
+
+</head>
+
+
+<!-- change your GA id in _config.yml -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46278016-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+
+<body class="layout-post">
+	<!-- defer loading of font and font awesome -->
+    <noscript id="deferred-styles">
+		<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+	</noscript>
+
+    
+	
+
+
+<!-- Begin Menu Navigation
+================================================== -->
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark shadow fixed-top mediumnavigation nav-down">
+
+    <div class="container pr-0">
+
+    <!-- Begin Logo -->
+    <a class="navbar-brand" href="/">
+    <img src="/assets/images/logo.png" alt="GranaData">
+    </a>
+    <!-- End Logo -->
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMediumish">
+
+        <!-- Begin Menu -->
+
+            <ul class="navbar-nav mr-auto">
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/index.html">Blog</a>
+                </li>
+
+                
+                <li class="nav-item">
+                
+                <a class="nav-link" href="/about">About</a>
+                </li>
+                
+            </ul>
+            <ul class="navbar-nav ml-auto">
+
+                <script src="/assets/js/lunr.js"></script>
+
+
+<style>
+    .lunrsearchresult .title {color: #d9230f;}
+    .lunrsearchresult .url {color: silver;}
+    .lunrsearchresult a {display: block; color: #777;}
+    .lunrsearchresult a:hover, .lunrsearchresult a:focus {text-decoration: none;}
+    .lunrsearchresult a:hover .title {text-decoration: underline;}
+</style>
+
+
+<form class="bd-search" onSubmit="return lunr_search(document.getElementById('lunrsearch').value);">
+    <input type="text" class="form-control text-small launch-modal-search" id="lunrsearch" name="q" maxlength="255" value="" placeholder="Type and enter..."/>
+</form>
+
+<div id="lunrsearchresults">
+    <ul></ul>
+</div>
+
+<script src="/assets/js/lunrsearchengine.js"></script>
+
+            </ul>
+
+        <!-- End Menu -->
+
+    </div>
+
+    </div>
+</nav>
+<!-- End Navigation
+================================================== -->
+
+<div class="site-content">
+
+<div class="container">
+
+<!-- Site Title
+================================================== -->
+<div class="mainheading">
+    <h1 class="sitetitle">GranaData</h1>
+    <p class="lead">
+        Data science from Granada to the world.
+    </p>
+</div>
+
+<!-- Content
+================================================== -->
+<div class="main-content">
+    <!-- Begin Article
+================================================== -->
+<div class="container inside-container">
+    
+    <div class="row">
+
+        <!-- Post Share -->
+        
+        <!-- Post -->
+        
+        
+            <div class="mainheading">
+
+                <!-- Author Box -->
+                
+                <div class="row post-top-meta">
+                    <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-right mb-4 mb-md-0">
+                        
+                        <img class="author-thumb" src="/assets/images/JoseAvatar.png" alt="Jose">
+                        
+                    </div>
+                    <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left">
+                        <a target="_blank" class="link-dark" href="https://jerry-master.github.io/Home-Page/">Jose</a>
+                        <a target="_blank" href="https://twitter.com/GranaDataJose" class="btn follow">Follow</a>
+                        
+                        <a target="_blank" href="/read_time" class="btn readtime">9 min read</a>
+                        
+                        <span class="author-description">Data scientist from Alcalá la Real. Studied at BarcelonaTech, worked as a researcher at the UGR and UPC, was a machine learning engineer at El Ranchito and Nemeda and now work in Koh Young Research Spain. Always wanting to explain my knowledge to the world.</span>
+                    </div>
+                </div>
+                
+
+                <!-- Post Title -->
+                <h1 class="posttitle">Neural Architecture Search (Part 2)</h1>
+
+            </div>
+
+            <!-- Adsense if enabled from _config.yml (change your pub id and slot) -->
+            
+            <!-- End Adsense -->
+
+            <!-- Post Featured Image -->
+            
+            <!-- End Featured Image -->
+
+            <!-- Post Content -->
+            <div class="article-post">
+                <!-- Toc if any -->
+                
+                <!-- End Toc -->
+                <p>In the <a href="/NAS" target="_blank">previous article</a> we discussed how we can use reinforcement learning to design simple architectures like some types of convolutional neural networks. Today I am bringing to you the explanation on how to design more complex architectures. Before diving into how to modify the controller, let’s introduce another way of thinking about recurrent nertworks. Typically, LSTM and GRU are explained through formulas or diagrams like the one I showed in the previous article. However, in the NAS paper they introduced another way of thinking about them. They used a graph representation in which states are nodes, and the edges represent the way of merging states. For instance, and edge can mean to apply a sigmoid function, another can be summing two hidden states, and so on. Below is a simple example visualized.</p>
+
+<p class="text-center"><img class="" src="/assets/images/NAS/simple-rnn.png" alt="simple" /></p>
+
+<p>Here the input is <span>$x_t$</span>, the hidden state from the previous step <span>$h_{t-1}$</span> and the cell state <span>$c_{t-1}$</span> which is used as memory. As you can see the states are combined either using multiplication or addition, and then some activation functions are applied. Now, think for a moment how can you represent this same graph in a linear way, as a sequence of operations. You have it? Well, one possible way would be [Add, Tanh, Multiply, ReLU, Multiply, sigmoid, Add, ReLU, 1, 0]. Don’t worry, there are many ways to represent the above graph sequentally, this one is just the one provided by the author of the NAS. To understand it look at the next picture.</p>
+
+<p class="text-center"><img class="" src="/assets/images/NAS/simple-explained.png" alt="simple2" /></p>
+
+<p>Let’s analyze it step by step. As you can see the process is split in 5. The first three are what you see, the way in which to combine <span>$x_t$</span> and <span>$h_{t-1}$</span> to produce <span>$h_{t}$</span>. However, that description is not complete because the cells state can be injected to any tree index. The last two numbers of the sequences indicate when to inject, in this example there is a 1 and a 0, which means that the cell state is injected to the tree index 0 and that the new cell state is the value in tree index 1. And the content of the cell inject part is how you inject the cell state. Let’s recap. Tree index 0 is <span>$a_0 = \text{tanh}(W_1 \cdot x_t + W_2 \cdot h_{t-1})$</span>, which is located at the right part of the graph above. Tree index 1 is <span>$a_1 = \text{ReLU}(W_3 \cdot x_t \odot W_4 \cdot h_{t-1})$</span> located at the left. This is the simple part. Now things get complicated, the number at the end tells which tree index to inject the cell state, in this case the 0. So we have to update <span>$a_0$</span> by <span>$a_0 \leftarrow \text{ReLU}(a_0 + c_{t-1})$</span>. Note that there are no learnable parameters in this step. Having done that we can now compute tree index 2: <span>$a_2 = \text{sigmoid}( a_0 \odot a_{1})$</span>. And this is the new hidden state <span>$h_t \leftarrow a_2$</span>. There is just one thing left, what is the new cell state? The value at tree index 1, which is the number we haven’t used yet. So the new cell state is the value at tree index 1 previous to activation so <span>$c_t \leftarrow W_3 \cdot x_t \odot W_4 \cdot h_{t-1}$</span>.</p>
+
+<p>It is a mess at the beginning but once you understand it, is awesome. You can represent any combination by a sequence and so you can learn to generate the optimal sequence. The irony here is that we are using recurrent networks to design recurrent networks. And although the authors didn’t try it, it could be interesting to iterate that process. Use an RNN to design a better RNN, then use that new RNN to design another one and so on. My guess is that it would converge, but who knows, maybe you get an infinitely better network.</p>
+
+<p>Okay, we have learned a way to represent RNN, so, how does the LSTM look like with this new representation? It looks like this</p>
+
+<p class="text-center"><img class="" src="/assets/images/NAS/lstm_.png" alt="lstm" /></p>
+
+<p>If you are interested you can go through the graph step by step to check that the formulas are the same.</p>
+
+<p>Finally, the moment we were all expecting, the new and better Recurrent cell found by the authors of the NAS, the so-called NASCell (you can find it in tensorflow with that name).</p>
+
+<p class="text-center"><img class="" src="/assets/images/NAS/nascell.png" alt="nascell" /></p>
+
+<p>In order to find it the authors required a lot of computation. This RNN is supposed to be better at language tasks than the normal LSTM. However, since this article came before big transformers were made, this recurrent cell got forgotten after that, and didn’t get much attention. Nevertheless, it is interesting to know that there are many possible RNN, not only the LSTM and the GRU. So the next time you want to try a simple RNN instead of a big transformer, you can think of using the NASCell.</p>
+
+<p>If you liked this, then you are going the enjoy the last part of this series. In the <a href="/NAS-parte3" target="_blank">next and last chapter</a> I will be explaining another modification of the controller to include residual connections. Making the controller capable of designing architectures such as ResNet or EfficienNet. Stay tuned!</p>
+
+            </div>
+
+            <!-- Rating -->
+            
+
+            <!-- Post Date -->
+            <p>
+            <small>
+                <span class="post-date"><time class="post-date" datetime="2022-07-13">13 Jul 2022</time></span>           
+                
+                </small>
+            </p>
+
+            <!-- Post Categories -->
+            <div class="after-post-cats">
+                <ul class="tags mb-4">
+                    
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Deep-Learning">Deep Learning</a>
+                    </li>
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Happy-Ideas">Happy Ideas</a>
+                    </li>
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Reinforcement-Learning">Reinforcement Learning</a>
+                    </li>
+                    
+                    <li>
+                        <a class="smoothscroll" href="/categories#Supervised-Learning">Supervised Learning</a>
+                    </li>
+                    
+                </ul>
+            </div>
+            <!-- End Categories -->
+
+            <!-- Post Tags -->
+            <div class="after-post-tags">
+                <ul class="tags">
+                    
+                    
+                </ul>
+            </div>
+            <!-- End Tags -->
+
+            <!-- Prev/Next -->
+            <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+            
+            <a class="prev d-block col-md-6" href="/NAS/"> &laquo; Neural Architecture Search</a>
+            
+            
+            <a class="next d-block col-md-6 text-lg-right" href="/gan_optimality_proof/">GAN optimality proof &raquo; </a>
+            
+            <div class="clearfix"></div>
+            </div>
+            <!-- End Categories -->
+        
+        <!-- End Post -->
+
+    </div>
+</div>
+<!-- End Article
+================================================== -->
+
+<!-- Begin Comments
+================================================== -->
+
+<!--End Comments
+================================================== -->
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+
+</div>
+
+
+<!-- Bottom Alert Bar
+================================================== -->
+<div class="alertbar">
+	<div class="container text-center">
+		<span> Never miss a <b>story</b> from us, subscribe to this blog</span>
+        <form
+          class="wj-contact-form validate"
+          action="https://gmail.us4.list-manage.com/subscribe/post?u=6bc2f64e5d9109bd06bf859c5&amp;id=68bbfe755b&amp;f_id=005c05e9f0"
+          method="post"
+          id="mc-embedded-subscribe-form"
+          name="mc-embedded-subscribe-form"
+          target="_blank"
+        >
+            <div class="mc-field-group center-inputs">
+                <input type="email" placeholder="Email" name="EMAIL" class="required email" id="mce-EMAIL" autocomplete="on" required>
+                <input type="submit" value="Subscribe" name="subscribe" class="button">
+            </div>
+        </form>
+	</div>
+</div>
+
+    
+</div>
+
+<!-- Categories Jumbotron
+================================================== -->
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+            <div class="d-md-flex align-items-center justify-content-center h-100">
+                <h2 class="d-md-block align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+            </div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+            
+            
+                
+                    <a class="mt-1 mb-1" href="/categories#Stories">Stories (5)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Philosophy">Philosophy (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Deep-Learning">Deep Learning (7)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Reinforcement-Learning">Reinforcement Learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Supervised-Learning">Supervised Learning (4)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Happy-Ideas">Happy Ideas (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#GAN">GAN (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Theory">Theory (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#unsupervised-learning">unsupervised learning (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Tutorial">Tutorial (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Servers">Servers (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Raspberry-Pi">Raspberry Pi (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Hidden-Markov-Model">Hidden Markov Model (3)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Django">Django (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Docker">Docker (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AWS">AWS (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#AI">AI (2)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Unsupervised-Learning">Unsupervised Learning (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Python">Python (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Psychology">Psychology (1)</a>
+                
+                    <a class="mt-1 mb-1" href="/categories#Economy">Economy (1)</a>
+                
+            
+            
+		</div>
+	</div>
+</div>
+
+<!-- Begin Footer
+================================================== 
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                Copyright © 2025 GranaData 
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" href="https://www.wowthemes.net/mediumish-free-jekyll-template/">Mediumish Jekyll Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>-->
+<!-- End Footer
+================================================== -->
+
+</div> <!-- /.site-content -->
+
+<!-- Scripts
+================================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<script src="/assets/js/mediumish.js"></script>
+
+
+<script src="/assets/js/lazyload.js"></script>
+
+
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script> 
+
+
+<script id="dsq-count-scr" src="//demowebsite.disqus.com/count.js"></script>
+
+
+</body>
+</html>
