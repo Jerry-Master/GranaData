@@ -2,7 +2,7 @@
 layout: post
 title:  "The buddhist pace"
 author: jose
-categories: [ Stories, Philosophy ]
+categories: [ Philosophy ]
 featured: true
 hidden: true
 comments: false
