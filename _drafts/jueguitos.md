@@ -95,3 +95,80 @@ Otro juego también de manos por parejas, pero este es un poco más matemático.
 * Si tus dos manos están muertas, pierdes.
 
 Las reglas se pueden modificar ligeramente dando pie a muchas variantes. Puedes hacer que en vez de módulo 5, si se pasa de 5 siempre sea 0. Puedes hacer que una mano pueda transferir todos sus dedos a tu otra mano, o prohibir esa jugada. O que si una mano muera no pueda ser revivida. Puedes hacer que gane quien pierda, o sea, que si mueren tus dos manos ganes. Algunas variantes tienen estrategia óptima y otras no. Te toca jugarlas todas para averiguarlo.
+
+## El cubo / chasing
+
+En Barcelona lo llamaban "cheisin" y en Andalucía cubo. Seguramente tendrá muchos más nombres pero yo conozco esos dos. Este juego va de adivinar. Al comienzo de la partida se reparte a cada jugador cuatro cartas boca abajo sin mirar. Cada jugador mirará dos de esas cuatro cartas antes de empezar la partida. Por turnos cada jugador cogerá una carta del montón y decidirá si la quiere o no. Si la descarta, la coloca boca arriba encima de la mesa. Si se la queda, deberá cambiarla por otra de las suyas pero sin mirar, una vez haya dado la vuelta a la carta que cambia no habrá marcha atrás. El objetivo del juego es tener la menor puntuación posible. Si alguien sabe seguro que tiene menos de 5 puntos, grita "cubo" o "cheisin". Tras cantarse cubo, quien falte por jugar la ronda, la juega, y después se comparan todas las cartas de todos los jugadores para ver quién ha ganado.
+
+Esa es la dinámica básica, pero hay más reglas:
+* Si la carta que acaban de descartar es una de las tuyas, puedes eliminarte esa carta poniéndola encima de la mesa boca arriba. Si te equivocas, robas una carta más sin mirar boca abajo. Si alguien se te adelanta y la coloca antes que tú, no eliminas la carta pero tampoco robas ninguna.
+* Si la carta descartada es una sota (o J en baraja de póker), intercambias dos cartas de dos compañeros (no valen cartas tuyas) sin mirarlas.
+* Si la carta descartada es una reina (o Q), intercambias una carta tuya con otra de otro jugador sin mirar.
+* Si la carta descartada es un rey (o K), puedes mirar dos cartas cualesquiera, tuyas o no.
+* Si la carta descartada es un siete, puedes mirar una carta tuya.
+* Si la carta descartada es un ocho, puedes mirar una carta de otro jugador.
+
+Además, el rey (o K) vale cero puntos. Estas reglas pueden variar ligeramente, pero en esencia es eso, mirar y cambiar cartas para darle emoción a la partida. Así, aunque hayas cantado cubo, si alguien te cambia las cartas podrías perder.
+
+## El presi
+
+También conocido como el culo o la puta, pero presidente queda más formal. Este es un juego de múltiples rondas donde los dos ganadores se llevan el título de presi y vicepresi, y los dos perdedores son el culo y el viceculo. En cada ronda el culo le da sus dos mejores cartas al presi, que le devuelve sus dos peores cartas; y el viceculo intercambia su mejor carta por la peor del vicepresi. Como ves, esto hace de este juego un juego bastante injusto, lo cual es su característica principal. Para compensar un poco, hay una variante en la que mientras el culo baraja las cartas, si alguien le contesta una pregunta, se cambia el rol con él. Explicado esto, el objetivo en cada partida es quedarte sin cartas. Por turnos, los jugadores van soltando cartas sobre la mesa hasta que nadie puede y, entonces, se apartan las cartas de la mesa y el último en soltar carta empieza la siguiente ronda. Estas serían las reglas para saber si puedes o no echar carta:
+
+* El primer jugador decide si en esa ronda se va a parejas, tríos, cuartetos o de uno en uno. Una vez elegido a qué se va, se va en esa ronda solo a eso. Por ejemplo, si el primer jugador juega una pareja, todos están obligados a jugar parejas y quien no tenga, se ve obligado a pasar.
+* El orden de las cartas es 3, 4, 5, ...,  11, 12, 1, 2, siendo el 3 la más baja y el 2 la más alta.
+* Empieza el culo o, si es la primera partida, quien tenga el 3 de oros.
+* La carta que eches debe ser mayor o igual que la última carta jugada (si se va a parejas o más, la pareja debe ser mayor o igual.). Si la carta que echas es exactamente igual (mismo número), entonces saltas al siguiente jugador. Saltar no significa pasar, ese jugador podrá soltar carta en la siguiente ronda. Cuando se pasa ya no se puede jugar más en la ronda, pero si te saltan sí puedes seguir.
+* Si sale un 7, la siguiente debe ser o un 7 o un 8 (o, en su defecto si no hay ochos, una sota).
+* Si sale un 8 (o sota), la siguiente carta debe ser menor estricto que el 8. Esto se suele resumir con "siete implica ocho, ocho implica más baja". 
+* El 2 corta. Si alguien echa un 2 esa ronda termina y le toca empezar a ese jugador. Sin embargo, si el 2 era su última carta, este jugador será el culo en la siguiente partida, así espabila para la próxima.
+
+Cuando son muchos jugadores se pueden unir dos barajas para poder jugar todo el mundo. Este juego es fenomenal para grupos grandes y lo puedes jugar hasta la saciedad.
+
+## Connect
+
+Veámos ahora un juego de palabras en el que no hacen falta ni cartas, ni brazos, ni dedos. En el connect hay una persona que piensa una palabra sin decirla y el resto tiene que adivinarla. Para ello, los demás jugadores tendrán que hacer connect y por cada connect se irá desvelando una letra de la palabra. Para hacer connect dos personas deben decir la misma palabra a la vez. Como esto así porque sí es complicado, lo que se hace es que alguien menciona otra palabra relacionada con la esperanza de que los demás sepan en que está pensando. Aquí iría un ejemplo:
+
+* David: Fórmula uno
+* Fernando: Connect!
+* David y Fernando: uno, dos, tres... Verstappen!
+
+Eso sería un connect válido. También podría haber sucedido lo siguiente:
+
+* David: Fórmula uno
+* Fernando: Connect!
+* David y Fernando: uno, dos, tres... Verstappen (David) / Hamilton (Fernando)
+
+Eso no sería un connect válido. Además, la palabra debe empezar por las mismas letras que la palabra que se busca y que ya se conocen. Con un ejemplo de partida se entiende más fácil:
+
+* Jose (Piensa): Celeridad
+* Jose: Empieza por la letra C.
+* Josan: Transporte.
+* David: Connect!
+* Josan y David: uno, dos, tres... Camión!
+
+* Jose: Vale, la siguiente letra es E.
+* Fernando: Fruta.
+* Nacho: Connect!
+* Fernando y Nacho: uno, dos, tres... Cereza!
+
+* Jose: Okay, le sigue la letra L.
+* Maria Elena: Móvil.
+* Fermín: Connect!
+* María Elena y Fermín: uno, dos, tres... Celular!
+
+* Jose: E.
+* Fernando: Alcahueta.
+* Javi: Connect!
+* Fernando y Javi: uno, dos, tres... Celestina!
+
+* Jose: R.
+* Nacho: ¿Pero qué palabra más rara has pensado?
+* Jose: A mi me parece normal.
+* Fernando: Celeridad!
+* Jose: ¿Ves? Era normal, Fernando la ha adivinado.
+
+La única regla que falta por explicar es la de cortar connect. La persona que ha pensado la palabra inicialmente puede cortar connect si dice la misma palabra que los otros dos a la vez, alargando así el juego. Por esta regla conviene que los jugadore se anden finos y no dejen pensar a quien pensó la palabra. Cuánto más rápido, más difícil es que te corten el connect.
+
+## El juego de follar
+
+Vale, dejadme que me explique. El nombre es claramente sensacionalista, y no muy family friendly, pero no es lo que parece. También es un juego de palabras como el connect donde hay que adivinar también la palabra que pensó el protagonista, que solo puede ser un verbo de acción. Pero ahora la metodología cambia. Para averiguar la palabra se harán preguntas en clave, donde se sustituirá la palabra que se busca por el verbo follar. Ejemplo: Supongamos que la palabra pensada es cantar. Alguien podría preguntar "¿Follas en la ducha?". A lo que se podría responder que sí, si eres una persona que canta en la ducha. De esta manera se irían haciendo múltiples preguntas hasta que finalmente resulte evidente cuál es la acción que encaja con las respuestas a todas las preguntas. Este juego ayuda a romper el hielo fácilmente aunque puede herir la sensibilidad de ciertas personas ya que las preguntas pueden estar algo subidas de tono. También en vez de "follar", la palabra sustituta podría haber sido cualquier otro verbo inofensivo, pero qué gracia tendría entonces. 
