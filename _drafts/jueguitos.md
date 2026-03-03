@@ -1,13 +1,13 @@
 ---
 layout: post
-title:  "Draft"
+title:  "15 juegos para pasar el rato."
 author: jose
-categories: [ Draft ]
-tags: [ Draft ]
+categories: [ Games ]
 featured: false
 hidden: false
 comments: false
 share: false
+image: assets/images/jueguitos/banner.png
 ---
 
 ¡Juguemos! ¿O ya somos demasiado mayores? Yo creo que nunca se es demasiado mayor para divertirse, así que hoy traigo un recopilatorio de juegos que me han dado muchos buenos momentos con mis familiares y amigos. 
@@ -171,4 +171,129 @@ La única regla que falta por explicar es la de cortar connect. La persona que h
 
 ## El juego de follar
 
-Vale, dejadme que me explique. El nombre es claramente sensacionalista, y no muy family friendly, pero no es lo que parece. También es un juego de palabras como el connect donde hay que adivinar también la palabra que pensó el protagonista, que solo puede ser un verbo de acción. Pero ahora la metodología cambia. Para averiguar la palabra se harán preguntas en clave, donde se sustituirá la palabra que se busca por el verbo follar. Ejemplo: Supongamos que la palabra pensada es cantar. Alguien podría preguntar "¿Follas en la ducha?". A lo que se podría responder que sí, si eres una persona que canta en la ducha. De esta manera se irían haciendo múltiples preguntas hasta que finalmente resulte evidente cuál es la acción que encaja con las respuestas a todas las preguntas. Este juego ayuda a romper el hielo fácilmente aunque puede herir la sensibilidad de ciertas personas ya que las preguntas pueden estar algo subidas de tono. También en vez de "follar", la palabra sustituta podría haber sido cualquier otro verbo inofensivo, pero qué gracia tendría entonces. 
+Vale, dejadme que me explique. El nombre es claramente sensacionalista, y no muy family friendly, pero no es lo que parece. También es un juego de palabras como el connect donde hay que adivinar también la palabra que pensó el protagonista, que solo puede ser un verbo de acción. Pero ahora la metodología cambia. Para averiguar la palabra se harán preguntas en clave, donde se sustituirá la palabra que se busca por el verbo follar. Ejemplo: Supongamos que la palabra pensada es cantar. Alguien podría preguntar "¿Follas en la ducha?". A lo que se podría responder que sí, si eres una persona que canta en la ducha. De esta manera se irían haciendo múltiples preguntas hasta que finalmente resulte evidente cuál es la acción que encaja con las respuestas a todas las preguntas. Este juego ayuda a romper el hielo fácilmente aunque puede herir la sensibilidad de ciertas personas ya que las preguntas pueden estar algo subidas de tono. También en vez de "follar", la palabra sustituta podría haber sido cualquier otro verbo inofensivo, pero qué gracia tendría entonces.
+
+## Ronda
+
+Volvamos con las cartas. El ronda es un juego clásico, al igual que la brisca o el chinchón es archiconocido por muchos, seguramente con el nombre de escoba. Aquí también cada jugador tiene 3 cartas, pero la dinámica es totalmente diferente a la brisca. Tras repartir las tres cartas a cada jugador, se ponen cuatro encima de la mesa boca arriba y el resto van al montón boca abajo. Por turnos, cada jugador deberá capturar las cartas de la mesa con sus cartas. Para ello debes tener una carta del mismo número que alguna de las de la mesa. Si tienes un cuatro y hay un cuatro en la mesa puedes llevarte ese cuatro y poner los dos cuatros en tu montón de cartas, el objetivo es tener más cartas que los demás. Además de coger si hay cartas iguales, también puedes arrastrar si hay cartas consecutivas. En el caso anterior, si además del cuatro hay un cinco y un seis, pues te los llevas todos. Sin embargo, solo puedes empezar la cadena si tienes una carta igual a las que ya hay. Una vez hayas terminado de barrer, dejas todas las cartas en tu montón boca arriba siendo la primera que usaste la que debe quedar encima. Esto es importante, ya que no solo puedes arrastrar cartas de la mesa, sino que también puedes llevarte todo el montón de tu compañero si la carta de arriba es consecutiva a otras que hayas capturado o arrastrado. Si no puedes capturar nada, entonces dejas la carta que quieras boca arriba encima de la mesa. Cuando todos os quedéis sin cartas en la mano, robáis otras tres y seguís hasta que no queden cartas por robar. Os muestro varias rondas de ejemplo para que quede más claro:
+
+### Preparación
+
+Jugadores: David y Jesús  
+Cada uno recibe 3 cartas.
+
+Mesa inicial (boca arriba):
+4 - 5 - 9 - 12
+
+Manos iniciales:
+- David: 4 - 6 - 8
+- Jesús: 9 - 8 - 11
+
+---
+
+### RONDA 1
+
+### Turno 1 — David (capturar + arrastrar)
+
+Tiene un 4 y en la mesa hay un 4 por lo que puede empezar capturando. Como además el 5 es consecutivo al 4, lo arrastra.
+
+Se lleva:
+4 y 5
+
+Su montón queda:
+4 (arriba)
+4
+5
+
+Mesa ahora:
+9 - 12
+
+Manos:
+- David: 6 - 8
+- Jesús: 9 - 8 - 11
+
+### Turno 2 — Jesús (capturar simple)
+
+Tiene un 9 y hay un 9 en la mesa así que también se lo lleva pero sin arrastrar.
+
+Se lleva:
+9
+
+Su montón:
+9 (arriba)
+9
+
+Mesa ahora:
+12
+
+Manos:
+- David: 6 - 8
+- Jesús: 8 - 11
+
+---
+
+### Turno 3 — David (soltar)
+
+Como no tiene iguales, simplemente deja el 6.
+
+Mesa ahora:
+6 - 12
+
+Manos:
+- David: 8
+- Jesús: 8 - 11
+
+### Turno 4 — Jesús (soltar)
+
+Igual que antes, solo suelta el 8.
+
+Mesa ahora:
+6 - 12 - 8
+
+Manos:
+- David: 8
+- Jesús: 11
+
+---
+
+### Turno 5 — David (arrastrar montón)
+
+David se aprovecha de la situación y con su 8 se lleva todo el montón de Jesús que empeza por nueve.
+
+Montones:
+- David: 6 cartas (4, 4, 5, 6, 8, 8, 9)
+- Jesús: 0 cartas
+
+Mesa ahora:
+6 - 12
+
+Manos:
+- David: Nada
+- Jesús: 11
+
+### Turno 6 — Jesús (soltar)
+
+Jesús, cabreado tras perder su montón, solo puede soltar su última carta y termina la ronda.
+
+Mesa ahora:
+6 - 12 - 11
+
+Manos:
+- David: Nada
+- Jesús: Nada
+
+---
+
+Además de esta dinámica básica, hay algunas reglas adicionales:
+* Si al robar las tres cartas (o al comienzo cuando te reparten) dos son iguales, se le llama ronda y los demás jugadores te deben una carta de sus montones que tu colocarás en el tuyo. Si sus montones están vacíos, te la darán cuando dejen de estarlo.
+* Si robas las tres iguales es rondiña y te deben dos cartas en vez de una. Las deudas son como en la vida real, si yo te debo a ti una y tú me debes una a mi, estamos en paz.
+* Si en algún momento dejas la mesa limpia, también te deben una carta. Dejar la mesa limpia es que te llevas todas las cartas, obligando al siguiente a poner una carta encima de la mesa sí o sí.
+* Al terminar, cuando a nadie le queden cartas, si aún hay cartas en la mesa se las lleva la última persona que hubiese capturado alguna carta.
+
+## Pocha
+
+## Infiltrado / Blanco
+
+## Poli-ladrón
+
+## Mao
