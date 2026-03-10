@@ -292,8 +292,30 @@ Además de esta dinámica básica, hay algunas reglas adicionales:
 
 ## Pocha
 
+La pocha me la enseñaron los madrileños que se ve que les gusta mucho. Es un juego para cinco o menos jugadores en el que primero se reparte una carta, en la siguiente ronda dos cartas, después tres y así hasta repartirlas todas y después se va hacia atrás, una ronda con el máximo de cartas menos una, luego menos dos y así hasta acabar con una carta otra vez cada uno. Con cinco jugadores se llega hasta 8 cartas y se baja, ya que los ochos y los nueves se quitan de la baraja. En cada ronda los jugadores intentan predecir de antemano cuantos puntos se van a hacer. Si aciertan se suman esos puntos más dos y, si fallan, se restan la diferencia entre lo predicho y lo real. Cada ronda se juega de manera similar a la brisca pero asistiendo, es decir, si tienes del mismo palo que la primera carta debes echar de ese palo. Si además puedes ganarle, debes ganarle. Si no tienes de ese palo pero tienes de la muestra, debes echar de la muestra. Si otra persona había echado muestra, tú vas a echar muestra y puedes ganarle, debes ganarle. Y si no tienes del palo ni de la muestra puedes echar lo que quieras. Aunque el orden de las cartas sea el de la brisca, cada mano ganada vale solo un punto, aquí da igual llevarse un uno o una sota. Por tanto, acertar los puntos que ganarás aquí significa acertar cuantas manos vas a ganar. Al final de todo, se hará recuento de todos los puntos y quien más tenga, gana. Suele ser conveniente ir anotando los puntos porque son muchas rondas y se olvida.
+
 ## Infiltrado / Blanco
+
+Este juego es como el cubo, lo conocí dos veces por dos grupos de amigos diferentes. Unos lo llamaban infiltrado y otros blanco. Nunca deja de sorprenderme como personas separadas por 900km que hablan lenguas diferentes, comparten los mismos juegos. En el fondo, no somos tan distintos. Independientemente del nombre, el infiltrado es un juego de grupo en el que un narrador dirá una palabra en secreto a los participantes. Esa palabra no se la dirá a todo el mundo, habrá un conjunto reducido de personas a las que les dirá "infiltrado". Una vez todos hayan escuchado su palabra, deberán por turnos decir en voz alta otra palabra o expresión que tenga semejanza con la palabra oculta. No ha de ser demasiado obvio, ni tampoco demasiado rebuscado. Lo justo para que los demás sepan que conoces la palabra, sin desvelarla. Aquellos que no sepan la palabra y sean infiltrados, deberán inventarse en su turno algo para pasar desapercibidos. Al terminar la ronda, el grupo debe ponerse de acuerdo en eliminar a quien parezca más sospechoso de ser un infiltrado. Tras varias rondas, si los infiltrados son mayoría, ganan; y si se elimina a todos los infiltrados, pierden. La otra forma en que los infiltrados ganan es si adivinan la palabra. A modo de ejemplo os dejo un enlace a un vídeo ilustrativo: [reel](https://www.instagram.com/reel/DUTWmxejHGq/){:target="_blank"}.
 
 ## Poli-ladrón
 
+Este juego bien podría ser un pilla-pilla con roles, que también le llamábamos así, pero aquí vengo a traer la versión de jugar por casa. Cada persona recibe una carta en secreto que representa un rol:
+* Sota: La curandera (o, más vulgarmente, la puta).
+* Rey: Policía.
+* As: Ladrón (aunque realmente es un asesino).
+* Cualquier otra carta: Persona normal.
+
+El ladrón puede matar a cualquiera guiñándole un ojo y esta persona deberá poner su carta boca arriba indicando que ha muerto. La curandera podrá revivir a los muertos haciéndole un gesto que consiste en sacar la lengua ligeramente hacia fuera por un lado y hacia arriba, como si te estuvieses relamiendo. Y el policía debe averiguar quien es el ladrón y detenerlo. Tan solo tiene una oportunidad, si detiene a quien no es, pierde. Por otro lado, si el ladrón mata al policía, es el policía el que gana y el ladrón pierde. Además, el ladrón podrá hacer un único cómplice dándole un beso y este podrá matar a otras personas. Si el cómplice es detenido por el policía simplemente muere y sigue la partida.
+
 ## Mao
+
+## Psicólogo
+
+## Mechero
+
+El mechero es otro juego psicólogico y, al igual que con el Mao, más te vale no explicar las reglas al principio. El juego se presenta así: "Tenemos una caja donde algunos objetos o entes se pueden meter, y otros no.". A partir de aquí dejas que los demás te pregunten si pueden meter objetos en la caja y tu les dices si sí o si no. El nombre viene de que el turno de pregunta lo tiene quien tiene el mechero (o cualquier objeto que haga las veces de mechero) y solo puede preguntar quien tenga el mechero. La gracia está en dar las gracias. Si al recibir el mechero diste las gracias, puedes meter lo que quieras, si no lo hiciste no puedes meter nada. Es un juego ideal para enseñar educación a los niños.
+
+## Magia negra
+
+Ya con este acabo los juegos psicológicos y el post. Para este pasatiempo necesitarás un cómplice con el que conquistar a tu audiencia. Les dirás a todos que tu cómplice y tú os comunicais por telepatía y que se lo vas a demostrar adivinando objetos. Las veces que se quiera el grupo elegirá un objeto sin que tú lo veas, y tu cómplice te transmitirá esa información sin palabras. Él o ella irá señalando objetos sin decir nada, y cuando señale el objeto elegido lo adivinarás. ¿Cómo? Pues eso te va a tocar adivinarlo a ti también, ya que un mago nunca revela sus trucos.
