@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "15 juegos para pasar el rato."
+title:  "18 juegos para pasar el rato."
 author: jose
 categories: [ Games ]
 featured: false
@@ -8,6 +8,7 @@ hidden: false
 comments: false
 share: false
 image: assets/images/jueguitos/banner.png
+time_read: 21
 ---
 
 ¡Juguemos! ¿O ya somos demasiado mayores? Yo creo que nunca se es demasiado mayor para divertirse, así que hoy traigo un recopilatorio de juegos que me han dado muchos buenos momentos con mis familiares y amigos. 
