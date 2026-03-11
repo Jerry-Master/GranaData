@@ -310,7 +310,24 @@ El ladrón puede matar a cualquiera guiñándole un ojo y esta persona deberá p
 
 ## Mao
 
+1. En el Mao solo hay una regla y es que no se habla de las reglas.
+
+Así debes empezar el juego tras haber repartido 3 cartas a cada jugador. Y aunque no le cuentes las reglas a nadie, tú debes sabértelas claro está. Este juego es básicamente como el UNO pero con cartas de póker. Vas tirando cartas con el objetivo de quedarte sin ellas. Y al igual que en el UNO hay cartas especiales que ejecutan acciones. Cada vez que alguien tire una carta especial y no haga lo que toca, se lleva una carta de castigo. Cada vez que alguien no juegue como si fuera el UNO y haga algo extraño, carta al canto. Si hablan de las reglas también, carta al canto. Así pues, estas son las cartas especiales:
+* As: El sentido se invierte.
+* 2: El siguiente jugador roba dos cartas. Si no las roba, además de las dos que le tocan se lleva una de castigo.
+* 4: Silencio obligatorio, si alguien habla antes de que el siguiente juegue su turno, se come una carta.
+* 5: Hay que decir "cinco".
+* 7: Se dice "buenos días" y se acumula. Si se echa otro siete seguido hay que decir, "buenos días, buenos días" y así.
+* 8: El siguiente jugador pierde turno.
+* J: Se cambia el palo al que se va.
+* Q: Se hace una reverencia.
+* K: Se dice "larga vida al rey".
+
+Lo cierto es que no son reglas oficiales ya que no hay reglas. El que propone el juego se las inventa, pero este es un buen conjunto para empezar. Sí, para empezar, y es que cada vez que alguien gane una ronda añade una regla adicional sin comunicárselo a nadie. El resto la aprenderá a base de chuparse cartas por no cumplirla. La última regla que sí deber estar siempre es que cuando te quedas sin cartas has de decir "Mao". Si no, recibes carta a modo de castigo. 
+
 ## Psicólogo
+
+Un juego grupal que nunca falla. En este juego un par de personas serán los psicólogos y el resto serán los pacientes. Los psicólogos se saldrán de la sala, o si es al aire libre, simplemente se apartan unos momentos. Mientras tanto, el resto hará un complot para confundir a los psicólogos. Dicho complot puede ser tan simple como responder lo que respondería el de tu derecha, o absurdamente complejo como mentir si la mano derecha del que pregunta está apoyada sobre alguna superficie. Los psicológos por su parte, cuando vuelvan deben averiguar en qué consiste el complot haciendo preguntas. Se puede empezar por preguntas triviales como si tu nombre es tal o cual o si eres hombre o mujer. Todas las preguntas han de ser de sí o no, no vale hacer preguntas abiertas. Aquí la creatividad es la clave de la diversión. Las preguntas comprometidas a lo mejor no te ayudan a desvelar el complot, pero desde luego te lo pasarás bien. A medida que se vayan haciendo preguntas se debe ir haciendo evidente cual es la regla que siguen los pacientes. También se puede hacer la misma pregunta varias veces, ya que la respuesta puede variar. Si ya pasa mucho tiempo y no lo averiguan, los pacientes pueden sugerir preguntas o dar pistas. Lo normal es empezar con una ronda donde la regla sea muy sencillita para que todos se acostumbren a la dinámica y después invertarse complots rebuscados.
 
 ## Mechero
 
