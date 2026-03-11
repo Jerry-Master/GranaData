@@ -16,13 +16,13 @@ image: assets/images/jueguitos/banner.png
 
 ¿Qué decir que no se haya dicho ya? La brisca es un clásico conocido y amado por todos. Nunca falla, si no sabes a qué jugar juegas a la brisca. Pueden jugar dos, tres o cuatro personas por parejas. La dinámica es sencilla: se baraja (baraja española), se reparten tres cartas a cada jugador y se deja una carta boca arriba bajo el montón de cartas cuyo palo determina el palo de la muestra. Por rondas, cada jugador juega una carta, alguien gana y todos roban carta del montón. Cuando se acaban las cartas se cuenta y gana quien más puntos tenga. 
 
-Las reglas para saber quien gana cada ronda son las siguientes:
+Las reglas para saber quién gana cada ronda son las siguientes:
 * La primera carta que se echa decide qué palo manda.
 * El palo de la muestra gana al palo que manda (si son diferentes) que a su vez gana al resto de palos.
 * Si dos cartas son del palo ganador, es decir, las dos son muestra o las dos son del palo que manda y no hay muestra, entonces gana la carta con más puntos, o si valen cero, la más alta.
 * La puntuación de las cartas es: 1->11 puntos, 3->10 puntos, rey->4 puntos, caballo->3 puntos, sota->2 puntos, el resto->0 puntos.
 
-Cuando se juegan tres personas hay una variante que es el alcalde. En vez de jugar todos contra todos, en el alcalde se juega dos contra uno. Para equilibrar la balanza, el alcalde gana si supera los 30 puntos en vez de los 60 que harían falta en una partida normal. También se debe tener en cuenta que cuando se juegan tres hay que quitar una carta porque sino sobrará al final. Lo habitual es eliminar un dos.
+Cuando se juegan tres personas hay una variante que es el alcalde. En vez de jugar todos contra todos, en el alcalde se juega dos contra uno. Para equilibrar la balanza, el alcalde gana si supera los 30 puntos en vez de los 60 que harían falta en una partida normal. También se debe tener en cuenta que cuando se juegan tres hay que quitar una carta porque si no sobrará al final. Lo habitual es eliminar un dos.
 
 Cuando se juega por parejas los miembros de cada pareja se enseñan entre sí las cartas antes de empezar el juego y antes de la última mano. Durante la partida se puede hablar de lo que se tiene (tanto si es verdad como si es mentira) pero no se pueden enseñar las cartas.
 
@@ -30,7 +30,7 @@ Hay una regla adicional que causa debate entre los jugadores habituales y es la 
 
 ## Chinchón
 
-Otro gran clásico, aunque algo más largo de jugar. El chinchón se juega con baraja española también y es para tres jugadores. En cada ronda se van sumando puntos también, pero aquí va ganando quien menos tenga. La dinámica consiste en repartir 7 cartas a cada jugador y dejar una boca arriba encima de la mesa. En cada ronda cada jugador puede elegir si coge la carta boca arriba o la de encima del montón. Una vez ha cogido una carta debe dejar otra carta boca arriba encima de la última carta boca arriba, y esta nueva carta será la que podrá robar el siguiente jugador si quiere. Esto continúa hasta que alguien cierra y entonces se procede a contar puntos.
+Otro gran clásico, aunque algo más largo de jugar. El chinchón se juega con baraja española también y es para tres jugadores. En cada ronda se van sumando puntos también, pero aquí va ganando quien menos tenga. La dinámica consiste en repartir 7 cartas a cada jugador y dejar una boca arriba encima de la mesa. En cada ronda cada jugador puede elegir si coge la carta boca arriba o la de encima del montón. Una vez ha cogido una carta debe dejar otra carta boca arriba encima de la última carta boca arriba, y esta nueva carta será la que podrá robar el siguiente jugador si quiere. Esto continúa hasta que alguien cierra, dejando una carta boca abajo encima del montón, y entonces se procede a contar puntos.
 
 Las reglas para cerrar son como sigue:
 * Se puede cerrar si se tienen 6 o 7 cartas ligadas. Si se tienen 6 cartas ligadas, la carta restante debe ser menor o igual a 5. Si se tienen 7 cartas ligadas a eso se le llama menos 10, porque te restas 10 puntos.
@@ -42,11 +42,11 @@ Aquí también hay reglas adicionales que causan furor. Cuando alguien cierra co
 
 ## One Card Deal
 
-A este juego realmente se le conoce por "Love Letter", sin embargo yo lo conocí por este nombre y las reglas para mi siempre fueron este folio.
+A este juego realmente se le conoce por "Love Letter", sin embargo yo lo conocí por este nombre y las reglas para mí siempre fueron este folio.
 
 <p class="text-center"><img class="" src="{{site.baseurl}}/assets/images/jueguitos/one-card-deal.jpg" alt="simple" /></p>
 
-Cuando me estuve documentando para escribir este post descubrí el nombre original, pero para mi siempre será el one card deal. La dinámica es sencilla, aunque pillarle el truco lleva su tiempo. Cada jugador posee una carta y en su turno roba otra carta y descarta una de las dos (de ahí el nombre de one card deal). Hay varias maneras de morir y gana el último en pie. Como puedes ver no tiene mucho misterio, sin embargo, cada vez que descartas una carta se lleva a cabo una acción diferente, de ahí el folio. Vayamos una por una:
+Cuando me estuve documentando para escribir este post descubrí el nombre original, pero para mí siempre será el one card deal. La dinámica es sencilla, aunque pillarle el truco lleva su tiempo. Cada jugador posee una carta y en su turno roba otra carta y descarta una de las dos (de ahí el nombre de one card deal). Hay varias maneras de morir y gana el último en pie. Como puedes ver no tiene mucho misterio, sin embargo, cada vez que descartas una carta se lleva a cabo una acción diferente, de ahí el folio. Vayamos una por una:
 * Adivinar: Si adivinas la carta de otra persona, esta muere.
 * Mirar: Le miras la carta a otra persona.
 * Lucha: Eliges a un jugador y quien tenga la carta más baja muere. Si son iguales se echa a piedra, papel o tijeras.
@@ -73,7 +73,7 @@ Los roles son los siguientes:
 * (4) Ladrón: Puede robar monedas a otros jugadores en vez de cogerlas del montón. No puede robarle a otro ladrón ni al embajador.
 * (K) Capitalista: Puede coger monedas de 3 en 3 del montón y además puede bloquear que otros jugadores cojan dos monedas del montón. Esto puede ser confuso, bloquear quiere decir que si un jugador coge dos monedas del montón (no de otro jugador), el capitalista puede hacer que ese jugador pierda turno, sin coger monedas ni hacer ninguna acción. Si el capitalista te bloquea no puedes rectificar y coger una moneda, si has sido avaricioso te aguantas y pierdes turno.
 * (Q) Reina: No le puede matar el asesino con 3 monedas, solo puede ser asesinada con 7 monedas.
-* (J) Embajador: La acción del embajador a mi me gusta llamarla "embajar". "Embajar" consiste en coger dos cartas de rol del montón de cartas disponibles y devolver dos cartas al montón. Si tenías dos roles sigues con dos roles y si tenías uno sigues con uno, pero habiendo podido elegir de entre dos roles más. Una vez se devuelven las cartas al montón de roles este se baraja.
+* (J) Embajador: La acción del embajador a mí me gusta llamarla "embajar". "Embajar" consiste en coger dos cartas de rol del montón de cartas disponibles y devolver dos cartas al montón. Si tenías dos roles sigues con dos roles y si tenías uno sigues con uno, pero habiendo podido elegir de entre dos roles más. Una vez se devuelven las cartas al montón de roles este se baraja.
 
 A medida que se van perdiendo vidas, es decir, roles, las cartas de rol se descartan y no se vuelven a usar. Estos roles descartados se colocan boca arriba para que todos los vean y no son del montón de roles para "embajar". En total hay 20 cartas de rol, o sea, cuatro cartas de cada rol e infinitas monedas. 
 
@@ -126,16 +126,16 @@ Cuando son muchos jugadores se pueden unir dos barajas para poder jugar todo el 
 
 ## Connect
 
-Veámos ahora un juego de palabras en el que no hacen falta ni cartas, ni brazos, ni dedos. En el connect hay una persona que piensa una palabra sin decirla y el resto tiene que adivinarla. Para ello, los demás jugadores tendrán que hacer connect y por cada connect se irá desvelando una letra de la palabra. Para hacer connect dos personas deben decir la misma palabra a la vez. Como esto así porque sí es complicado, lo que se hace es que alguien menciona otra palabra relacionada con la esperanza de que los demás sepan en que está pensando. Aquí iría un ejemplo:
+Veamos ahora un juego de palabras en el que no hacen falta ni cartas, ni brazos, ni dedos. En el connect hay una persona que piensa una palabra sin decirla y el resto tiene que adivinarla. Para ello, los demás jugadores tendrán que hacer connect y por cada connect se irá desvelando una letra de la palabra. Para hacer connect dos personas deben decir la misma palabra a la vez. Como esto así porque sí es complicado, lo que se hace es que alguien menciona otra palabra relacionada con la esperanza de que los demás sepan en qué está pensando. Aquí iría un ejemplo:
 
 * David: Fórmula uno
-* Fernando: Connect!
-* David y Fernando: uno, dos, tres... Verstappen!
+* Fernando: ¡Connect!
+* David y Fernando: uno, dos, tres... ¡Verstappen!
 
 Eso sería un connect válido. También podría haber sucedido lo siguiente:
 
 * David: Fórmula uno
-* Fernando: Connect!
+* Fernando: ¡Connect!
 * David y Fernando: uno, dos, tres... Verstappen (David) / Hamilton (Fernando)
 
 Eso no sería un connect válido. Además, la palabra debe empezar por las mismas letras que la palabra que se busca y que ya se conocen. Con un ejemplo de partida se entiende más fácil:
@@ -143,13 +143,13 @@ Eso no sería un connect válido. Además, la palabra debe empezar por las misma
 * Jose (Piensa): Celeridad
 * Jose: Empieza por la letra C.
 * Josan: Transporte.
-* David: Connect!
-* Josan y David: uno, dos, tres... Camión!
+* David: ¡Connect!
+* Josan y David: uno, dos, tres... ¡Camión!
 
 * Jose: Vale, la siguiente letra es E.
 * Fernando: Fruta.
-* Nacho: Connect!
-* Fernando y Nacho: uno, dos, tres... Cereza!
+* Nacho: ¡Connect!
+* Fernando y Nacho: uno, dos, tres... ¡Cereza!
 
 * Jose: Okay, le sigue la letra L.
 * Maria Elena: Móvil.
@@ -158,16 +158,16 @@ Eso no sería un connect válido. Además, la palabra debe empezar por las misma
 
 * Jose: E.
 * Fernando: Alcahueta.
-* Javi: Connect!
-* Fernando y Javi: uno, dos, tres... Celestina!
+* Javi: ¡Connect!
+* Fernando y Javi: uno, dos, tres... ¡Celestina!
 
 * Jose: R.
 * Nacho: ¿Pero qué palabra más rara has pensado?
-* Jose: A mi me parece normal.
-* Fernando: Celeridad!
+* Jose: A mí me parece normal.
+* Fernando: ¡Celeridad!
 * Jose: ¿Ves? Era normal, Fernando la ha adivinado.
 
-La única regla que falta por explicar es la de cortar connect. La persona que ha pensado la palabra inicialmente puede cortar connect si dice la misma palabra que los otros dos a la vez, alargando así el juego. Por esta regla conviene que los jugadore se anden finos y no dejen pensar a quien pensó la palabra. Cuánto más rápido, más difícil es que te corten el connect.
+La única regla que falta por explicar es la de cortar connect. La persona que ha pensado la palabra inicialmente puede cortar connect si dice la misma palabra que los otros dos a la vez, alargando así el juego. Por esta regla conviene que los jugadores se anden finos y no dejen pensar a quien pensó la palabra. Cuanto más rápido, más difícil es que te corten el connect.
 
 ## El juego de follar
 
@@ -258,7 +258,7 @@ Manos:
 
 ### Turno 5 — David (arrastrar montón)
 
-David se aprovecha de la situación y con su 8 se lleva todo el montón de Jesús que empeza por nueve.
+David se aprovecha de la situación y con su 8 se lleva todo el montón de Jesús que empieza por nueve.
 
 Montones:
 - David: 6 cartas (4, 4, 5, 6, 8, 8, 9)
@@ -285,18 +285,18 @@ Manos:
 ---
 
 Además de esta dinámica básica, hay algunas reglas adicionales:
-* Si al robar las tres cartas (o al comienzo cuando te reparten) dos son iguales, se le llama ronda y los demás jugadores te deben una carta de sus montones que tu colocarás en el tuyo. Si sus montones están vacíos, te la darán cuando dejen de estarlo.
-* Si robas las tres iguales es rondiña y te deben dos cartas en vez de una. Las deudas son como en la vida real, si yo te debo a ti una y tú me debes una a mi, estamos en paz.
+* Si al robar las tres cartas (o al comienzo cuando te reparten) dos son iguales, se le llama ronda y los demás jugadores te deben una carta de sus montones que tú colocarás en el tuyo. Si sus montones están vacíos, te la darán cuando dejen de estarlo.
+* Si robas las tres iguales es rondiña y te deben dos cartas en vez de una. Las deudas son como en la vida real, si yo te debo a una a ti y tú me debes una a mí, estamos en paz.
 * Si en algún momento dejas la mesa limpia, también te deben una carta. Dejar la mesa limpia es que te llevas todas las cartas, obligando al siguiente a poner una carta encima de la mesa sí o sí.
 * Al terminar, cuando a nadie le queden cartas, si aún hay cartas en la mesa se las lleva la última persona que hubiese capturado alguna carta.
 
 ## Pocha
 
-La pocha me la enseñaron los madrileños que se ve que les gusta mucho. Es un juego para cinco o menos jugadores en el que primero se reparte una carta, en la siguiente ronda dos cartas, después tres y así hasta repartirlas todas y después se va hacia atrás, una ronda con el máximo de cartas menos una, luego menos dos y así hasta acabar con una carta otra vez cada uno. Con cinco jugadores se llega hasta 8 cartas y se baja, ya que los ochos y los nueves se quitan de la baraja. En cada ronda los jugadores intentan predecir de antemano cuantos puntos se van a hacer. Si aciertan se suman esos puntos más dos y, si fallan, se restan la diferencia entre lo predicho y lo real. Cada ronda se juega de manera similar a la brisca pero asistiendo, es decir, si tienes del mismo palo que la primera carta debes echar de ese palo. Si además puedes ganarle, debes ganarle. Si no tienes de ese palo pero tienes de la muestra, debes echar de la muestra. Si otra persona había echado muestra, tú vas a echar muestra y puedes ganarle, debes ganarle. Y si no tienes del palo ni de la muestra puedes echar lo que quieras. Aunque el orden de las cartas sea el de la brisca, cada mano ganada vale solo un punto, aquí da igual llevarse un uno o una sota. Por tanto, acertar los puntos que ganarás aquí significa acertar cuantas manos vas a ganar. Al final de todo, se hará recuento de todos los puntos y quien más tenga, gana. Suele ser conveniente ir anotando los puntos porque son muchas rondas y se olvida.
+La pocha me la enseñaron los madrileños que se ve que les gusta mucho. Es un juego para cinco o menos jugadores en el que primero se reparte una carta, en la siguiente ronda dos cartas, después tres y así hasta repartirlas todas y después se va hacia atrás, una ronda con el máximo de cartas menos una, luego menos dos y así hasta acabar con una carta otra vez cada uno. Con cinco jugadores se llega hasta 8 cartas y se baja, ya que los ochos y los nueves se quitan de la baraja. En cada ronda los jugadores intentan predecir de antemano cuántos puntos se van a hacer. Si aciertan se suman esos puntos más dos y, si fallan, se restan la diferencia entre lo predicho y lo real. Cada ronda se juega de manera similar a la brisca pero asistiendo, es decir, si tienes del mismo palo que la primera carta debes echar de ese palo. Si además puedes ganarle, debes ganarle. Si no tienes de ese palo pero tienes de la muestra, debes echar de la muestra. Si otra persona había echado muestra, tú vas a echar muestra y puedes ganarle, debes ganarle. Y si no tienes del palo ni de la muestra puedes echar lo que quieras. Aunque el orden de las cartas sea el de la brisca, cada mano ganada vale solo un punto, aquí da igual llevarse un uno o una sota. Por tanto, acertar los puntos que ganarás aquí significa acertar cuántas manos vas a ganar. Al final de todo, se hará recuento de todos los puntos y quien más tenga, gana. Suele ser conveniente ir anotando los puntos porque son muchas rondas y se olvida.
 
 ## Infiltrado / Blanco
 
-Este juego es como el cubo, lo conocí dos veces por dos grupos de amigos diferentes. Unos lo llamaban infiltrado y otros blanco. Nunca deja de sorprenderme como personas separadas por 900km que hablan lenguas diferentes, comparten los mismos juegos. En el fondo, no somos tan distintos. Independientemente del nombre, el infiltrado es un juego de grupo en el que un narrador dirá una palabra en secreto a los participantes. Esa palabra no se la dirá a todo el mundo, habrá un conjunto reducido de personas a las que les dirá "infiltrado". Una vez todos hayan escuchado su palabra, deberán por turnos decir en voz alta otra palabra o expresión que tenga semejanza con la palabra oculta. No ha de ser demasiado obvio, ni tampoco demasiado rebuscado. Lo justo para que los demás sepan que conoces la palabra, sin desvelarla. Aquellos que no sepan la palabra y sean infiltrados, deberán inventarse en su turno algo para pasar desapercibidos. Al terminar la ronda, el grupo debe ponerse de acuerdo en eliminar a quien parezca más sospechoso de ser un infiltrado. Tras varias rondas, si los infiltrados son mayoría, ganan; y si se elimina a todos los infiltrados, pierden. La otra forma en que los infiltrados ganan es si adivinan la palabra. A modo de ejemplo os dejo un enlace a un vídeo ilustrativo: [reel](https://www.instagram.com/reel/DUTWmxejHGq/){:target="_blank"}.
+Este juego es como el cubo, lo conocí dos veces por dos grupos de amigos diferentes. Unos lo llamaban infiltrado y otros blanco. Nunca deja de sorprenderme cómo personas separadas por 900 km que hablan lenguas diferentes, comparten los mismos juegos. En el fondo, no somos tan distintos. Independientemente del nombre, el infiltrado es un juego de grupo en el que un narrador dirá una palabra en secreto a los participantes. Esa palabra no se la dirá a todo el mundo, habrá un conjunto reducido de personas a las que les dirá "infiltrado". Una vez todos hayan escuchado su palabra, deberán por turnos decir en voz alta otra palabra o expresión que tenga semejanza con la palabra oculta. No ha de ser demasiado obvio, ni tampoco demasiado rebuscado. Lo justo para que los demás sepan que conoces la palabra, sin desvelarla. Aquellos que no sepan la palabra y sean infiltrados, deberán inventarse en su turno algo para pasar desapercibidos. Al terminar la ronda, el grupo debe ponerse de acuerdo en eliminar a quien parezca más sospechoso de ser un infiltrado. Tras varias rondas, si los infiltrados son mayoría, ganan; y si se elimina a todos los infiltrados, pierden. La otra forma en que los infiltrados ganan es si adivinan la palabra. A modo de ejemplo os dejo un enlace a un vídeo ilustrativo: [reel](https://www.instagram.com/reel/DUTWmxejHGq/){:target="_blank"}.
 
 ## Poli-ladrón
 
@@ -306,7 +306,9 @@ Este juego bien podría ser un pilla-pilla con roles, que también le llamábamo
 * As: Ladrón (aunque realmente es un asesino).
 * Cualquier otra carta: Persona normal.
 
-El ladrón puede matar a cualquiera guiñándole un ojo y esta persona deberá poner su carta boca arriba indicando que ha muerto. La curandera podrá revivir a los muertos haciéndole un gesto que consiste en sacar la lengua ligeramente hacia fuera por un lado y hacia arriba, como si te estuvieses relamiendo. Y el policía debe averiguar quien es el ladrón y detenerlo. Tan solo tiene una oportunidad, si detiene a quien no es, pierde. Por otro lado, si el ladrón mata al policía, es el policía el que gana y el ladrón pierde. Además, el ladrón podrá hacer un único cómplice dándole un beso y este podrá matar a otras personas. Si el cómplice es detenido por el policía simplemente muere y sigue la partida.
+El ladrón puede matar a cualquiera guiñándole un ojo y esta persona deberá poner su carta boca arriba indicando que ha muerto. La curandera podrá revivir a los muertos haciéndole un gesto que consiste en sacar la lengua ligeramente hacia fuera por un lado y hacia arriba, como si te estuvieses relamiendo. Y el policía debe averiguar quién es el ladrón y detenerlo. Tan solo tiene una oportunidad, si detiene a quien no es, pierde. Por otro lado, si el ladrón mata al policía, es el policía el que gana y el ladrón pierde. Además, el ladrón podrá hacer un único cómplice dándole un beso y este podrá matar a otras personas. Si el cómplice es detenido por el policía simplemente muere y sigue la partida.
+
+En esencia el juego va de hacer gestos sutiles y con ello se pretende aprender a gesticular de manera discreta. No falta quien guiña un ojo que parece que su cara se convirtiera en una pasa. La discreción es fundamental aquí. Siempre son risas cuando el policía está en su mundo y tú ves claramente quién es el ladrón pero el policía ni coscarse.
 
 ## Mao
 
@@ -323,16 +325,16 @@ Así debes empezar el juego tras haber repartido 3 cartas a cada jugador. Y aunq
 * Q: Se hace una reverencia.
 * K: Se dice "larga vida al rey".
 
-Lo cierto es que no son reglas oficiales ya que no hay reglas. El que propone el juego se las inventa, pero este es un buen conjunto para empezar. Sí, para empezar, y es que cada vez que alguien gane una ronda añade una regla adicional sin comunicárselo a nadie. El resto la aprenderá a base de chuparse cartas por no cumplirla. La última regla que sí deber estar siempre es que cuando te quedas sin cartas has de decir "Mao". Si no, recibes carta a modo de castigo. 
+Lo cierto es que no son reglas oficiales ya que no hay reglas. El que propone el juego se las inventa, pero este es un buen conjunto para empezar. Sí, para empezar, y es que cada vez que alguien gane una ronda añade una regla adicional sin comunicárselo a nadie. El resto la aprenderá a base de chuparse cartas por no cumplirla. La última regla que sí debe estar siempre es que cuando te quedas sin cartas has de decir "Mao". Si no, recibes carta a modo de castigo. 
 
 ## Psicólogo
 
-Un juego grupal que nunca falla. En este juego un par de personas serán los psicólogos y el resto serán los pacientes. Los psicólogos se saldrán de la sala, o si es al aire libre, simplemente se apartan unos momentos. Mientras tanto, el resto hará un complot para confundir a los psicólogos. Dicho complot puede ser tan simple como responder lo que respondería el de tu derecha, o absurdamente complejo como mentir si la mano derecha del que pregunta está apoyada sobre alguna superficie. Los psicológos por su parte, cuando vuelvan deben averiguar en qué consiste el complot haciendo preguntas. Se puede empezar por preguntas triviales como si tu nombre es tal o cual o si eres hombre o mujer. Todas las preguntas han de ser de sí o no, no vale hacer preguntas abiertas. Aquí la creatividad es la clave de la diversión. Las preguntas comprometidas a lo mejor no te ayudan a desvelar el complot, pero desde luego te lo pasarás bien. A medida que se vayan haciendo preguntas se debe ir haciendo evidente cual es la regla que siguen los pacientes. También se puede hacer la misma pregunta varias veces, ya que la respuesta puede variar. Si ya pasa mucho tiempo y no lo averiguan, los pacientes pueden sugerir preguntas o dar pistas. Lo normal es empezar con una ronda donde la regla sea muy sencillita para que todos se acostumbren a la dinámica y después invertarse complots rebuscados.
+Un juego grupal que nunca falla. En este juego un par de personas serán los psicólogos y el resto serán los pacientes. Los psicólogos se saldrán de la sala, o si es al aire libre, simplemente se apartan unos momentos. Mientras tanto, el resto hará un complot para confundir a los psicólogos. Dicho complot puede ser tan simple como responder lo que respondería el de tu derecha, o absurdamente complejo como mentir si la mano derecha del que pregunta está apoyada sobre alguna superficie. Los psicólogos por su parte, cuando vuelvan deben averiguar en qué consiste el complot haciendo preguntas. Se puede empezar por preguntas triviales como si tu nombre es tal o cual o si eres hombre o mujer. Todas las preguntas han de ser de sí o no, no vale hacer preguntas abiertas. Aquí la creatividad es la clave de la diversión. Las preguntas comprometidas a lo mejor no te ayudan a desvelar el complot, pero desde luego te lo pasarás bien. A medida que se vayan haciendo preguntas se debe ir haciendo evidente cuál es la regla que siguen los pacientes. También se puede hacer la misma pregunta varias veces, ya que la respuesta puede variar. Si ya pasa mucho tiempo y no lo averiguan, los pacientes pueden sugerir preguntas o dar pistas. Lo normal es empezar con una ronda donde la regla sea muy sencillita para que todos se acostumbren a la dinámica y después inventarse complots rebuscados.
 
 ## Mechero
 
-El mechero es otro juego psicólogico y, al igual que con el Mao, más te vale no explicar las reglas al principio. El juego se presenta así: "Tenemos una caja donde algunos objetos o entes se pueden meter, y otros no.". A partir de aquí dejas que los demás te pregunten si pueden meter objetos en la caja y tu les dices si sí o si no. El nombre viene de que el turno de pregunta lo tiene quien tiene el mechero (o cualquier objeto que haga las veces de mechero) y solo puede preguntar quien tenga el mechero. La gracia está en dar las gracias. Si al recibir el mechero diste las gracias, puedes meter lo que quieras, si no lo hiciste no puedes meter nada. Es un juego ideal para enseñar educación a los niños.
+El mechero es otro juego psicológico y, al igual que con el Mao, más te vale no explicar las reglas al principio. El juego se presenta así: "Tenemos una caja donde algunos objetos o entes se pueden meter, y otros no.". A partir de aquí dejas que los demás te pregunten si pueden meter objetos en la caja y tú les dices si sí o si no. El nombre viene de que el turno de pregunta lo tiene quien tiene el mechero (o cualquier objeto que haga las veces de mechero) y solo puede preguntar quien tenga el mechero. La gracia está en dar las gracias. Si al recibir el mechero diste las gracias, puedes meter lo que quieras, si no lo hiciste no puedes meter nada. Es un juego ideal para enseñar educación a los niños.
 
 ## Magia negra
 
-Ya con este acabo los juegos psicológicos y el post. Para este pasatiempo necesitarás un cómplice con el que conquistar a tu audiencia. Les dirás a todos que tu cómplice y tú os comunicais por telepatía y que se lo vas a demostrar adivinando objetos. Las veces que se quiera el grupo elegirá un objeto sin que tú lo veas, y tu cómplice te transmitirá esa información sin palabras. Él o ella irá señalando objetos sin decir nada, y cuando señale el objeto elegido lo adivinarás. ¿Cómo? Pues eso te va a tocar adivinarlo a ti también, ya que un mago nunca revela sus trucos.
+Ya con este acabo los juegos psicológicos y el post. Para este pasatiempo necesitarás un cómplice con el que conquistar a tu audiencia. Les dirás a todos que tu cómplice y tú os comunicáis por telepatía y que se lo vas a demostrar adivinando objetos. Las veces que se quiera el grupo elegirá un objeto sin que tú lo veas, y tu cómplice te transmitirá esa información sin palabras. Él o ella irá señalando objetos sin decir nada, y cuando señale el objeto elegido lo adivinarás. ¿Cómo? Pues eso te va a tocar adivinarlo a ti también, ya que un mago nunca revela sus trucos.
