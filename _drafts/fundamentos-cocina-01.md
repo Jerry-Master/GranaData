@@ -2,7 +2,7 @@
 layout: post
 title:  "Cocinando desde los fundamentos."
 author: jose
-categories: [ tutorial ]
+categories: [ Tutorial ]
 featured: false
 hidden: false
 comments: false

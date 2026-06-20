@@ -1,3 +1,4 @@
+@use "sass:meta";
 ---
 # Add a comment to make this file sass-y.
 # Change this file for any custom CSS.
@@ -9,10 +10,8 @@
 }
 
 // Import partials from `sass_dir` (defaults to `_sass`)
-@import
-	"syntax",
-    "starsnonscss"
-;
+@include meta.load-css("syntax");
+@include meta.load-css("starsnonscss");
 
 
 @import url(themes/tango.css);

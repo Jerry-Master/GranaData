@@ -2,7 +2,7 @@
 layout: post
 title:  "Crowdsourcing methods for cancer detection"
 author: jose
-categories: [ Deep Learning, Unsupervised Learning, Supervised Learning ]
+categories: [ Deep Learning, unsupervised learning, Supervised Learning ]
 featured: false
 hidden: false
 comments: false
