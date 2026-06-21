@@ -1,12 +1,14 @@
 ---
 layout: post
-title:  "Vibe-coding, an informed guide (Part II)."
+title:  "Vibe-coding, an informed guide (Part II)"
 author: jose
 categories: [ AI ]
 featured: false
 hidden: false
 comments: false
 share: false
+image: assets/images/vibe-coding-ii/front-image-gpt.png
+time_read: 15
 ---
 
 It was only a year ago when we were discussing [vibe coding]({{site.baseurl}}/vibe-coding){:target="_blank"} in its initial form. Productivity gains were estimated to be more than 14% and prices were less than 2000$ a year. It was very primitive given current standards but we had companies like replit providing some level of agentic coding. A year has passed and it is now time to look at the data again and see where we are now. Agentic coding is all over the place now. We have Claude Code, Codex, OpenCode, Pi and many more interfaces to interact with the models. The chat-based interface can be now considered obsolete. Models have also come a long way, so long that the US government is even denying access to some of them ([Fable](https://www.anthropic.com/news/fable-mythos-access){:target="_blank"}) to the rest of the world. The psicosis has only increased and that is the reason I am writing a new post to clarify the situation with the available evidence and data that we have today.
@@ -27,12 +29,12 @@ LLMs are, as its name says, language models. They only understand language and t
 
 <p class="text-center"><img class="" src="{{site.baseurl}}/assets/images/vibe-coding-ii/toc_llmformatter.png" alt="structured output example" /></p>
 
-How the models were trained to do that is out of the scope of this post but the idea is simple, just make the model output a json that a program can translate into an action. Once the model knows how to call a tool, the agentic loop consists of feeding the output of the command back to the model. This way the model can run autonomously and look inside a codebase without having to interact with a person. Anthropic has a nice diagram and explains in more detail how it works in [their blog](https://code.claude.com/docs/en/agent-sdk/agent-loop){:target="_blank"} and if you are interested in the low-level details of the loop there is [this vibe-coded page](https://ccunpacked.dev/){:target="_blank"} that was created after the [Claude Code leakage](https://github.com/tanbiralam/claude-code){:target="_blank"}:
+How the models were trained to do that is out of the scope of this post but the idea is simple, just make the model output a json that a program can translate into an action. Once the model knows how to call a tool, the agentic loop consists of feeding the output of the command back to the model. This way the model can run autonomously and look inside a codebase without having to interact with a person. Anthropic has a nice diagram and explains in more detail how it works in [their blog](https://code.claude.com/docs/en/agent-sdk/agent-loop){:target="_blank"} and if you are interested in the low-level details of the loop there is [this vibe-coded page](https://ccunpacked.dev/){:target="_blank"} that was created after the [Claude Code leakage](https://github.com/tanbiralam/claude-code){:target="_blank"}.
 
 
 <p class="text-center"><img class="" src="{{site.baseurl}}/assets/images/vibe-coding-ii/agent-loop-diagram.svg" alt="agentic loop" /></p>
 
-This loop shows what happens when you ask the agent "How can I run this code locally?". Instead of having to manually copy and paste the `README.md` and all the main files, the agent can go and look directly into those files. Not only can the model read, but it can also write and modify your files. Of course, it can only do so if you let it. The interfaces don't give permissions to the models to anything by default and you can always control what you let the model do. However, alert fatigue can happen and in another [METR report](https://metr.org/es/blog/2026-05-19-frontier-risk-report/#coding-agents-did-real-projects-that-would-take-humans-hours-or-days){:target="_blank"} it was measured that between 20% and 40% of workers just allow the model to do everything unrestricted:
+This loop shows what happens when you ask the agent "How can I run this code locally?". Instead of having to manually copy and paste the `README.md` and all the main files, the agent can go and look directly into those files. Not only can the model read, but it can also write and modify your files. Of course, it can only do so if you let it. The interfaces don't give permissions to the models to anything by default and you can always control what you let the model do. However, alert fatigue can happen and in a [METR report](https://metr.org/es/blog/2026-05-19-frontier-risk-report/#coding-agents-did-real-projects-that-would-take-humans-hours-or-days){:target="_blank"} it was measured that between 20% and 40% of workers just allow the model to do everything unrestricted:
 
 <p class="text-center"><img class="" src="{{site.baseurl}}/assets/images/vibe-coding-ii/metr-unrestricted-access.png" alt="metr figure" /></p>
 
@@ -76,11 +78,11 @@ Having shown how it works and assuming it is useful, one may ask the price. Last
 | Google         | Gemini 2.5 Pro (≤200k)        | 1.25         | 0.125               | 10.00         |
 | Google         | Gemini 2.5 Flash              | 0.30         | 0.03                | 2.50          |
 | Google         | Gemini 2.5 Flash-Lite         | 0.10         | 0.01                | 0.40          |
-| GLM (Z.ai)     | GLM-5.2                       | 1.40         | 0.26                | 4.40          |
-| GLM (Z.ai)     | GLM-5                         | 1.00         | 0.20                | 3.20          |
-| GLM (Z.ai)     | GLM-4.7                       | 0.60         | 0.11                | 2.20          |
-| GLM (Z.ai)     | GLM-4.5-Air                   | 0.20         | 0.03                | 1.10          |
-| GLM (Z.ai)     | GLM-4.7-Flash                 | Free         | Free                | Free          |
+| Z.ai.          | GLM-5.2                       | 1.40         | 0.26                | 4.40          |
+| Z.ai.          | GLM-5                         | 1.00         | 0.20                | 3.20          |
+| Z.ai.          | GLM-4.7                       | 0.60         | 0.11                | 2.20          |
+| Z.ai.          | GLM-4.5-Air                   | 0.20         | 0.03                | 1.10          |
+| Z.ai.          | GLM-4.7-Flash                 | Free         | Free                | Free          |
 | DeepSeek       | V4 Flash                      | 0.14         | 0.0028              | 0.28          |
 | DeepSeek       | V4 Pro (Promo)                | 0.435        | 0.003625            | 0.87          |
 | DeepSeek       | V4 Pro (Base)                 | 1.74         | 0.145               | 3.48          |
@@ -90,10 +92,10 @@ Having shown how it works and assuming it is useful, one may ask the price. Last
 | Qwen           | Qwen3.6-Plus                  | 0.50         | 0.05                | 3.00          |
 | Qwen           | Qwen3.6-Flash                 | 0.19         | 0.019               | 1.13          |
 | Qwen           | Qwen3 Coder Plus (≤32k)       | 1.00         | 0.10                | 5.00          |
-| Kimi (Moonshot)| Kimi K2.6                     | 0.95         | 0.16                | 4.00          |
-| Kimi (Moonshot)| Kimi K2.7 Code                | 0.95         | 0.19                | 4.00          |
-| Kimi (Moonshot)| Kimi K2.5                     | 0.60         | 0.10                | 3.00          |
-| Kimi (Moonshot)| Moonshot V1 (8k)              | 0.20         | —                   | 2.00          |
+| Moonshot       | Kimi K2.6                     | 0.95         | 0.16                | 4.00          |
+| Moonshot       | Kimi K2.7 Code                | 0.95         | 0.19                | 4.00          |
+| Moonshot       | Kimi K2.5                     | 0.60         | 0.10                | 3.00          |
+| Moonshot       | Moonshot V1 (8k)              | 0.20         | —                   | 2.00          |
 | Mistral        | Large 3 (2512)                | 0.50         | 0.05                | 1.50          |
 | Mistral        | Medium 3.5                    | 1.50         | 0.15                | 7.50          |
 | Mistral        | Small 4                       | 0.10         | 0.01                | 0.30          |
@@ -107,7 +109,7 @@ As I said, this is only the token cost but we are interested in the real cost. T
 
 <p class="text-center"><img class="" src="{{site.baseurl}}/assets/images/vibe-coding-ii/cost-per-task.png" alt="artificial analysis cost per task" /></p>
 
-The most capable model can also be the less efficient. The opposite can also happen. Sonnet 4.6 is more expensive per task than Opus 4.7 even though Opus 4.7 is more expensive per token. But Opus 4.8 is more expensive than Sonnet 4.6 both per task and token. Deepseek V4 Pro (Max) and Qwen 3.7 Plus offer way more value for money than other propietary models but have its own limitations. Deepseek is known for having a [94% hallucination rate](https://artificialanalysis.ai/articles/deepseek-is-back-among-the-leading-open-weights-models-with-v4-pro-and-v4-flash){:target="_blank"} and Qwen has very limited reasoning capabilities. 
+The most capable model can be the less efficient. But the opposite can also happen. Sonnet 4.6 is more expensive per task than Opus 4.7 even though Opus 4.7 is more expensive per token. But Opus 4.8 is more expensive than Sonnet 4.6 both per task and per token. Deepseek V4 Pro (Max) and Qwen 3.7 Plus offer way more value for money than other propietary models but have its own limitations. Deepseek is known for having a [94% hallucination rate](https://artificialanalysis.ai/articles/deepseek-is-back-among-the-leading-open-weights-models-with-v4-pro-and-v4-flash){:target="_blank"} and Qwen has very limited reasoning capabilities. 
 
 Knowing that, what is the real cost in real jobs? Let's start with me. I have been using Claude Code for the past 3 months. This is the bill for the whole duration:
 
@@ -132,7 +134,7 @@ Therefore, the real cost is around 300$ for a normal-to-heavy user that codes ev
 
 <p class="text-center"><img class="" src="{{site.baseurl}}/assets/images/vibe-coding-ii/token-cost-other.png" alt="artificial analysis cost per task" /></p>
 
-How on earth are their software engineers spending 10 times more than me? Even though it is impressive, I have more data that proves that many engineers are really spending 3000$ per month. A friend of mine confirmed that figure for Databricks and internal documents of my company also show similar quantities for some departments. So, is it going to cost you 300$ or 3000$? The answer is it depends. Some deeper analysis have shown that the people that consume so much do the following:
+How on earth are their software engineers spending 10 times more than me? Even though it is impressive and difficult to believe, I have more data that proves that many engineers are really spending 3000$ per month. A friend of mine confirmed that figure for Databricks and internal documents of my company also show similar quantities for some departments. So, is it going to cost you 300$ or 3000$? The answer is it depends. Some deeper analysis have shown that the people that consume so much do the following:
 
 * Use Opus (or the smartest model) always.
 * Be vague in their descriptions.
@@ -151,7 +153,7 @@ What about Anthropic and OpenAI valuations? Are those also justified? For the pu
 * Total knowledge workers' [compensation is 50T$](https://github.com/danielmiessler/Substrate/blob/main/Data/Knowledge-Worker-Global-Salaries/knowledge-worker-compensation-data.md){:target="_blank"}.
 * Total developers' compensation is 3.2T$. I am assuming an average salary of [70K$ / year](https://www.birjob.com/blog/developer-salaries-global){:target="_blank"}.
 * The bill for knowledge workers is an average of 380$ / month. This is based on the previous image.
-* The bill for developers is capped at 1500$ / month. This based on Uber monthly cap.
+* The bill for developers is around 1500$ / month. This is based on Uber monthly cap.
 * Developers productivity is increased by 30% and for the rest of knowledge workers is increased by 6%.
 * A well established company that is no longer growing astronomically and is considered a value stock has a [PE ratio](https://www.investopedia.com/terms/p/price-earningsratio.asp){:target="_blank"} between 10 and 20.
 * All AI company's valuations add up to 7 trillion dollars, that is, seven one trillion dollar companies.
@@ -163,7 +165,7 @@ With all those hypothesis acknowledged we can estimate how much revenue can the 
 
 To finalize this post let's analyze the main limitations of the current agents, show some use cases that work quite well and make some predictions for the future ahead.
 
-The biggest limitation of current agents is visual understanding. [New benchmarks](https://arxiv.org/html/2602.02185v1#S5){:target="_blank"} have been introduced this year because previous ones were found to allow the model to solve the problems via text-shortcuts. It's surprising that these models have an [IQ higher than the average human](https://www.trackingai.org/home){:target="_blank"} but cannot understand simple images. And I can illustrate this with a very simple task that they fail miserably: cropping a powerpoint. In my job we have to do a weekly report in powerpoint and then create a word out of it. It is a very automatic thing you just have to take a screenshot of the images and copy the text separately. You basically have to go from this:
+The biggest limitation of current agents is visual understanding. [New benchmarks](https://arxiv.org/html/2602.02185v1#S5){:target="_blank"} have been introduced this year because previous ones were found to allow the model to solve the problems via text-shortcuts. It's surprising that these models have an [IQ higher than the average human](https://www.trackingai.org/home){:target="_blank"} but cannot understand simple images. And I can illustrate this with a very simple task that they fail miserably: cropping a powerpoint. In my job we have to do a weekly report in powerpoint and then create a word document out of it. It is a very automatic thing you just have to take a screenshot of the images and copy the text separately. You basically have to go from this:
 
 <p class="text-center"><img class="" src="{{site.baseurl}}/assets/images/vibe-coding-ii/slides.png" alt="slides" /></p>
 
@@ -175,7 +177,7 @@ Pretty simple, right? When I tried with both Opus and Sonnet they consumed almos
 
 The next big limitation of this technology is the human factor. The maximum number of agents that I can manage is two. And I am not the only one saying so, all of my colleagues agree with me in that regard. If you try to manage three or more agents at the same time, you will end up working sequentially rather than in parallel and some agents will be idle while you work with others. The reason for this is quite simple. There are two phases: planning and execution. Planning normally takes 15 minutes and execution another 15 minutes so you can only plan one task before another has finished, thus two is the maximum number of agents you can manage in parallel. This is what METR has called the time horizon of the agent. In [their report](https://metr.org/time-horizons/){:target="_blank"} they have shown that the time horizon is increasing exponentially so I expect that this human bottleneck will be reduced once the time horizons increase. I would expect models to perform 1 hour tasks by next year, so that would mean that I can have four agents working at the same time. However, for that to work I would need to have four copies of my repository so that agents can compile in four separate branches without fighting each other. Many changes will be needed in the way we work to adapt to this new reality.
 
-Another limitation of these models is their memory. In the current formulation memory is just the context window enhanced by some MCP or skill that looks for memories in a database. If implemented correctly that could go very far but in its current state it is very primitive. Whatever is not included in the system prompt is rarely remembered. This handicaps the model and makes it more expensive. Many times have I found myself asking a question to the model only for it to start creating loads of subagents to explore the codebase for the umpteenth time. In expert fields there are terms that are specific to the project at hand. If the model needs to look for them every single time it is very costly. For me this looks like a simple problem, just create some glossary and when prompted with something the model does not understand look at the glossary instead of exploring everything. Current models look very static to me. For them to be considered real AGI they need to learn automatically. And having a dynamic memory that updates along the way and has efficient retrieval is the main obstacle right now to achieve AGI.
+Another limitation of these models is their memory. In the current formulation memory is just the context window enhanced by some MCP or skill that looks for memories in a database. If implemented correctly that could go very far but in its current state it is very primitive. Whatever is not included in the system prompt is rarely remembered. This handicaps the model and makes it more expensive. Many times have I found myself asking a question to the model only for it to start creating loads of subagents to explore the codebase for the umpteenth time. In domains that require high expertise, there are terms that are specific to the project at hand. If the model needs to explore the whole codebase to infer its meaning every single time it is very costly. For me this looks like a simple problem, just create some glossary and when prompted with something the model does not understand look at the glossary instead of exploring everything. Current models look very static to me. For them to be considered real AGI they need to learn automatically. And having a dynamic memory that updates along the way and has efficient retrieval is the main obstacle right now to achieve AGI.
 
 Nevertheless, there are a few coding tasks that agents can done fully autonomous with little to no supervision. They can be used to reduce technical debt in three ways:
 
