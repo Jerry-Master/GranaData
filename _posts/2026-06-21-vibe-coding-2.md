@@ -7,7 +7,7 @@ featured: false
 hidden: false
 comments: false
 share: false
-image: assets/images/vibe-coding-ii/front-image-gpt.png
+image: assets/images/vibe-coding-ii.png
 time_read: 15
 ---
 
