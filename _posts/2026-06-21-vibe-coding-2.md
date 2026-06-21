@@ -27,7 +27,7 @@ A year ago, coding with LLMs consisted mainly in copy-pasting snippets of code b
 
 LLMs are, as its name says, language models. They only understand language and they cannot run commands. But what they can do is to say "run the Read(path) tool". To implement this properly, the model needed to be more structured in its output. Many companies did this at the same time, but we can point to [this paper](https://arxiv.org/html/2505.04016v1){:target="_blank"} for an example of how this looks:
 
-<p class="text-center"><img class="" src="{{site.baseurl}}/assets/images/vibe-coding-ii/toc_llmformatter.png" alt="structured output example" /></p>
+<p class="text-center"><img class="" src="{{site.baseurl}}/assets/images/vibe-coding-ii.png" alt="structured output example" /></p>
 
 How the models were trained to do that is out of the scope of this post but the idea is simple, just make the model output a json that a program can translate into an action. Once the model knows how to call a tool, the agentic loop consists of feeding the output of the command back to the model. This way the model can run autonomously and look inside a codebase without having to interact with a person. Anthropic has a nice diagram and explains in more detail how it works in [their blog](https://code.claude.com/docs/en/agent-sdk/agent-loop){:target="_blank"} and if you are interested in the low-level details of the loop there is [this vibe-coded page](https://ccunpacked.dev/){:target="_blank"} that was created after the [Claude Code leakage](https://github.com/tanbiralam/claude-code){:target="_blank"}.
 
