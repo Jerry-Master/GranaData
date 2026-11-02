@@ -2,7 +2,7 @@
 layout: post
 title:  "The two craziest bugs I have solved in my career so far."
 author: jose
-categories: [ Draft ]
+categories: [ AI, engineering ]
 featured: false
 hidden: false
 comments: false
