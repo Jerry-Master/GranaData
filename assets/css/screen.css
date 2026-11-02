@@ -1038,3 +1038,28 @@ iframe {
     display: block;  /* Removes any unwanted space below the image */
     margin: 0 auto;  /* Centers the image if it's narrower than its container */
 }
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 1rem 0;
+}
+
+.image-grid img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.image-grid figure {
+  margin: 0;
+  text-align: center;
+}
+
+.image-grid figcaption {
+  margin-top: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
